@@ -7,5 +7,6 @@
 public class Main{
     public static void Main(String ... args){
         //TODO: GUI starten
+    	System.out.println("OMG");
     }
 }
