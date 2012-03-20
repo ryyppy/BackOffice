@@ -4,7 +4,7 @@
  * Date: 14.03.12
  * Time: 11:46
  */
-public class Main{
+public class Program{
     public static void Main(String ... args){
         //TODO: GUI starten
     	System.out.println("OMG");
