@@ -1,4 +1,4 @@
-package model;
+package bl.model;
 
 import dal.DBEntity;
 
