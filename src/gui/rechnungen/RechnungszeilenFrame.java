@@ -18,7 +18,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import bl.BL;
-import bl.models.Angebot;
+import bl.models.armin.Angebot;
 
 public class RechnungszeilenFrame extends JFrame implements ActionListener {
 	private JButton add, edit, delete, angebotInfo;

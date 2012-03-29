@@ -2,7 +2,7 @@ package bl;
 
 import java.util.ArrayList;
 
-import bl.models.Projekt;
+import bl.models.armin.Projekt;
 
 public class ProjektListe {
 	private ArrayList<Projekt> projekte;

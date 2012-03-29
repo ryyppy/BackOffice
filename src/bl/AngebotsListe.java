@@ -2,8 +2,8 @@ package bl;
 
 import java.util.ArrayList;
 
-import bl.models.Angebot;
-import bl.models.Rechnungszeile;
+import bl.models.armin.Angebot;
+import bl.models.armin.Rechnungszeile;
 
 public class AngebotsListe {
 	private ArrayList<Angebot> angebote;

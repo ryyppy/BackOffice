@@ -20,8 +20,8 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import bl.BL;
-import bl.models.Kunde;
-import bl.models.Projekt;
+import bl.models.armin.Kunde;
+import bl.models.armin.Projekt;
 
 public class AngebotePanel extends JPanel implements ActionListener {
 	private JButton add, edit, delete, kunden_info, projekt_info;

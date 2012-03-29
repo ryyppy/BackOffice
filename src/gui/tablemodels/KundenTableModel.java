@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import bl.models.Kunde;
+import bl.models.armin.Kunde;
 
 public class KundenTableModel extends AbstractTableModel {
 	private ArrayList<Kunde> kunden;

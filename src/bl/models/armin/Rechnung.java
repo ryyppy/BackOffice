@@ -1,4 +1,4 @@
-package bl.models;
+package bl.models.armin;
 
 public interface Rechnung {
 

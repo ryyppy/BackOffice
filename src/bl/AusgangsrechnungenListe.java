@@ -2,8 +2,8 @@ package bl;
 
 import java.util.ArrayList;
 
-import bl.models.Angebot;
-import bl.models.Ausgangsrechnung;
+import bl.models.armin.Angebot;
+import bl.models.armin.Ausgangsrechnung;
 
 public class AusgangsrechnungenListe {
 	private ArrayList<Ausgangsrechnung> ausgangsrechnungen;

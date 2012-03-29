@@ -2,7 +2,7 @@ package bl;
 
 import java.util.ArrayList;
 
-import bl.models.Kunde;
+import bl.models.armin.Kunde;
 
 public class KundenListe {
 	private ArrayList<Kunde> kunden;
