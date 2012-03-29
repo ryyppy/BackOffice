@@ -18,7 +18,7 @@ public class Angebot extends DBEntity {
     private Double chance;
 
     public Angebot(){
-
+    	boolean b = true;
     }
 
     public Integer getAngebotID() {
