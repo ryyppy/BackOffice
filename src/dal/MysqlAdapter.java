@@ -1,13 +1,13 @@
 package dal;
 
 import java.lang.reflect.Field;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import java.sql.PreparedStatement;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+
 
 public class MysqlAdapter extends DatabaseAdapter {
 
