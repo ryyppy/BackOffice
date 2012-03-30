@@ -8,33 +8,23 @@ import dal.DALException;
 import bl.models.armin.*;
 
 public class BL {
-	private ProjektListe projekte;
 	private static ArrayList<Projekt> projektliste;
 	private static int projektID = 0;
-	private KundenListe kunden;
 	private static ArrayList<Kunde> kundenliste;
 	private static int kundenID = 0;
-	private AngebotsListe angebote;
 	private static ArrayList<Angebot> angebotsliste;
 	private static int angebotID = 0;
-	private AusgangsrechnungenListe ausgangsrechnungen;
 	private static ArrayList<Ausgangsrechnung> ausgangsrechnungenliste;
 	private static int rechnungID = 0;
-	private RechnungszeilenListe rechnungszeilen;
 	private static ArrayList<Rechnungszeile> rechnungszeilenliste;
 	private static int rechnungszeileID = 0;
 
 	public BL() {
-		projekte = new ProjektListe();
 		projektliste = new ArrayList<Projekt>();
-		kunden = new KundenListe();
 		kundenliste = new ArrayList<Kunde>();
-		angebote = new AngebotsListe(this);
 		angebotsliste = new ArrayList<Angebot>();
-		ausgangsrechnungen = new AusgangsrechnungenListe(this);
 		ausgangsrechnungenliste = new ArrayList<Ausgangsrechnung>();
-		rechnungszeilen = new RechnungszeilenListe(this);
-		rechnungszeilenliste= new ArrayList<Rechnungszeile>();
+		rechnungszeilenliste = new ArrayList<Rechnungszeile>();
 
 	}
 
@@ -105,10 +95,12 @@ public class BL {
 	public static ArrayList<Angebot> getAngebotsListe() throws DALException {
 		return angebotsliste;
 	}
-	public static ArrayList<Angebot> getAngebotsListe(int kundenID) throws DALException {
+
+	public static ArrayList<Angebot> getAngebotsListe(int kundenID)
+			throws DALException {
 		ArrayList<Angebot> ret = new ArrayList<Angebot>();
-		for(Angebot a : angebotsliste){
-			if(a.getKundenID()==kundenID){
+		for (Angebot a : angebotsliste) {
+			if (a.getKundenID() == kundenID) {
 				ret.add(a);
 			}
 		}
@@ -183,10 +175,6 @@ public class BL {
 		return rechnungszeilenliste;
 	}
 
-	public ProjektListe getProjektListe2() {
-		return projekte;
-	}
-
 	public static Rechnungszeile getRechnungszeile(int rechnungszeileID)
 			throws DALException {
 		for (int i = 0; i < rechnungszeilenliste.size(); i++) {
@@ -215,42 +203,6 @@ public class BL {
 
 		r.setId(rechnungszeileID++);
 		rechnungszeilenliste.add(r);
-	}
-
-	public void setProjekte(ProjektListe projekte) {
-		this.projekte = projekte;
-	}
-
-	public KundenListe getKundenListe2() {
-		return kunden;
-	}
-
-	public void setKunden(KundenListe kunden) {
-		this.kunden = kunden;
-	}
-
-	public AngebotsListe getAngebotsListe2() {
-		return angebote;
-	}
-
-	public void setAngebote(AngebotsListe angebote) {
-		this.angebote = angebote;
-	}
-
-	public AusgangsrechnungenListe getAusgangsrechnungenListe2() {
-		return ausgangsrechnungen;
-	}
-
-	public void setAusgangsrechnungen(AusgangsrechnungenListe ausgangsrechnungen) {
-		this.ausgangsrechnungen = ausgangsrechnungen;
-	}
-
-	public RechnungszeilenListe getRechnungszeilenListe2() {
-		return rechnungszeilen;
-	}
-
-	public void setRechnungszeilen(RechnungszeilenListe rechnungszeilen) {
-		this.rechnungszeilen = rechnungszeilen;
 	}
 
 }
