@@ -1,5 +1,7 @@
 package gui.projekte;
 
+import gui.tablemodels.ProjektTableModel;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -24,23 +26,21 @@ public class ProjektePanel extends JPanel implements ActionListener {
 	private JButton add, edit, delete, angebote;
 	private JTable table;
 	private JScrollPane scrollpane;
-	private DefaultTableModel tModel;
+	private ProjektTableModel tModel;
 	private TableRowSorter<TableModel> tSorter;
 
-	private BL data;
 	private JFrame owner;
 
 	private String[] columnNames;
 	private Object[][] rows;
 
-	public ProjektePanel(JFrame owner, BL data) {
+	public ProjektePanel(JFrame owner) {
 		// super("EPU - Projekte");
 		setSize(600, 300);
 		// setLocationRelativeTo(null);
 		setLayout(new BorderLayout());
 		// setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-		this.data = data;
 		this.owner = owner;
 		JPanel buttonPanel = initButtons();
 		initTable();
@@ -72,7 +72,7 @@ public class ProjektePanel extends JPanel implements ActionListener {
 
 		JPanel panel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
-		
+
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.1;
@@ -90,10 +90,7 @@ public class ProjektePanel extends JPanel implements ActionListener {
 	}
 
 	public void initTable() {
-		rows = data.getProjektListe().getRows();
-		columnNames = data.getProjektListe().getColumnNames();
-
-		tModel = new DefaultTableModel(rows, columnNames);
+		tModel = new ProjektTableModel(BL.getProjektListe());
 
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
@@ -112,17 +109,17 @@ public class ProjektePanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			new AddProjektDialog(owner, tModel, columnNames, data);
+			new AddProjektDialog(owner);
+			tModel.refresh();
 		} else if (e.getSource() == delete) {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
-				data.getProjektListe().delete(
-						Integer.valueOf((String) (tModel
-								.getValueAt(b - i, 0))));
-				tModel.removeRow(b - i);
+				BL.deleteProjekt(Integer.valueOf((String) (tModel.getValueAt(b
+						- i, 0))));
+				tModel.refresh();
 
 			}
-		} 
+		}
 	}
 }

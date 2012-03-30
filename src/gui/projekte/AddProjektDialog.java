@@ -5,6 +5,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.InvalidObjectException;
+import java.text.ParseException;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -13,30 +15,28 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
+
+import dal.DALException;
 
 import bl.BL;
+import bl.models.armin.Projekt;
 
 public class AddProjektDialog extends JDialog implements ActionListener {
 	private JTextField[] textfeld;
 	private JButton add, cancel;
 
-	private BL data;
+	private JFrame owner;
 
-	private DefaultTableModel tModel;
-	private String[] columnNames;
+	private String[] columnNames = { "Name", "Beschreibung" };
 
-	public AddProjektDialog(JFrame owner, DefaultTableModel tModel,
-			String[] columnNames, BL data) {
+	public AddProjektDialog(JFrame owner) {
 		super(owner, "Kunde hinzufuegen", true);
 		setSize(300, 150);
 		setLocationRelativeTo(owner);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
 
-		this.tModel = tModel;
-		this.columnNames = columnNames;
-		this.data = data;
+		this.owner = owner;
 
 		JPanel buttonPanel = initButtons();
 		JPanel fields = initTextFields();
@@ -90,12 +90,13 @@ public class AddProjektDialog extends JDialog implements ActionListener {
 				inhalt[i] = textfeld[i].getText();
 			}
 			try {
-				data.getProjektListe().validate(inhalt);
-				data.getProjektListe().add(inhalt);
-				tModel.addRow(inhalt);
+				Projekt p = new Projekt(inhalt);
+				BL.saveProjekt(p);
 				dispose();
-			} catch (IllegalArgumentException iae) {
-				JOptionPane.showMessageDialog(null, iae.getMessage());
+			} catch (InvalidObjectException ioe) {
+				JOptionPane.showMessageDialog(owner, ioe.getMessage());
+			} catch (DALException de) {
+				JOptionPane.showMessageDialog(owner, de.getMessage());
 			}
 		} else if (e.getSource() == cancel) {
 			dispose();

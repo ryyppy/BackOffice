@@ -32,7 +32,7 @@ public class Haupt_Frame extends JFrame implements ActionListener {
 		
 		reiter=new JTabbedPane();
 		reiter.addTab("Kunden", new KundenPanel(this));
-		reiter.addTab("Projekte", new ProjektePanel(this, data));
+		reiter.addTab("Projekte", new ProjektePanel(this));
 		reiter.addTab("Angebote", new AngebotePanel(this, data));
 		reiter.addTab("Rechnungen", new RechnungenPanel(this, data));
 

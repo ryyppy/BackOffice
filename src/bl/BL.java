@@ -5,11 +5,13 @@ import java.util.ArrayList;
 
 import dal.DALException;
 
-import bl.models.armin.Kunde;
+import bl.models.armin.*;
 
 public class BL {
 	private ProjektListe projekte;
-	private static KundenListe kunden;
+	private static ArrayList<Projekt> projektliste;
+	private static int projektID = 0;
+	private KundenListe kunden;
 	private static ArrayList<Kunde> kundenliste;
 	private static int kundenID = 0;
 	private AngebotsListe angebote;
@@ -18,17 +20,13 @@ public class BL {
 
 	public BL() {
 		projekte = new ProjektListe();
+		projektliste= new ArrayList<Projekt>();
 		kunden = new KundenListe();
 		kundenliste = new ArrayList<Kunde>();
 		angebote = new AngebotsListe(this);
 		ausgangsrechnungen = new AusgangsrechnungenListe(this);
 		rechnungszeilen = new RechnungszeilenListe(this);
 
-	}
-
-	public static String[] getKundenMetaDaten() {
-		String[] ret = { "Kunden-ID", "Vorname", "Nachname", "Geburtsdatum" };
-		return ret;
 	}
 
 	public static ArrayList<Kunde> getKundenListe() throws DALException {
@@ -71,7 +69,44 @@ public class BL {
 		kundenliste.add(k);
 	}
 
-	public ProjektListe getProjektListe() {
+	public static ArrayList<Projekt> getProjektListe() throws DALException {
+		return projektliste;
+	}
+
+	public static Projekt getProjekt(int projektID) throws DALException {
+		for (int i = 0; i < projektliste.size(); i++) {
+			if (projektliste.get(i).getId() == projektID) {
+				return projektliste.get(i);
+			}
+		}
+		throw new DALException("Projekt-ID nicht vorhanden");
+	}
+
+	public static void deleteProjekt(int projektID) throws DALException {
+		Projekt p = getProjekt(projektID);
+		if (p != null) {
+			projektliste.remove(p);
+		}
+	}
+
+	public static void saveProjekt(Projekt p) throws DALException,
+			InvalidObjectException {
+		String exception = "";
+		if (p.getName() == null || p.getName().isEmpty()) {
+			exception += "Name ist ungültig\n";
+		}
+		if (p.getBeschreibung() == null || p.getBeschreibung().isEmpty()) {
+			exception += "Beschreibung ist ungültig\n";
+		}
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		p.setId(projektID++);
+		projektliste.add(p);
+	}
+
+	public ProjektListe getProjektListe2() {
 		return projekte;
 	}
 
