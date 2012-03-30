@@ -1,10 +1,15 @@
 package gui.angebote;
 
+import gui.comboboxmodels.MyListCellRenderer;
+import gui.comboboxmodels.KundenComboBoxModel;
+import gui.comboboxmodels.ProjekteComboBoxModel;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.InvalidObjectException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -16,29 +21,28 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import dal.DALException;
+
 import bl.BL;
+import bl.models.armin.Angebot;
+import bl.models.armin.Kunde;
+import bl.models.armin.Projekt;
 
 public class AddAngebotDialog extends JDialog implements ActionListener {
 	private JTextField[] textfeld;
-	private JComboBox kunden, projekte;
+	private JComboBox<Kunde> kunden;
+	private JComboBox<Projekt> projekte;
 	private JButton add, cancel;
 
-	private BL data;
+	private String[] columnNames = { "Summe", "Dauer", "Chance", "Kunde-ID",
+			"Projekt-ID" };
 
-	private DefaultTableModel tModel;
-	private String[] columnNames;
-
-	public AddAngebotDialog(JFrame owner, DefaultTableModel tModel,
-			String[] columnNames, BL data) {
+	public AddAngebotDialog(JFrame owner) {
 		super(owner, "Angebot hinzufuegen", true);
 		setSize(300, 250);
 		setLocationRelativeTo(owner);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
-
-		this.tModel = tModel;
-		this.columnNames = columnNames;
-		this.data = data;
 
 		JPanel buttonPanel = initButtons();
 		JPanel fields = initTextFields();
@@ -82,10 +86,12 @@ public class AddAngebotDialog extends JDialog implements ActionListener {
 			panel.add(p);
 
 		}
+		kunden = new JComboBox<Kunde>(new KundenComboBoxModel(
+				BL.getKundenListe()));
+		kunden.setRenderer(new MyListCellRenderer("nachname"));
 
-		kunden = new JComboBox(data.getKundenListe().getIDs());
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		JLabel l = new JLabel(columnNames[columnNames.length-2]);
+		JLabel l = new JLabel(columnNames[columnNames.length - 2]);
 		p.add(l);
 		panel.add(p);
 
@@ -93,10 +99,11 @@ public class AddAngebotDialog extends JDialog implements ActionListener {
 		p.add(kunden);
 		panel.add(p);
 
-		projekte = new JComboBox(data.getProjektListe().getIDs());
-
+		projekte = new JComboBox<Projekt>(new ProjekteComboBoxModel(
+				BL.getProjektListe()));
+		projekte.setRenderer(new MyListCellRenderer("name"));
 		p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		l = new JLabel(columnNames[columnNames.length-1]);
+		l = new JLabel(columnNames[columnNames.length - 1]);
 		p.add(l);
 		panel.add(p);
 
@@ -115,15 +122,23 @@ public class AddAngebotDialog extends JDialog implements ActionListener {
 			for (int i = 0; i < textfeld.length; i++) {
 				inhalt[i] = textfeld[i].getText();
 			}
-			inhalt[columnNames.length-2]=String.valueOf(kunden.getSelectedItem());
-			inhalt[columnNames.length-1]=String.valueOf(projekte.getSelectedItem());
 			try {
-				data.getAngebotsListe().validate(inhalt);
-				data.getAngebotsListe().add(inhalt);
-				tModel.addRow(inhalt);
+				inhalt[columnNames.length - 2] = String
+						.valueOf(((Kunde) (kunden.getSelectedItem())).getId());
+				inhalt[columnNames.length - 1] = String
+						.valueOf(((Projekt) (projekte.getSelectedItem()))
+								.getId());
+				Angebot a = new Angebot(inhalt);
+				BL.saveAngebot(a);
 				dispose();
+			}catch (NullPointerException npe){
+				JOptionPane.showMessageDialog(this, "Kunde bzw. Projekt müssen ausgewählt sein");
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
+			} catch (InvalidObjectException ioe) {
+				JOptionPane.showMessageDialog(this, ioe.getMessage());
+			} catch (DALException de) {
+				JOptionPane.showMessageDialog(this, de.getMessage());
 			}
 		} else if (e.getSource() == cancel) {
 			dispose();

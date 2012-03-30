@@ -1,5 +1,7 @@
 package gui.angebote;
 
+import gui.tablemodels.AngebotTableModel;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -27,23 +29,18 @@ public class AngebotePanel extends JPanel implements ActionListener {
 	private JButton add, edit, delete, kunden_info, projekt_info;
 	private JTable table;
 	private JScrollPane scrollpane;
-	private DefaultTableModel tModel;
+	private AngebotTableModel tModel;
 	private TableRowSorter<TableModel> tSorter;
 
-	private BL data;
 	private JFrame owner;
 
-	private String[] columnNames;
-	private Object[][] rows;
-
-	public AngebotePanel(JFrame owner, BL data) {
+	public AngebotePanel(JFrame owner) {
 		// super("EPU - Angebote");
 		setSize(500, 300);
 		// setLocationRelativeTo(null);
 		setLayout(new BorderLayout());
 		// setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-		this.data = data;
 		this.owner = owner;
 
 		JPanel buttonPanel = initButtons();
@@ -97,10 +94,8 @@ public class AngebotePanel extends JPanel implements ActionListener {
 	}
 
 	public void initTable() {
-		rows = data.getAngebotsListe().getRows();
-		columnNames = data.getAngebotsListe().getColumnNames();
 
-		tModel = new DefaultTableModel(rows, columnNames);
+		tModel = new AngebotTableModel(BL.getAngebotsListe());
 
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
@@ -119,29 +114,26 @@ public class AngebotePanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			new AddAngebotDialog(owner, tModel, columnNames, data);
+			new AddAngebotDialog(owner);
+			tModel.refresh();
 		} else if (e.getSource() == delete) {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
-				data.getAngebotsListe()
-						.delete(Integer.valueOf((String) (tModel.getValueAt(b
-								- i, 0))));
-				tModel.removeRow(b - i);
-
+				BL.deleteAngebot(Integer.valueOf((String) (tModel.getValueAt(b
+						- i, 0))));
+				tModel.refresh();
 			}
 
 		} else if (e.getSource() == edit) {
 
 		} else if (e.getSource() == kunden_info) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Kunde k = data.getKundenListe().getObjectById(
-					Integer.valueOf((String) tModel.getValueAt(a, 5)));
+			Kunde k = BL.getKunde((Integer) tModel.getValueAt(a, 5));
 			JOptionPane.showMessageDialog(this, k.toString());
 		} else if (e.getSource() == projekt_info) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Projekt p = data.getProjektListe().getObjectById(
-					Integer.valueOf((String) tModel.getValueAt(a, 6)));
+			Projekt p = BL.getProjekt((Integer) tModel.getValueAt(a, 6));
 			JOptionPane.showMessageDialog(this, p.toString());
 		}
 	}

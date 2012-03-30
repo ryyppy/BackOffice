@@ -15,10 +15,10 @@ public class AngebotsListe {
 	}
 
 	public void add(String[] inhalt) {
-		angebote.add(new Angebot(Integer.valueOf(inhalt[0]), Double
-				.valueOf(inhalt[1]), Double.valueOf(inhalt[2]), Double
-				.valueOf(inhalt[3]), inhalt[4], Integer.valueOf(inhalt[5]),
-				Integer.valueOf(inhalt[6])));
+//		angebote.add(new Angebot(Integer.valueOf(inhalt[0]), Double
+//				.valueOf(inhalt[1]), Double.valueOf(inhalt[2]), Double
+//				.valueOf(inhalt[3]), inhalt[4], Integer.valueOf(inhalt[5]),
+//				Integer.valueOf(inhalt[6])));
 	}
 
 	public void delete(int id) {
@@ -124,9 +124,9 @@ public class AngebotsListe {
 			if (kid < 0) {
 				throw new IllegalArgumentException("Kunden-ID ungültig");
 			}
-			if (data.getKundenListe().containsID(kid) == false) {
-				throw new IllegalArgumentException("Kunden-ID nicht vorhanden");
-			}
+//			if (data.getKundenListe().containsID(kid) == false) {
+//				throw new IllegalArgumentException("Kunden-ID nicht vorhanden");
+//			}
 		} catch (NumberFormatException nfe) {
 			throw new IllegalArgumentException("Kunden-ID ungültig");
 		}
@@ -135,9 +135,9 @@ public class AngebotsListe {
 			if (pid < 0) {
 				throw new IllegalArgumentException("Projekt-ID ungültig");
 			}
-			if (data.getProjektListe().containsID(pid) == false) {
-				throw new IllegalArgumentException("Projekt-ID nicht vorhanden");
-			}
+//			if (data.getProjektListe().containsID(pid) == false) {
+//				throw new IllegalArgumentException("Projekt-ID nicht vorhanden");
+//			}
 		} catch (NumberFormatException nfe) {
 			throw new IllegalArgumentException("Projekt-ID ungültig");
 		}

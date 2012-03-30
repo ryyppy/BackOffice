@@ -15,15 +15,18 @@ public class BL {
 	private static ArrayList<Kunde> kundenliste;
 	private static int kundenID = 0;
 	private AngebotsListe angebote;
+	private static ArrayList<Angebot> angebotsliste;
+	private static int angebotID = 0;
 	private AusgangsrechnungenListe ausgangsrechnungen;
 	private RechnungszeilenListe rechnungszeilen;
 
 	public BL() {
 		projekte = new ProjektListe();
-		projektliste= new ArrayList<Projekt>();
+		projektliste = new ArrayList<Projekt>();
 		kunden = new KundenListe();
 		kundenliste = new ArrayList<Kunde>();
 		angebote = new AngebotsListe(this);
+		angebotsliste = new ArrayList<Angebot>();
 		ausgangsrechnungen = new AusgangsrechnungenListe(this);
 		rechnungszeilen = new RechnungszeilenListe(this);
 
@@ -106,6 +109,40 @@ public class BL {
 		projektliste.add(p);
 	}
 
+	public static ArrayList<Angebot> getAngebotsListe() throws DALException {
+		return angebotsliste;
+	}
+
+	public static Angebot getAngebot(int angebotID) throws DALException {
+		for (int i = 0; i < angebotsliste.size(); i++) {
+			if (angebotsliste.get(i).getId() == angebotID) {
+				return angebotsliste.get(i);
+			}
+		}
+		throw new DALException("Angebot-ID nicht vorhanden");
+	}
+
+	public static void deleteAngebot(int angebotID) throws DALException {
+		Angebot a = getAngebot(angebotID);
+		if (a != null) {
+			projektliste.remove(a);
+		}
+	}
+
+	public static void saveAngebot(Angebot a) throws DALException,
+			InvalidObjectException {
+		String exception = "";
+//		if (!exists(a.getKundenID())) {
+//			exception += "KundenID ist ungültig\n";
+//		}
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		a.setId(angebotID++);
+		angebotsliste.add(a);
+	}
+
 	public ProjektListe getProjektListe2() {
 		return projekte;
 	}
@@ -122,7 +159,7 @@ public class BL {
 		this.kunden = kunden;
 	}
 
-	public AngebotsListe getAngebotsListe() {
+	public AngebotsListe getAngebotsListe2() {
 		return angebote;
 	}
 
