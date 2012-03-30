@@ -1,12 +1,12 @@
 package gui.kunden;
 
-import gui.tablemodels.KundenTableModel;
-
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.InvalidObjectException;
+import java.text.ParseException;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -15,31 +15,28 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
+
+import dal.DALException;
 
 import bl.BL;
+import bl.models.armin.Kunde;
 
 public class AddKundeDialog extends JDialog implements ActionListener {
 	private JTextField[] textfeld;
 	private JButton add, cancel;
 
-	private BL data;
+	private JFrame owner;
 
-	private KundenTableModel tModel;
-	private String[] columnNames;
+	private String[] columnNames = { "Vorname", "Nachname", "Geburtsdatum" };
 
-	public AddKundeDialog(JFrame owner, KundenTableModel tModel,
-			String[] columnNames, BL data) {
+	public AddKundeDialog(JFrame owner) {
 		super(owner, "Kunde hinzufuegen", true);
 		setSize(300, 200);
 		setLocationRelativeTo(owner);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
 
-		this.tModel = tModel;
-		this.columnNames = columnNames;
-		this.data = data;
+		this.owner = owner;
 
 		JPanel buttonPanel = initButtons();
 		JPanel fields = initTextFields();
@@ -93,12 +90,15 @@ public class AddKundeDialog extends JDialog implements ActionListener {
 				inhalt[i] = textfeld[i].getText();
 			}
 			try {
-				data.getKundenListe().validate(inhalt);
-				data.getKundenListe().add(inhalt);
-//				tModel.addRow(inhalt);
+				Kunde k = new Kunde(inhalt);
+				BL.saveKunde(k);
 				dispose();
-			} catch (IllegalArgumentException iae) {
-				JOptionPane.showMessageDialog(null, iae.getMessage());
+			} catch (InvalidObjectException ioe) {
+				JOptionPane.showMessageDialog(owner, ioe.getMessage());
+			} catch (ParseException pe) {
+				JOptionPane.showMessageDialog(owner, pe.getMessage());
+			} catch (DALException de) {
+				JOptionPane.showMessageDialog(owner, de.getMessage());
 			}
 		} else if (e.getSource() == cancel) {
 			dispose();

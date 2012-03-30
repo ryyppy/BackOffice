@@ -1,15 +1,41 @@
 package bl.models.armin;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Kunde {
 	private int kundenID;
-	private String vorname, nachname, geburtsdatum;
+	private String vorname, nachname;
+	private Date geburtsdatum;
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
-	public Kunde(int id, String vorname, String nachname, String geburtsdatum) {
+	public Kunde(int id, String vorname, String nachname, Date geburtsdatum) {
 		super();
 		this.kundenID = id;
 		this.vorname = vorname;
 		this.nachname = nachname;
 		this.geburtsdatum = geburtsdatum;
+	}
+
+	/**
+	 * 
+	 * @param inhalt
+	 * @param inhalt[0]=vorname;
+	 * @param inhalt[1]=nachname;
+	 * @param inhalt[2]=geburtsdatum;
+	 * @throws ParseException
+	 */
+	public Kunde(String[] inhalt) throws ParseException {
+		this.kundenID = -1;
+		this.vorname = inhalt[0];
+		this.nachname = inhalt[1];
+		try{
+		this.geburtsdatum = dateFormat.parse(inhalt[2]);
+		}catch (ParseException e) {
+			throw new ParseException("Datumsformat ungültig - (TT.MM.JJJJ)", e.getErrorOffset());
+		}
+
 	}
 
 	public Object[] getRow() {
@@ -41,16 +67,19 @@ public class Kunde {
 		this.nachname = nachname;
 	}
 
-	public String getGeburtsdatum() {
+	public Date getGeburtsdatum() {
 		return geburtsdatum;
 	}
+	public String getGeburtsdatumString(){
+		return new StringBuilder(dateFormat.format(geburtsdatum)).toString();
+	}
 
-	public void setGeburtsdatum(String geburtsdatum) {
+	public void setGeburtsdatum(Date geburtsdatum) {
 		this.geburtsdatum = geburtsdatum;
 	}
 
 	public String toString() {
-		return kundenID + "\n" + vorname + " " + nachname + "\n" + geburtsdatum;
+		return kundenID + "\n" + vorname + " " + nachname + "\n" + getGeburtsdatumString();
 	}
 
 }

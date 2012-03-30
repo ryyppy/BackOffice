@@ -1,6 +1,7 @@
 package bl;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import bl.models.armin.Kunde;
 
@@ -13,7 +14,7 @@ public class KundenListe {
 
 	public void add(String[] inhalt) {
 		kunden.add(new Kunde(Integer.valueOf(inhalt[0]), inhalt[1], inhalt[2],
-				inhalt[3]));
+				new Date()));
 	}
 
 	public void delete(int id) {

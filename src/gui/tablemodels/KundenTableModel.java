@@ -8,6 +8,7 @@ import bl.models.armin.Kunde;
 
 public class KundenTableModel extends AbstractTableModel {
 	private ArrayList<Kunde> kunden;
+	private String[] columnNames = { "Kunden-ID", "Vorname", "Nachname", "Geburtsdatum" };
 
 	public KundenTableModel(ArrayList<Kunde> kunden) {
 		this.kunden = kunden;
@@ -36,25 +37,30 @@ public class KundenTableModel extends AbstractTableModel {
 		case 2:
 			return k.getNachname();
 		case 3:
-			return k.getGeburtsdatum();
+			return k.getGeburtsdatumString();
 		default:
 			return "";
 		}
 	}
 	@Override
 	public String getColumnName(int column) {
-		switch (column) {
-		case 0:
-			return "Kunden-ID";
-		case 1:
-			return "Vorname";
-		case 2:
-			return "Nachname";
-		case 3:
-			return "Geburtsdatum";
-		default:
-			return "";
-		}
+		return columnNames[column];
+		// switch (column) {
+		// case 0:
+		// return "Kunden-ID";
+		// case 1:
+		// return "Vorname";
+		// case 2:
+		// return "Nachname";
+		// case 3:
+		// return "Geburtsdatum";
+		// default:
+		// return "";
+		// }
+	}
+	
+	public String[] getColumnNames(){
+		return columnNames;
 	}
 	
 	public void refresh(){

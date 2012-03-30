@@ -32,20 +32,15 @@ public class KundenPanel extends JPanel implements ActionListener {
 	private KundenTableModel tModel;
 	private TableRowSorter<TableModel> tSorter;
 
-	private BL data;
 	private JFrame owner;
 
-	private String[] columnNames;
-	private Object[][] rows;
-
-	public KundenPanel(JFrame owner, BL data) {
+	public KundenPanel(JFrame owner) {
 		// super("EPU - Kunden");
 		setSize(600, 300);
 		// setLocationRelativeTo(null);
 		setLayout(new BorderLayout());
 		// setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-		this.data = data;
 		this.owner = owner;
 
 		JPanel buttonPanel = initButtons();
@@ -78,7 +73,7 @@ public class KundenPanel extends JPanel implements ActionListener {
 
 		JPanel panel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
-		
+
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.1;
@@ -120,12 +115,8 @@ public class KundenPanel extends JPanel implements ActionListener {
 	}
 
 	public void initTable() {
-		rows = data.getKundenListe().getRows();
-		columnNames = data.getKundenListe().getColumnNames();
-
-//		tModel = new DefaultTableModel(rows, columnNames);
-		tModel = new KundenTableModel(data.getKundenListe().getKunden());
-
+		// tModel = new DefaultTableModel(rows, columnNames);
+		tModel = new KundenTableModel(BL.getKundenListe());
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.setFillsViewportHeight(true);
@@ -143,18 +134,16 @@ public class KundenPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			new AddKundeDialog(owner, tModel, columnNames, data);
+			new AddKundeDialog(owner);
 			tModel.refresh();
 		} else if (e.getSource() == delete) {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
-				data.getKundenListe().delete(
-						Integer.valueOf((String) (tModel
-								.getValueAt(b - i, 0))));
+				BL.deleteKunde(Integer.valueOf((String) (tModel.getValueAt(b
+						- i, 0))));
 				tModel.refresh();
-
 			}
-		} 
+		}
 	}
 }
