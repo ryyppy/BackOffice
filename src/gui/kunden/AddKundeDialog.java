@@ -25,8 +25,6 @@ public class AddKundeDialog extends JDialog implements ActionListener {
 	private JTextField[] textfeld;
 	private JButton add, cancel;
 
-	private JFrame owner;
-
 	private String[] columnNames = { "Vorname", "Nachname", "Geburtsdatum" };
 
 	public AddKundeDialog(JFrame owner) {
@@ -35,8 +33,6 @@ public class AddKundeDialog extends JDialog implements ActionListener {
 		setLocationRelativeTo(owner);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
-
-		this.owner = owner;
 
 		JPanel buttonPanel = initButtons();
 		JPanel fields = initTextFields();
@@ -93,12 +89,14 @@ public class AddKundeDialog extends JDialog implements ActionListener {
 				Kunde k = new Kunde(inhalt);
 				BL.saveKunde(k);
 				dispose();
+			} catch (IllegalArgumentException iae) {
+				JOptionPane.showMessageDialog(this, iae.getMessage());
 			} catch (InvalidObjectException ioe) {
-				JOptionPane.showMessageDialog(owner, ioe.getMessage());
+				JOptionPane.showMessageDialog(this, ioe.getMessage());
 			} catch (ParseException pe) {
-				JOptionPane.showMessageDialog(owner, pe.getMessage());
+				JOptionPane.showMessageDialog(this, pe.getMessage());
 			} catch (DALException de) {
-				JOptionPane.showMessageDialog(owner, de.getMessage());
+				JOptionPane.showMessageDialog(this, de.getMessage());
 			}
 		} else if (e.getSource() == cancel) {
 			dispose();

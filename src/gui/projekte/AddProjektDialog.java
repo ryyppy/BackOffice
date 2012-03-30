@@ -25,8 +25,6 @@ public class AddProjektDialog extends JDialog implements ActionListener {
 	private JTextField[] textfeld;
 	private JButton add, cancel;
 
-	private JFrame owner;
-
 	private String[] columnNames = { "Name", "Beschreibung" };
 
 	public AddProjektDialog(JFrame owner) {
@@ -35,8 +33,6 @@ public class AddProjektDialog extends JDialog implements ActionListener {
 		setLocationRelativeTo(owner);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
-
-		this.owner = owner;
 
 		JPanel buttonPanel = initButtons();
 		JPanel fields = initTextFields();
@@ -93,10 +89,12 @@ public class AddProjektDialog extends JDialog implements ActionListener {
 				Projekt p = new Projekt(inhalt);
 				BL.saveProjekt(p);
 				dispose();
+			} catch (IllegalArgumentException iae) {
+				JOptionPane.showMessageDialog(this, iae.getMessage());
 			} catch (InvalidObjectException ioe) {
-				JOptionPane.showMessageDialog(owner, ioe.getMessage());
+				JOptionPane.showMessageDialog(this, ioe.getMessage());
 			} catch (DALException de) {
-				JOptionPane.showMessageDialog(owner, de.getMessage());
+				JOptionPane.showMessageDialog(this, de.getMessage());
 			}
 		} else if (e.getSource() == cancel) {
 			dispose();
