@@ -55,9 +55,9 @@ public class Angebot {
 			throw new IllegalArgumentException("Chance muss festgelegt werden");
 		}
 		this.chance = Double.parseDouble(inhalt[2]);
-		if (chance < 0 || chance > 1) {
+		if (chance < 0 || chance > 100) {
 			throw new IllegalArgumentException(
-					"Chance darf nur zw. 0.0 und 1.0 sein");
+					"Chance darf nur zw. 0.0 und 100.0 sein");
 		}
 		this.kundenID = Integer.valueOf(inhalt[3]);
 		this.projektID = Integer.valueOf(inhalt[4]);

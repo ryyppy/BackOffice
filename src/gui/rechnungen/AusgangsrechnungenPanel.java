@@ -24,7 +24,7 @@ import javax.swing.table.TableRowSorter;
 import bl.BL;
 import bl.models.armin.Kunde;
 
-public class RechnungenPanel extends JPanel implements ActionListener {
+public class AusgangsrechnungenPanel extends JPanel implements ActionListener {
 	private JButton add, edit, delete, kundenInfo, showRechnungszeilen;
 	private JTable table;
 	private JScrollPane scrollpane;
@@ -33,7 +33,7 @@ public class RechnungenPanel extends JPanel implements ActionListener {
 
 	private JFrame owner;
 
-	public RechnungenPanel(JFrame owner) {
+	public AusgangsrechnungenPanel(JFrame owner) {
 		// super("EPU - Rechnungen");
 		setSize(500, 300);
 		// setLocationRelativeTo(null);

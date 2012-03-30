@@ -3,7 +3,7 @@ package gui;
 import gui.angebote.AngebotePanel;
 import gui.kunden.KundenPanel;
 import gui.projekte.ProjektePanel;
-import gui.rechnungen.RechnungenPanel;
+import gui.rechnungen.AusgangsrechnungenPanel;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -34,7 +34,7 @@ public class Haupt_Frame extends JFrame implements ActionListener {
 		reiter.addTab("Kunden", new KundenPanel(this));
 		reiter.addTab("Projekte", new ProjektePanel(this));
 		reiter.addTab("Angebote", new AngebotePanel(this));
-		reiter.addTab("Rechnungen", new RechnungenPanel(this));
+		reiter.addTab("Rechnungen", new AusgangsrechnungenPanel(this));
 
 		
 		add(reiter);
