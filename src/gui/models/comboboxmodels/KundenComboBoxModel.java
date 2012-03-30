@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import javax.swing.ComboBoxModel;
 import javax.swing.event.ListDataListener;
 
-import bl.objects.armin.Kunde;
+import bl.objects.Kunde;
 
 public class KundenComboBoxModel implements ComboBoxModel<Kunde> {
 	private ArrayList<Kunde> kunden;

@@ -1,8 +1,8 @@
-package bl.objects.armin;
+package bl.objects;
 
-import java.io.InvalidObjectException;
+import dal.DBEntity;
 
-public class Projekt {
+public class Projekt extends DBEntity{
 	private int projektID;
 	private String name, beschreibung;
 
@@ -36,11 +36,6 @@ public class Projekt {
 		this.name = inhalt[0];
 		this.beschreibung = inhalt[1];
 
-	}
-
-	public Object[] getRow() {
-		Object[] ret = { projektID, name, beschreibung };
-		return ret;
 	}
 
 	public int getId() {

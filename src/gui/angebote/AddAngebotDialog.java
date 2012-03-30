@@ -24,9 +24,9 @@ import javax.swing.table.DefaultTableModel;
 import dal.DALException;
 
 import bl.BL;
-import bl.objects.armin.Angebot;
-import bl.objects.armin.Kunde;
-import bl.objects.armin.Projekt;
+import bl.objects.Angebot;
+import bl.objects.Kunde;
+import bl.objects.Projekt;
 
 public class AddAngebotDialog extends JDialog implements ActionListener {
 	private JTextField[] textfeld;

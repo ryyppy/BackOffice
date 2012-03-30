@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import javax.swing.ComboBoxModel;
 import javax.swing.event.ListDataListener;
 
-import bl.objects.armin.Angebot;
-import bl.objects.armin.Kunde;
+import bl.objects.Angebot;
+import bl.objects.Kunde;
 
 public class AngebotComboBoxModel implements ComboBoxModel<Angebot> {
 	private ArrayList<Angebot> angebote;

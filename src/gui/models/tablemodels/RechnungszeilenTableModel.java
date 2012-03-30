@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import bl.objects.armin.Angebot;
-import bl.objects.armin.Ausgangsrechnung;
-import bl.objects.armin.Rechnungszeile;
+import bl.objects.Angebot;
+import bl.objects.Ausgangsrechnung;
+import bl.objects.Rechnungszeile;
 
 public class RechnungszeilenTableModel extends AbstractTableModel {
 	private ArrayList<Rechnungszeile> rechnungszeilen;

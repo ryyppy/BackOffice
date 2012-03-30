@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import bl.objects.armin.Angebot;
+import bl.objects.Angebot;
 
 public class AngebotTableModel extends AbstractTableModel {
 	private ArrayList<Angebot> angebote;

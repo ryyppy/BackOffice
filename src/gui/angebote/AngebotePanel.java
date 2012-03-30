@@ -22,8 +22,8 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import bl.BL;
-import bl.objects.armin.Kunde;
-import bl.objects.armin.Projekt;
+import bl.objects.Kunde;
+import bl.objects.Projekt;
 
 public class AngebotePanel extends JPanel implements ActionListener {
 	private JButton add, edit, delete, kunden_info, projekt_info;

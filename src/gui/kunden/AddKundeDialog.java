@@ -19,7 +19,7 @@ import javax.swing.JTextField;
 import dal.DALException;
 
 import bl.BL;
-import bl.objects.armin.Kunde;
+import bl.objects.Kunde;
 
 public class AddKundeDialog extends JDialog implements ActionListener {
 	private JTextField[] textfeld;

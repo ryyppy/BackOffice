@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import bl.objects.armin.Angebot;
-import bl.objects.armin.Ausgangsrechnung;
+import bl.objects.Angebot;
+import bl.objects.Ausgangsrechnung;
 
 public class AusgangsrechnungTableModel extends AbstractTableModel {
 	private ArrayList<Ausgangsrechnung> ausgangsrechnungen;

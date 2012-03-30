@@ -1,6 +1,8 @@
-package bl.objects.armin;
+package bl.objects;
 
-public abstract class Rechnung {
+import dal.DBEntity;
+
+public abstract class Rechnung extends DBEntity{
 	private int rechnungID;
 	private String status;
 

@@ -23,9 +23,9 @@ import javax.swing.table.DefaultTableModel;
 import dal.DALException;
 
 import bl.BL;
-import bl.objects.armin.Angebot;
-import bl.objects.armin.Projekt;
-import bl.objects.armin.Rechnungszeile;
+import bl.objects.Angebot;
+import bl.objects.Projekt;
+import bl.objects.Rechnungszeile;
 
 public class AddRechnungszeileDialog extends JDialog implements ActionListener {
 	private JTextField[] textfeld;

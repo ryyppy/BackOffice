@@ -22,7 +22,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import bl.BL;
-import bl.objects.armin.Kunde;
+import bl.objects.Kunde;
 
 public class AusgangsrechnungenPanel extends JPanel implements ActionListener {
 	private JButton add, edit, delete, kundenInfo, showRechnungszeilen;

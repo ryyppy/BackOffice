@@ -1,8 +1,8 @@
-package bl.objects.armin;
+package bl.objects;
 
-import java.util.Date;
+import dal.DBEntity;
 
-public class Rechnungszeile {
+public class Rechnungszeile extends DBEntity{
 	private int rechnungszeileID, rechnungID, angebotsID;
 	private String kommentar;
 	private double steuersatz, betrag;

@@ -20,7 +20,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import bl.BL;
-import bl.objects.armin.Angebot;
+import bl.objects.Angebot;
 
 public class RechnungszeilenFrame extends JFrame implements ActionListener {
 	private JButton add, edit, delete, angebotInfo;

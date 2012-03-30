@@ -1,11 +1,12 @@
-package bl.objects.armin;
+package bl.objects;
 
-import java.io.InvalidObjectException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Kunde {
+import dal.DBEntity;
+
+public class Kunde extends DBEntity{
 	private int kundenID;
 	private String vorname, nachname;
 	private Date geburtsdatum;
@@ -30,7 +31,8 @@ public class Kunde {
 	 *            [2]=geburtsdatum;
 	 * @throws ParseException
 	 */
-	public Kunde(String[] inhalt) throws ParseException, IllegalArgumentException {
+	public Kunde(String[] inhalt) throws ParseException,
+			IllegalArgumentException {
 		String exception = "";
 		if (inhalt[0] == null || inhalt[0].isEmpty()) {
 			exception += "Vorname ist ungültig\n";
@@ -55,11 +57,6 @@ public class Kunde {
 					e.getErrorOffset());
 		}
 
-	}
-
-	public Object[] getRow() {
-		Object[] ret = { kundenID, vorname, nachname, geburtsdatum };
-		return ret;
 	}
 
 	public int getId() {

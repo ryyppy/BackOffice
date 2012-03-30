@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import bl.objects.armin.Kunde;
-import bl.objects.armin.Projekt;
+import bl.objects.Kunde;
+import bl.objects.Projekt;
 
 public class ProjektTableModel extends AbstractTableModel {
 	private ArrayList<Projekt> projekte;

@@ -5,7 +5,12 @@ import java.util.ArrayList;
 
 import dal.DALException;
 
-import bl.objects.armin.*;
+import bl.objects.Angebot;
+import bl.objects.Ausgangsrechnung;
+import bl.objects.Kunde;
+import bl.objects.Projekt;
+import bl.objects.Rechnungszeile;
+import bl.objects.patrick.*;
 
 public class BL {
 	private static ArrayList<Projekt> projektliste;

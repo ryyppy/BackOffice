@@ -1,4 +1,4 @@
-package bl.objects.armin;
+package bl.objects;
 
 public class Eingangsrechnung extends Rechnung {
 	private int kontaktID;
