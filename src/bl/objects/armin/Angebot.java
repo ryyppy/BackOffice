@@ -1,4 +1,4 @@
-package bl.models.armin;
+package bl.objects.armin;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

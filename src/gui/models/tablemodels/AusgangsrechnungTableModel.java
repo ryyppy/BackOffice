@@ -1,18 +1,19 @@
-package gui.tablemodels;
+package gui.models.tablemodels;
 
 import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import bl.models.armin.Kunde;
-import bl.models.armin.Projekt;
+import bl.objects.armin.Angebot;
+import bl.objects.armin.Ausgangsrechnung;
 
-public class ProjektTableModel extends AbstractTableModel {
-	private ArrayList<Projekt> projekte;
-	private String[] columnNames = { "Projekt-ID", "Name", "Beschreibung" };
+public class AusgangsrechnungTableModel extends AbstractTableModel {
+	private ArrayList<Ausgangsrechnung> ausgangsrechnungen;
+	private String[] columnNames = { "Rechnung-ID", "Status", "Kunden-ID" };
 
-	public ProjektTableModel(ArrayList<Projekt> projekte) {
-		this.projekte = projekte;
+	public AusgangsrechnungTableModel(
+			ArrayList<Ausgangsrechnung> ausgangsrechnungen) {
+		this.ausgangsrechnungen = ausgangsrechnungen;
 	}
 
 	@Override
@@ -24,19 +25,19 @@ public class ProjektTableModel extends AbstractTableModel {
 	@Override
 	public int getRowCount() {
 		// TODO Auto-generated method stub
-		return projekte.size();
+		return ausgangsrechnungen.size();
 	}
 
 	@Override
 	public Object getValueAt(int row, int col) {
-		Projekt p = projekte.get(row);
+		Ausgangsrechnung a = ausgangsrechnungen.get(row);
 		switch (col) {
 		case 0:
-			return String.valueOf(p.getId());
+			return a.getId();
 		case 1:
-			return p.getName();
+			return a.getStatus();
 		case 2:
-			return p.getBeschreibung();
+			return a.getKundenID();
 		default:
 			return "";
 		}

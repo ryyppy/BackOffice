@@ -1,6 +1,6 @@
 package gui.angebote;
 
-import gui.tablemodels.AngebotTableModel;
+import gui.models.tablemodels.AngebotTableModel;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -22,8 +22,8 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import bl.BL;
-import bl.models.armin.Kunde;
-import bl.models.armin.Projekt;
+import bl.objects.armin.Kunde;
+import bl.objects.armin.Projekt;
 
 public class AngebotePanel extends JPanel implements ActionListener {
 	private JButton add, edit, delete, kunden_info, projekt_info;

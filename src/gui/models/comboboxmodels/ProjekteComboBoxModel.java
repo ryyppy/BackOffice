@@ -1,18 +1,19 @@
-package gui.comboboxmodels;
+package gui.models.comboboxmodels;
 
 import java.util.ArrayList;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.event.ListDataListener;
 
-import bl.models.armin.Kunde;
+import bl.objects.armin.Kunde;
+import bl.objects.armin.Projekt;
 
-public class KundenComboBoxModel implements ComboBoxModel<Kunde> {
-	private ArrayList<Kunde> kunden;
-	private Kunde selectedItem;
+public class ProjekteComboBoxModel implements ComboBoxModel<Projekt> {
+	private ArrayList<Projekt> projekte;
+	private Projekt selectedItem;
 
-	public KundenComboBoxModel(ArrayList<Kunde> kunden) {
-		this.kunden = kunden;
+	public ProjekteComboBoxModel(ArrayList<Projekt> projekte) {
+		this.projekte = projekte;
 	}
 
 	@Override
@@ -24,7 +25,7 @@ public class KundenComboBoxModel implements ComboBoxModel<Kunde> {
 	@Override
 	public void setSelectedItem(Object arg0) {
 		// TODO Auto-generated method stub
-		selectedItem = (Kunde) arg0;
+		selectedItem = (Projekt) arg0;
 	}
 
 	@Override
@@ -34,15 +35,15 @@ public class KundenComboBoxModel implements ComboBoxModel<Kunde> {
 	}
 
 	@Override
-	public Kunde getElementAt(int index) {
+	public Projekt getElementAt(int index) {
 		// TODO Auto-generated method stub
-		return kunden.get(index);
+		return projekte.get(index);
 	}
 
 	@Override
 	public int getSize() {
 		// TODO Auto-generated method stub
-		return kunden.size();
+		return projekte.size();
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package gui.rechnungen;
 
-import gui.comboboxmodels.AngebotComboBoxModel;
-import gui.comboboxmodels.MyListCellRenderer;
+import gui.models.comboboxmodels.AngebotComboBoxModel;
+import gui.models.comboboxmodels.MyListCellRenderer;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -23,9 +23,9 @@ import javax.swing.table.DefaultTableModel;
 import dal.DALException;
 
 import bl.BL;
-import bl.models.armin.Angebot;
-import bl.models.armin.Projekt;
-import bl.models.armin.Rechnungszeile;
+import bl.objects.armin.Angebot;
+import bl.objects.armin.Projekt;
+import bl.objects.armin.Rechnungszeile;
 
 public class AddRechnungszeileDialog extends JDialog implements ActionListener {
 	private JTextField[] textfeld;

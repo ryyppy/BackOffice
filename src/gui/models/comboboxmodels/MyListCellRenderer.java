@@ -1,4 +1,4 @@
-package gui.comboboxmodels;
+package gui.models.comboboxmodels;
 
 import java.awt.Component;
 import java.lang.reflect.Method;

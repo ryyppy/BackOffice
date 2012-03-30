@@ -1,6 +1,6 @@
 package gui.kunden;
 
-import gui.tablemodels.KundenTableModel;
+import gui.models.tablemodels.KundenTableModel;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

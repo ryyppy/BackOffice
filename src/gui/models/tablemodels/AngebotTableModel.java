@@ -1,10 +1,10 @@
-package gui.tablemodels;
+package gui.models.tablemodels;
 
 import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import bl.models.armin.Angebot;
+import bl.objects.armin.Angebot;
 
 public class AngebotTableModel extends AbstractTableModel {
 	private ArrayList<Angebot> angebote;

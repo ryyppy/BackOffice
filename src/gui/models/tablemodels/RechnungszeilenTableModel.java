@@ -1,12 +1,12 @@
-package gui.tablemodels;
+package gui.models.tablemodels;
 
 import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import bl.models.armin.Angebot;
-import bl.models.armin.Ausgangsrechnung;
-import bl.models.armin.Rechnungszeile;
+import bl.objects.armin.Angebot;
+import bl.objects.armin.Ausgangsrechnung;
+import bl.objects.armin.Rechnungszeile;
 
 public class RechnungszeilenTableModel extends AbstractTableModel {
 	private ArrayList<Rechnungszeile> rechnungszeilen;

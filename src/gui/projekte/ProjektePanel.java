@@ -1,6 +1,6 @@
 package gui.projekte;
 
-import gui.tablemodels.ProjektTableModel;
+import gui.models.tablemodels.ProjektTableModel;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

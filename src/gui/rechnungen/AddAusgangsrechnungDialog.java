@@ -1,7 +1,7 @@
 package gui.rechnungen;
 
-import gui.comboboxmodels.KundenComboBoxModel;
-import gui.comboboxmodels.MyListCellRenderer;
+import gui.models.comboboxmodels.KundenComboBoxModel;
+import gui.models.comboboxmodels.MyListCellRenderer;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -23,8 +23,8 @@ import javax.swing.table.DefaultTableModel;
 import dal.DALException;
 
 import bl.BL;
-import bl.models.armin.Ausgangsrechnung;
-import bl.models.armin.Kunde;
+import bl.objects.armin.Ausgangsrechnung;
+import bl.objects.armin.Kunde;
 
 public class AddAusgangsrechnungDialog extends JDialog implements
 		ActionListener {

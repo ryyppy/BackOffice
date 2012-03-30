@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import dal.DALException;
 
-import bl.models.armin.*;
+import bl.objects.armin.*;
 
 public class BL {
 	private static ArrayList<Projekt> projektliste;

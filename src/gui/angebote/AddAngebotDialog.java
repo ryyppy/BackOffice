@@ -1,8 +1,8 @@
 package gui.angebote;
 
-import gui.comboboxmodels.MyListCellRenderer;
-import gui.comboboxmodels.KundenComboBoxModel;
-import gui.comboboxmodels.ProjekteComboBoxModel;
+import gui.models.comboboxmodels.KundenComboBoxModel;
+import gui.models.comboboxmodels.MyListCellRenderer;
+import gui.models.comboboxmodels.ProjekteComboBoxModel;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -24,9 +24,9 @@ import javax.swing.table.DefaultTableModel;
 import dal.DALException;
 
 import bl.BL;
-import bl.models.armin.Angebot;
-import bl.models.armin.Kunde;
-import bl.models.armin.Projekt;
+import bl.objects.armin.Angebot;
+import bl.objects.armin.Kunde;
+import bl.objects.armin.Projekt;
 
 public class AddAngebotDialog extends JDialog implements ActionListener {
 	private JTextField[] textfeld;

@@ -1,12 +1,12 @@
-package gui.comboboxmodels;
+package gui.models.comboboxmodels;
 
 import java.util.ArrayList;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.event.ListDataListener;
 
-import bl.models.armin.Angebot;
-import bl.models.armin.Kunde;
+import bl.objects.armin.Angebot;
+import bl.objects.armin.Kunde;
 
 public class AngebotComboBoxModel implements ComboBoxModel<Angebot> {
 	private ArrayList<Angebot> angebote;

@@ -1,6 +1,6 @@
 package gui.rechnungen;
 
-import gui.tablemodels.RechnungszeilenTableModel;
+import gui.models.tablemodels.RechnungszeilenTableModel;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -20,7 +20,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import bl.BL;
-import bl.models.armin.Angebot;
+import bl.objects.armin.Angebot;
 
 public class RechnungszeilenFrame extends JFrame implements ActionListener {
 	private JButton add, edit, delete, angebotInfo;
