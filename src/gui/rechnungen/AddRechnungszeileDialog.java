@@ -1,10 +1,14 @@
 package gui.rechnungen;
 
+import gui.comboboxmodels.AngebotComboBoxModel;
+import gui.comboboxmodels.MyListCellRenderer;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.InvalidObjectException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -16,33 +20,35 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import dal.DALException;
+
 import bl.BL;
+import bl.models.armin.Angebot;
+import bl.models.armin.Projekt;
+import bl.models.armin.Rechnungszeile;
 
 public class AddRechnungszeileDialog extends JDialog implements ActionListener {
 	private JTextField[] textfeld;
 	private JButton add, cancel;
-	private JComboBox angebote;
+	private JComboBox<Angebot> angebote;
 
 	private BL data;
 
 	private DefaultTableModel tModel;
-	private String[] columnNames;
-	private int ausgangsrechnungsID, kundenID;
+	private String[] columnNames = { "Rechnungs-ID", "Kommentar", "Steuersatz",
+			"Betrag", "Angebot-ID" };
+	private int rechnungID, kundenID;
 
-	public AddRechnungszeileDialog(JFrame owner, DefaultTableModel tModel,
-			String[] columnNames, BL data, int ausgangsrechnungsID, int kundenID) {
-		super(owner, "Rechnungszeile zur Ausgangsrechnung "
-				+ ausgangsrechnungsID + " hinzufuegen", true);
+	public AddRechnungszeileDialog(JFrame owner, int rechnungID, int kundenID) {
+		super(owner, "Rechnungszeile zur Ausgangsrechnung " + rechnungID
+				+ " hinzufuegen", true);
 		setSize(320, 200);
 		setLocationRelativeTo(owner);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
 
-		this.tModel = tModel;
-		this.columnNames = columnNames;
-		this.data = data;
-		this.ausgangsrechnungsID = ausgangsrechnungsID;
-		this.kundenID=kundenID;
+		this.rechnungID = rechnungID;
+		this.kundenID = kundenID;
 
 		JPanel buttonPanel = initButtons();
 		JPanel fields = initTextFields();
@@ -75,8 +81,8 @@ public class AddRechnungszeileDialog extends JDialog implements ActionListener {
 
 		for (int i = 0; i < textfeld.length; i++) {
 			textfeld[i] = new JTextField(15);
-			if (columnNames[i].equals("Ausgangsrechnungs-ID")) {
-				textfeld[i].setText(String.valueOf(ausgangsrechnungsID));
+			if (columnNames[i].equals("Rechnungs-ID")) {
+				textfeld[i].setText(String.valueOf(rechnungID));
 				textfeld[i].setEditable(false);
 			}
 			JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -90,16 +96,19 @@ public class AddRechnungszeileDialog extends JDialog implements ActionListener {
 			panel.add(p);
 		}
 
-		angebote = new JComboBox(data.getAngebotsListe().getIDs(kundenID));
+		angebote = new JComboBox<Angebot>(new AngebotComboBoxModel(
+				BL.getAngebotsListe(kundenID)));
+		angebote.setRenderer(new MyListCellRenderer("projektID"));
+
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		JLabel l = new JLabel(columnNames[columnNames.length-1]);
+		JLabel l = new JLabel(columnNames[columnNames.length - 1]);
 		p.add(l);
 		panel.add(p);
 
 		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p.add(angebote);
 		panel.add(p);
-		
+
 		return panel;
 	}
 
@@ -111,16 +120,23 @@ public class AddRechnungszeileDialog extends JDialog implements ActionListener {
 			for (int i = 0; i < textfeld.length; i++) {
 				inhalt[i] = textfeld[i].getText();
 			}
-			JOptionPane.showMessageDialog(this, angebote.getSelectedItem());
-			inhalt[columnNames.length-1]=String.valueOf(angebote.getSelectedItem());
-			JOptionPane.showMessageDialog(this, inhalt[4]);
+
 			try {
-				data.getRechnungszeilenListe().validate(inhalt);
-				data.getRechnungszeilenListe().add(inhalt);
-				tModel.addRow(inhalt);
+				inhalt[columnNames.length - 1] = String
+						.valueOf(((Angebot) (angebote.getSelectedItem()))
+								.getId());
+				Rechnungszeile r = new Rechnungszeile(inhalt);
+				BL.saveRechnungszeile(r);
 				dispose();
+			} catch (NullPointerException npe) {
+				JOptionPane.showMessageDialog(this,
+						"Angebot muss ausgewählt sein");
 			} catch (IllegalArgumentException iae) {
-				JOptionPane.showMessageDialog(null, iae.getMessage());
+				JOptionPane.showMessageDialog(this, iae.getMessage());
+			} catch (InvalidObjectException ioe) {
+				JOptionPane.showMessageDialog(this, ioe.getMessage());
+			} catch (DALException de) {
+				JOptionPane.showMessageDialog(this, de.getMessage());
 			}
 		} else if (e.getSource() == cancel) {
 			dispose();

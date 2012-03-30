@@ -18,7 +18,11 @@ public class BL {
 	private static ArrayList<Angebot> angebotsliste;
 	private static int angebotID = 0;
 	private AusgangsrechnungenListe ausgangsrechnungen;
+	private static ArrayList<Ausgangsrechnung> ausgangsrechnungenliste;
+	private static int rechnungID = 0;
 	private RechnungszeilenListe rechnungszeilen;
+	private static ArrayList<Rechnungszeile> rechnungszeilenliste;
+	private static int rechnungszeileID = 0;
 
 	public BL() {
 		projekte = new ProjektListe();
@@ -28,7 +32,9 @@ public class BL {
 		angebote = new AngebotsListe(this);
 		angebotsliste = new ArrayList<Angebot>();
 		ausgangsrechnungen = new AusgangsrechnungenListe(this);
+		ausgangsrechnungenliste = new ArrayList<Ausgangsrechnung>();
 		rechnungszeilen = new RechnungszeilenListe(this);
+		rechnungszeilenliste= new ArrayList<Rechnungszeile>();
 
 	}
 
@@ -99,6 +105,15 @@ public class BL {
 	public static ArrayList<Angebot> getAngebotsListe() throws DALException {
 		return angebotsliste;
 	}
+	public static ArrayList<Angebot> getAngebotsListe(int kundenID) throws DALException {
+		ArrayList<Angebot> ret = new ArrayList<Angebot>();
+		for(Angebot a : angebotsliste){
+			if(a.getKundenID()==kundenID){
+				ret.add(a);
+			}
+		}
+		return ret;
+	}
 
 	public static Angebot getAngebot(int angebotID) throws DALException {
 		for (int i = 0; i < angebotsliste.size(); i++) {
@@ -128,8 +143,78 @@ public class BL {
 		angebotsliste.add(a);
 	}
 
+	public static ArrayList<Ausgangsrechnung> getAusgangsrechnungenListe()
+			throws DALException {
+		return ausgangsrechnungenliste;
+	}
+
+	public static Ausgangsrechnung getAusgangsrechnung(int rechnungID)
+			throws DALException {
+		for (int i = 0; i < ausgangsrechnungenliste.size(); i++) {
+			if (ausgangsrechnungenliste.get(i).getId() == rechnungID) {
+				return ausgangsrechnungenliste.get(i);
+			}
+		}
+		throw new DALException("Rechnung-ID nicht vorhanden");
+	}
+
+	public static void deleteAusgangsrechnung(int rechnungID)
+			throws DALException {
+		Ausgangsrechnung a = getAusgangsrechnung(rechnungID);
+		if (a != null) {
+			ausgangsrechnungenliste.remove(a);
+		}
+	}
+
+	public static void saveAusgangsrechnung(Ausgangsrechnung a)
+			throws DALException, InvalidObjectException {
+		String exception = "";
+		// ... Kunden-ID überprüfen
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		a.setId(rechnungID++);
+		ausgangsrechnungenliste.add(a);
+	}
+
+	public static ArrayList<Rechnungszeile> getRechnungszeilenListe()
+			throws DALException {
+		return rechnungszeilenliste;
+	}
+
 	public ProjektListe getProjektListe2() {
 		return projekte;
+	}
+
+	public static Rechnungszeile getRechnungszeile(int rechnungszeileID)
+			throws DALException {
+		for (int i = 0; i < rechnungszeilenliste.size(); i++) {
+			if (rechnungszeilenliste.get(i).getId() == rechnungszeileID) {
+				return rechnungszeilenliste.get(i);
+			}
+		}
+		throw new DALException("Rechnungszeile-ID nicht vorhanden");
+	}
+
+	public static void deleteRechnungszeile(int rechnungszeileID)
+			throws DALException {
+		Rechnungszeile r = getRechnungszeile(rechnungszeileID);
+		if (r != null) {
+			rechnungszeilenliste.remove(r);
+		}
+	}
+
+	public static void saveRechnungszeile(Rechnungszeile r)
+			throws DALException, InvalidObjectException {
+		String exception = "";
+		// ... rechnung bzw angebot-ID überprüfen
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		r.setId(rechnungszeileID++);
+		rechnungszeilenliste.add(r);
 	}
 
 	public void setProjekte(ProjektListe projekte) {
@@ -152,7 +237,7 @@ public class BL {
 		this.angebote = angebote;
 	}
 
-	public AusgangsrechnungenListe getAusgangsrechnungenListe() {
+	public AusgangsrechnungenListe getAusgangsrechnungenListe2() {
 		return ausgangsrechnungen;
 	}
 
@@ -160,7 +245,7 @@ public class BL {
 		this.ausgangsrechnungen = ausgangsrechnungen;
 	}
 
-	public RechnungszeilenListe getRechnungszeilenListe() {
+	public RechnungszeilenListe getRechnungszeilenListe2() {
 		return rechnungszeilen;
 	}
 

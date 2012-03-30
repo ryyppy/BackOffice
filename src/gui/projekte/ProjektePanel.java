@@ -117,9 +117,8 @@ public class ProjektePanel extends JPanel implements ActionListener {
 				int b = table.convertRowIndexToModel(a[i]);
 				BL.deleteProjekt(Integer.valueOf((String) (tModel.getValueAt(b
 						- i, 0))));
-				tModel.refresh();
-
 			}
+			tModel.refresh();
 		}
 	}
 }

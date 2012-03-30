@@ -1,27 +1,28 @@
 package bl.models.armin;
 
-public class Ausgangsrechnung implements Rechnung {
-	private int ausgangsrechnungID, kundenID;
-	private String status;
+public class Ausgangsrechnung extends Rechnung {
+	private int kundenID;
 
-	public Ausgangsrechnung(int id,  String status, int kundenID) {
-		super();
-		this.ausgangsrechnungID = id;
+	public Ausgangsrechnung(int rechnungID, String status, int kundenID) {
+		super(rechnungID, status);
 		this.kundenID = kundenID;
-		this.status = status;
 	}
 
-	public Object[] getRow() {
-		Object[] ret = { ausgangsrechnungID,  status , kundenID};
-		return ret;
-	}
-
-	public int getId() {
-		return ausgangsrechnungID;
-	}
-
-	public void setId(int id) {
-		this.ausgangsrechnungID = id;
+	/**
+	 * 
+	 * @param inhalt
+	 * @param inhalt
+	 *            [0]=status;
+	 * @param inhalt
+	 *            [1]=kundenid;
+	 */
+	public Ausgangsrechnung(String[] inhalt) throws IllegalArgumentException {
+		super(-1, "");
+		if (inhalt[0] == null || inhalt[0].isEmpty()) {
+			throw new IllegalArgumentException("Status ist ungültig");
+		}
+		setStatus(inhalt[0]);
+		this.kundenID = Integer.valueOf(inhalt[1]);
 	}
 
 	public int getKundenID() {
@@ -32,15 +33,8 @@ public class Ausgangsrechnung implements Rechnung {
 		this.kundenID = kundenID;
 	}
 
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
 	public String toString() {
-		return ausgangsrechnungID + "\n" + status + "\n" + kundenID;
+		return "Ausgangsrechnung:\n" + super.toString() + "\nKundenID: "
+				+ kundenID;
 	}
 }

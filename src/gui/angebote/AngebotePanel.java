@@ -122,9 +122,8 @@ public class AngebotePanel extends JPanel implements ActionListener {
 				int b = table.convertRowIndexToModel(a[i]);
 				BL.deleteAngebot(Integer.valueOf((String) (tModel.getValueAt(b
 						- i, 0))));
-				tModel.refresh();
 			}
-
+			tModel.refresh();
 		} else if (e.getSource() == edit) {
 
 		} else if (e.getSource() == kunden_info) {

@@ -1,5 +1,7 @@
 package gui.rechnungen;
 
+import gui.tablemodels.RechnungszeilenTableModel;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -24,25 +26,22 @@ public class RechnungszeilenFrame extends JFrame implements ActionListener {
 	private JButton add, edit, delete, angebotInfo;
 	private JTable table;
 	private JScrollPane scrollpane;
-	private DefaultTableModel tModel;
+	private RechnungszeilenTableModel tModel;
 	private TableRowSorter<TableModel> tSorter;
 
-	private BL data;
-
-	private String[] columnNames;
-	private Object[][] rows;
 	private int ausgangsrechnungsID, kundenID;
 
-	public RechnungszeilenFrame(JFrame owner, BL data, int ausgangsrechnungsID, int kundenID) {
-		super("EPU - Rechnungszeilen für AusgangsrechnungsID "+ausgangsrechnungsID);
+	public RechnungszeilenFrame(JFrame owner, int ausgangsrechnungsID,
+			int kundenID) {
+		super("EPU - Rechnungszeilen für AusgangsrechnungsID "
+				+ ausgangsrechnungsID);
 		setSize(500, 300);
 		setLocationRelativeTo(owner);
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-		this.data = data;
-		this.ausgangsrechnungsID= ausgangsrechnungsID;
-		this.kundenID=kundenID;
+		this.ausgangsrechnungsID = ausgangsrechnungsID;
+		this.kundenID = kundenID;
 
 		JPanel buttonPanel = initButtons();
 		initTable();
@@ -80,10 +79,7 @@ public class RechnungszeilenFrame extends JFrame implements ActionListener {
 	}
 
 	public void initTable() {
-		rows = data.getRechnungszeilenListe().getRows(ausgangsrechnungsID);
-		columnNames = data.getRechnungszeilenListe().getColumnNames();
-
-		tModel = new DefaultTableModel(rows, columnNames);
+		tModel = new RechnungszeilenTableModel(BL.getRechnungszeilenListe());
 
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
@@ -102,23 +98,21 @@ public class RechnungszeilenFrame extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			new AddRechnungszeileDialog(this, tModel, columnNames, data, ausgangsrechnungsID,kundenID);
+			new AddRechnungszeileDialog(this, ausgangsrechnungsID, kundenID);
+			tModel.refresh();
 		} else if (e.getSource() == delete) {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
-				data.getRechnungszeilenListe().delete(
-						Integer.valueOf((String) (tModel
-								.getValueAt(b - i, 0))));
-				tModel.removeRow(b - i);
+				BL.deleteRechnungszeile((Integer) (tModel.getValueAt(b - i, 0)));
 			}
+			tModel.refresh();
 		} else if (e.getSource() == edit) {
 
 		} else if (e.getSource() == angebotInfo) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Angebot an = data.getAngebotsListe().getObjectById(
-					Integer.valueOf((String) tModel.getValueAt(a, 4)));
-			JOptionPane.showMessageDialog(null, an.toString());
-		} 
+			Angebot an = BL.getAngebot((Integer) tModel.getValueAt(a, 5));
+			JOptionPane.showMessageDialog(this, an.toString());
+		}
 	}
 }

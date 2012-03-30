@@ -1,24 +1,62 @@
 package bl.models.armin;
 
-public class Rechnungszeile {
-	private int rechnungszeileID, ausgangsrechnungsID, angebotsID;
-	private String kommentar;
-	private double preis;
+import java.util.Date;
 
-	public Rechnungszeile(int id, String kommentar, double preis,
-			int ausgangsrechnungsID, int angebotsID) {
+public class Rechnungszeile {
+	private int rechnungszeileID, rechnungID, angebotsID;
+	private String kommentar;
+	private double steuersatz, betrag;
+
+	public Rechnungszeile(int id, String kommentar, double betrag,
+			int rechnungID, int angebotsID) {
 		super();
 		this.rechnungszeileID = id;
-		this.ausgangsrechnungsID = ausgangsrechnungsID;
+		this.rechnungID = rechnungID;
 		this.angebotsID = angebotsID;
 		this.kommentar = kommentar;
-		this.preis = preis;
+		this.betrag = betrag;
 	}
 
-	public Object[] getRow() {
-		Object[] ret = { rechnungszeileID, kommentar, preis,
-				ausgangsrechnungsID, angebotsID };
-		return ret;
+	/**
+	 * 
+	 * @param inhalt
+	 * @param inhalt
+	 *            [0]=rechnungid
+	 * @param inhalt
+	 *            [1]=kommentar
+	 * @param inhalt
+	 *            [2]=steuersatz
+	 * @param inhalt
+	 *            [3]=betrag
+	 * @param inhalt
+	 *            [4]=angebotid
+	 */
+	public Rechnungszeile(String[] inhalt) {
+		this.rechnungszeileID = -1;
+		this.rechnungID = Integer.valueOf(inhalt[0]);
+
+		if (inhalt[1].isEmpty() || inhalt[1] == null) {
+			throw new IllegalArgumentException("Kommentar ist ungültig");
+		}
+		this.kommentar = inhalt[1];
+		if (inhalt[2].isEmpty()) {
+			throw new IllegalArgumentException(
+					"Steuersatz muss festgelegt werden");
+		}
+		this.steuersatz = Double.parseDouble(inhalt[2]);
+		if (steuersatz < 0 || steuersatz > 100) {
+			throw new IllegalArgumentException(
+					"Steuersatz darf nur zw. 0 und 100 sein");
+		}
+		if (inhalt[3].isEmpty()) {
+			throw new IllegalArgumentException("Chance muss festgelegt werden");
+		}
+		this.betrag = Double.parseDouble(inhalt[3]);
+		if (betrag < 0) {
+			throw new IllegalArgumentException("Betrag darf nicht negativ sein");
+		}
+		
+		this.angebotsID = Integer.valueOf(inhalt[4]);
 	}
 
 	public int getId() {
@@ -29,12 +67,12 @@ public class Rechnungszeile {
 		this.rechnungszeileID = id;
 	}
 
-	public int getAusgangsrechnungsID() {
-		return ausgangsrechnungsID;
+	public int getRechnungID() {
+		return rechnungID;
 	}
 
-	public void setAusgangsrechnungsID(int ausgangsrechnungsID) {
-		this.ausgangsrechnungsID = ausgangsrechnungsID;
+	public void setRechnungID(int rechnungID) {
+		this.rechnungID = rechnungID;
 	}
 
 	public int getAngebotsID() {
@@ -53,16 +91,24 @@ public class Rechnungszeile {
 		this.kommentar = kommentar;
 	}
 
-	public double getPreis() {
-		return preis;
+	public double getBetrag() {
+		return betrag;
 	}
 
-	public void setPreis(double preis) {
-		this.preis = preis;
+	public void setBetrag(double betrag) {
+		this.betrag = betrag;
+	}
+
+	public double getSteuersatz() {
+		return steuersatz;
+	}
+
+	public void setSteuersatz(double steuersatz) {
+		this.steuersatz = steuersatz;
 	}
 
 	public String toString() {
-		return rechnungszeileID + "\n" + kommentar + "\n"
-				+ preis + "\n" + ausgangsrechnungsID + "\n" + angebotsID;
+		return rechnungszeileID + "\n" + rechnungID + "\n" + kommentar + "\n"
+				+ steuersatz + "\n" + betrag + "\n" + angebotsID;
 	}
 }
