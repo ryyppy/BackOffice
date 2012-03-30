@@ -55,15 +55,7 @@ public class BL {
 	public static void saveKunde(Kunde k) throws DALException,
 			InvalidObjectException {
 		String exception = "";
-		if (k.getVorname() == null || k.getVorname().isEmpty()) {
-			exception += "Vorname ist ungültig\n";
-		}
-		if (k.getNachname() == null || k.getNachname().isEmpty()) {
-			exception += "Nachname ist ungültig\n";
-		}
-		if (k.getGeburtsdatum() == null) {
-			exception += "Geburtsdatum ist ungültig\n";
-		}
+		// ...
 		if (!exception.isEmpty()) {
 			throw new InvalidObjectException(exception);
 		}
@@ -95,12 +87,7 @@ public class BL {
 	public static void saveProjekt(Projekt p) throws DALException,
 			InvalidObjectException {
 		String exception = "";
-		if (p.getName() == null || p.getName().isEmpty()) {
-			exception += "Name ist ungültig\n";
-		}
-		if (p.getBeschreibung() == null || p.getBeschreibung().isEmpty()) {
-			exception += "Beschreibung ist ungültig\n";
-		}
+		// ...
 		if (!exception.isEmpty()) {
 			throw new InvalidObjectException(exception);
 		}
@@ -132,9 +119,7 @@ public class BL {
 	public static void saveAngebot(Angebot a) throws DALException,
 			InvalidObjectException {
 		String exception = "";
-//		if (!exists(a.getKundenID())) {
-//			exception += "KundenID ist ungültig\n";
-//		}
+		// ... Kunden bzw Projekt-ID überprüfen
 		if (!exception.isEmpty()) {
 			throw new InvalidObjectException(exception);
 		}

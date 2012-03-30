@@ -1,5 +1,7 @@
 package bl.models.armin;
 
+import java.io.InvalidObjectException;
+
 public class Projekt {
 	private int projektID;
 	private String name, beschreibung;
@@ -18,10 +20,22 @@ public class Projekt {
 	 * @param inhalt
 	 *            [1] =beschreibung
 	 */
-	public Projekt(String[] inhalt) {
+	public Projekt(String[] inhalt) throws IllegalArgumentException {
+		String exception = "";
+		if (inhalt[0] == null || inhalt[0].isEmpty()) {
+			exception += "Name ist ungültig\n";
+		}
+		if (inhalt[1] == null || inhalt[1].isEmpty()) {
+			exception += "Beschreibung ist ungültig\n";
+		}
+		if (!exception.isEmpty()) {
+			throw new IllegalArgumentException(exception);
+		}
+
 		this.projektID = -1;
 		this.name = inhalt[0];
 		this.beschreibung = inhalt[1];
+
 	}
 
 	public Object[] getRow() {

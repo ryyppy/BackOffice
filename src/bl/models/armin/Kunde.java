@@ -1,5 +1,6 @@
 package bl.models.armin;
 
+import java.io.InvalidObjectException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,19 +22,37 @@ public class Kunde {
 	/**
 	 * 
 	 * @param inhalt
-	 * @param inhalt[0]=vorname;
-	 * @param inhalt[1]=nachname;
-	 * @param inhalt[2]=geburtsdatum;
+	 * @param inhalt
+	 *            [0]=vorname;
+	 * @param inhalt
+	 *            [1]=nachname;
+	 * @param inhalt
+	 *            [2]=geburtsdatum;
 	 * @throws ParseException
 	 */
-	public Kunde(String[] inhalt) throws ParseException {
+	public Kunde(String[] inhalt) throws ParseException, IllegalArgumentException {
+		String exception = "";
+		if (inhalt[0] == null || inhalt[0].isEmpty()) {
+			exception += "Vorname ist ungültig\n";
+		}
+		if (inhalt[1] == null || inhalt[1].isEmpty()) {
+			exception += "Nachname ist ungültig\n";
+		}
+		if (inhalt[2] == null) {
+			exception += "Geburtsdatum ist ungültig\n";
+		}
+		if (!exception.isEmpty()) {
+			throw new IllegalArgumentException(exception);
+		}
+
 		this.kundenID = -1;
 		this.vorname = inhalt[0];
 		this.nachname = inhalt[1];
-		try{
-		this.geburtsdatum = dateFormat.parse(inhalt[2]);
-		}catch (ParseException e) {
-			throw new ParseException("Datumsformat ungültig - (TT.MM.JJJJ)", e.getErrorOffset());
+		try {
+			this.geburtsdatum = dateFormat.parse(inhalt[2]);
+		} catch (ParseException e) {
+			throw new ParseException("Datumsformat ungültig - (TT.MM.JJJJ)",
+					e.getErrorOffset());
 		}
 
 	}
@@ -70,7 +89,8 @@ public class Kunde {
 	public Date getGeburtsdatum() {
 		return geburtsdatum;
 	}
-	public String getGeburtsdatumString(){
+
+	public String getGeburtsdatumString() {
 		return new StringBuilder(dateFormat.format(geburtsdatum)).toString();
 	}
 
@@ -79,7 +99,8 @@ public class Kunde {
 	}
 
 	public String toString() {
-		return kundenID + "\n" + vorname + " " + nachname + "\n" + getGeburtsdatumString();
+		return kundenID + "\n" + vorname + " " + nachname + "\n"
+				+ getGeburtsdatumString();
 	}
 
 }
