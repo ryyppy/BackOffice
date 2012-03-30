@@ -17,7 +17,7 @@ public class KundenTableModel extends AbstractTableModel {
 	@Override
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
-		return 4;
+		return columnNames.length;
 	}
 
 	@Override
