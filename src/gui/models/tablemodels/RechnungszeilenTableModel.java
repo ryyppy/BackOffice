@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import bl.BL;
 import bl.objects.Angebot;
 import bl.objects.Ausgangsrechnung;
 import bl.objects.Rechnungszeile;

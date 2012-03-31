@@ -8,12 +8,13 @@ import bl.objects.Kunde;
 
 public class KundenTableModel extends AbstractTableModel {
 	private ArrayList<Kunde> kunden;
-	private String[] columnNames = { "Kunden-ID", "Vorname", "Nachname", "Geburtsdatum" };
+	private String[] columnNames = { "Kunden-ID", "Vorname", "Nachname",
+			"Geburtsdatum" };
 
 	public KundenTableModel(ArrayList<Kunde> kunden) {
 		this.kunden = kunden;
 	}
-	
+
 	@Override
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
@@ -42,6 +43,7 @@ public class KundenTableModel extends AbstractTableModel {
 			return "";
 		}
 	}
+
 	@Override
 	public String getColumnName(int column) {
 		return columnNames[column];
@@ -58,12 +60,12 @@ public class KundenTableModel extends AbstractTableModel {
 		// return "";
 		// }
 	}
-	
-	public String[] getColumnNames(){
+
+	public String[] getColumnNames() {
 		return columnNames;
 	}
-	
-	public void refresh(){
+
+	public void refresh() {
 		super.fireTableDataChanged();
 	}
 }

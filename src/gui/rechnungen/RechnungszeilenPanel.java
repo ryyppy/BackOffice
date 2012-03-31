@@ -22,26 +22,28 @@ import javax.swing.table.TableRowSorter;
 import bl.BL;
 import bl.objects.Angebot;
 
-public class RechnungszeilenFrame extends JFrame implements ActionListener {
+public class RechnungszeilenPanel extends JPanel implements ActionListener {
 	private JButton add, edit, delete, angebotInfo;
 	private JTable table;
 	private JScrollPane scrollpane;
 	private RechnungszeilenTableModel tModel;
 	private TableRowSorter<TableModel> tSorter;
 
-	private int ausgangsrechnungsID, kundenID;
+	private int rechnungsID, kundenID;
+	
+	private JFrame owner;
 
-	public RechnungszeilenFrame(JFrame owner, int ausgangsrechnungsID,
+	public RechnungszeilenPanel(JFrame owner, int rechnungsID,
 			int kundenID) {
-		super("EPU - Rechnungszeilen für AusgangsrechnungsID "
-				+ ausgangsrechnungsID);
 		setSize(500, 300);
-		setLocationRelativeTo(owner);
+		//setLocationRelativeTo(owner);
 		setLayout(new BorderLayout());
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		//setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-		this.ausgangsrechnungsID = ausgangsrechnungsID;
+		this.rechnungsID = rechnungsID;
 		this.kundenID = kundenID;
+		
+		this.owner=owner;
 
 		JPanel buttonPanel = initButtons();
 		initTable();
@@ -53,7 +55,7 @@ public class RechnungszeilenFrame extends JFrame implements ActionListener {
 	}
 
 	public JPanel initButtons() {
-		add = new JButton("Add");
+		add = new JButton("Add Rechnungszeile");
 		edit = new JButton("Edit");
 		delete = new JButton("Delete");
 		angebotInfo = new JButton("Angebotinfo");
@@ -79,7 +81,7 @@ public class RechnungszeilenFrame extends JFrame implements ActionListener {
 	}
 
 	public void initTable() {
-		tModel = new RechnungszeilenTableModel(BL.getRechnungszeilenListe(ausgangsrechnungsID));
+		tModel = new RechnungszeilenTableModel(BL.getRechnungszeilenListe(rechnungsID));
 
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
@@ -98,7 +100,8 @@ public class RechnungszeilenFrame extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			new AddRechnungszeileDialog(this, ausgangsrechnungsID, kundenID);
+			new AddRechnungszeileDialog(owner, rechnungsID, kundenID);
+			//refresh bug
 			tModel.refresh();
 		} else if (e.getSource() == delete) {
 			int[] a = table.getSelectedRows();

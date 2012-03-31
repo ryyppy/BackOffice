@@ -13,15 +13,15 @@ import bl.objects.Rechnungszeile;
 import bl.objects.patrick.*;
 
 public class BL {
-	private static ArrayList<Projekt> projektliste;
+	private static ArrayList<Projekt> projektliste = new ArrayList<Projekt>();
 	private static int projektID = 0;
-	private static ArrayList<Kunde> kundenliste;
+	private static ArrayList<Kunde> kundenliste = new ArrayList<Kunde>();
 	private static int kundenID = 0;
-	private static ArrayList<Angebot> angebotsliste;
+	private static ArrayList<Angebot> angebotsliste = new ArrayList<Angebot>();
 	private static int angebotID = 0;
-	private static ArrayList<Ausgangsrechnung> ausgangsrechnungenliste;
+	private static ArrayList<Ausgangsrechnung> ausgangsrechnungenliste = new ArrayList<Ausgangsrechnung>();
 	private static int rechnungID = 0;
-	private static ArrayList<Rechnungszeile> rechnungszeilenliste;
+	private static ArrayList<Rechnungszeile> rechnungszeilenliste = new ArrayList<Rechnungszeile>();
 	private static int rechnungszeileID = 0;
 
 	public BL() {
@@ -175,9 +175,33 @@ public class BL {
 		ausgangsrechnungenliste.add(a);
 	}
 
+	public static void updateAusgangsrechnung(Ausgangsrechnung a)
+			throws DALException, InvalidObjectException {
+		String exception = "";
+		// ... Kunden-ID überprüfen
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		for (Ausgangsrechnung ar : ausgangsrechnungenliste) {
+			if (ar.getId() == a.getId()) {
+				ar = a;
+			}
+		}
+	}
 	public static ArrayList<Rechnungszeile> getRechnungszeilenListe()
 			throws DALException {
 		return rechnungszeilenliste;
+	}
+	public static ArrayList<Rechnungszeile> getRechnungszeilenListe(int rechnungID)
+			throws DALException {
+		ArrayList<Rechnungszeile> ret = new ArrayList<Rechnungszeile>();
+		for(Rechnungszeile r : rechnungszeilenliste){
+			if(r.getRechnungID() == rechnungID){
+				ret.add(r);
+			}
+		}
+		return ret;
 	}
 
 	public static Rechnungszeile getRechnungszeile(int rechnungszeileID)

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
+
 import bl.objects.Angebot;
 import bl.objects.Ausgangsrechnung;
 
@@ -15,6 +17,7 @@ public class AusgangsrechnungTableModel extends AbstractTableModel {
 			ArrayList<Ausgangsrechnung> ausgangsrechnungen) {
 		this.ausgangsrechnungen = ausgangsrechnungen;
 	}
+	
 
 	@Override
 	public int getColumnCount() {

@@ -22,6 +22,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import bl.BL;
+import bl.objects.Ausgangsrechnung;
 import bl.objects.Kunde;
 
 public class AusgangsrechnungenPanel extends JPanel implements ActionListener {
@@ -122,7 +123,10 @@ public class AusgangsrechnungenPanel extends JPanel implements ActionListener {
 			}
 			tModel.refresh();
 		} else if (e.getSource() == edit) {
-
+			int a = table.convertRowIndexToModel(table.getSelectedRow());
+			Ausgangsrechnung ar = BL.getAusgangsrechnung((Integer)tModel.getValueAt(a, 0));
+			new EditAusgangsrechnungDialog(owner, ar);
+			tModel.refresh();
 		} else if (e.getSource() == kundenInfo) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
 			Kunde k = BL.getKunde((Integer) tModel.getValueAt(a, 2));
