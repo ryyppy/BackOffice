@@ -7,12 +7,13 @@ public class Rechnungszeile extends DBEntity {
 	private String kommentar;
 	private double steuersatz, betrag;
 
-	public Rechnungszeile(int id, String kommentar, double betrag,
+	public Rechnungszeile(int id, String kommentar, double steuersatz, double betrag,
 			int rechnungID, int angebotsID) {
 		super();
 		this.rechnungszeileID = id;
 		this.rechnungID = rechnungID;
 		this.angebotsID = angebotsID;
+		this.steuersatz=steuersatz;
 		this.kommentar = kommentar;
 		this.betrag = betrag;
 	}
@@ -49,7 +50,7 @@ public class Rechnungszeile extends DBEntity {
 					"Steuersatz darf nur zw. 0 und 100 sein");
 		}
 		if (inhalt[3].isEmpty()) {
-			throw new IllegalArgumentException("Chance muss festgelegt werden");
+			throw new IllegalArgumentException("Betrag muss festgelegt werden");
 		}
 		this.betrag = Double.parseDouble(inhalt[3]);
 		if (betrag < 0) {
