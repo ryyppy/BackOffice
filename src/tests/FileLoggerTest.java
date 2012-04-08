@@ -1,14 +1,15 @@
 package tests;
 
-import logging.*;
 import junit.framework.TestCase;
+import logging.*;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -20,15 +21,27 @@ import java.util.*;
 public class FileLoggerTest extends TestCase {
     private Logger log = null;
     private File logfile = null;
-    private static int testrun = 1;
+    private File logdir = new File("log");
+    private static int testrun = 0;
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        log = LoggerManager.registerLogger("test"+FileLoggerTest.testrun++, LoggerType.FILE);
-        
-        if(log instanceof FileLogger)
-            logfile = ((FileLogger) log).getLogfile();
+
+        String loggername = "test" + FileLoggerTest.testrun++;
+
+        log = new Logger();
+        log.addAdapter(new FileAdapter(logdir, loggername));
+        log.addAdapter(new ConsoleAdapter());
+
+        //Registers logger and opens all streams in all adapters
+        LoggerManager.registerLogger(loggername, log);
+
+        //Retrieve open logfile
+        LoggerAdapter la = log.getAdapter(FileAdapter.class);
+
+        if(la != null)
+            logfile = ((FileAdapter)la).getLogfile();
     }
 
     @Override
@@ -37,6 +50,7 @@ public class FileLoggerTest extends TestCase {
 
         //if(logfile != null)
             //logfile.delete();
+
     }
 
     @Test
