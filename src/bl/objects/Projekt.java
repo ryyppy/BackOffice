@@ -2,7 +2,7 @@ package bl.objects;
 
 import dal.DBEntity;
 
-public class Projekt extends DBEntity{
+public class Projekt extends DBEntity {
 	private int projektID;
 	private String name, beschreibung;
 
@@ -63,6 +63,7 @@ public class Projekt extends DBEntity{
 	}
 
 	public String toString() {
-		return projektID + "\n" + name + "\n" + beschreibung;
+		return "Projekt-ID: " + projektID + "\nName: " + name
+				+ "\nBeschreibung: " + beschreibung;
 	}
 }

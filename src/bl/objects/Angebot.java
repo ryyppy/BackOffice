@@ -5,7 +5,7 @@ import java.util.Date;
 
 import dal.DBEntity;
 
-public class Angebot extends DBEntity{
+public class Angebot extends DBEntity {
 	private int angebotID, kundenID, projektID;
 	private double summe, dauer, chance;
 	private Date date;
@@ -127,8 +127,8 @@ public class Angebot extends DBEntity{
 	}
 
 	public String toString() {
-		return angebotID + "\n" + summe + "\n" + dauer + "\n"
-				+ getDatumString() + "\n" + chance + "\n" + kundenID + "\n"
-				+ projektID;
+		return "Angebot-ID: " + angebotID + "\nSumme: " + summe + "\nDauer: "
+				+ dauer + "\n" + getDatumString() + "\nChance:" + chance
+				+ "\nKunden-ID:" + kundenID + "\nProjektID: " + projektID;
 	}
 }

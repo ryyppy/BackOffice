@@ -2,7 +2,7 @@ package bl.objects;
 
 import dal.DBEntity;
 
-public abstract class Rechnung extends DBEntity{
+public abstract class Rechnung extends DBEntity {
 	private int rechnungID;
 	private String status;
 
@@ -29,7 +29,7 @@ public abstract class Rechnung extends DBEntity{
 
 	@Override
 	public String toString() {
-		return "ID: " + rechnungID + "\nStatus: " + status;
+		return "Rechnung-ID: " + rechnungID + "\nStatus: " + status;
 	}
 
 }

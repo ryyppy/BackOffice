@@ -6,7 +6,7 @@ import java.util.Date;
 
 import dal.DBEntity;
 
-public class Kunde extends DBEntity{
+public class Kunde extends DBEntity {
 	private int kundenID;
 	private String vorname, nachname;
 	private Date geburtsdatum;
@@ -96,8 +96,8 @@ public class Kunde extends DBEntity{
 	}
 
 	public String toString() {
-		return kundenID + "\n" + vorname + " " + nachname + "\n"
-				+ getGeburtsdatumString();
+		return "Kunden-ID: " + kundenID + "\nName: " + vorname + " " + nachname
+				+ "\nGeburtsdatum: " + getGeburtsdatumString();
 	}
 
 }

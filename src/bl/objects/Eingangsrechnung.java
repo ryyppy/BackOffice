@@ -17,7 +17,7 @@ public class Eingangsrechnung extends Rechnung {
 	}
 
 	public String toString() {
-		return "Eingangsrechnung:\n" + super.toString() + "\nKontaktID: "
+		return "Eingangsrechnung:\n" + super.toString() + "\nKontakt-ID: "
 				+ kontaktID;
 	}
 }

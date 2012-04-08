@@ -2,7 +2,7 @@ package bl.objects;
 
 import dal.DBEntity;
 
-public class Rechnungszeile extends DBEntity{
+public class Rechnungszeile extends DBEntity {
 	private int rechnungszeileID, rechnungID, angebotsID;
 	private String kommentar;
 	private double steuersatz, betrag;
@@ -55,7 +55,7 @@ public class Rechnungszeile extends DBEntity{
 		if (betrag < 0) {
 			throw new IllegalArgumentException("Betrag darf nicht negativ sein");
 		}
-		
+
 		this.angebotsID = Integer.valueOf(inhalt[4]);
 	}
 
@@ -108,7 +108,9 @@ public class Rechnungszeile extends DBEntity{
 	}
 
 	public String toString() {
-		return rechnungszeileID + "\n" + rechnungID + "\n" + kommentar + "\n"
-				+ steuersatz + "\n" + betrag + "\n" + angebotsID;
+		return "Rechnungszeile-ID: " + rechnungszeileID + "\nRechnung-ID: "
+				+ rechnungID + "\nKommentar: " + kommentar + "\nSteuersatz: "
+				+ steuersatz + "\nBetrag: " + betrag + "\nAngebot-ID: "
+				+ angebotsID;
 	}
 }
