@@ -87,7 +87,7 @@ public class RechnungszeilenPanel extends JPanel implements ActionListener {
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.setFillsViewportHeight(true);
 
-		tSorter = new TableRowSorter<>(table.getModel());
+		tSorter = new TableRowSorter<TableModel>(table.getModel());
 		tSorter.toggleSortOrder(0);
 		tSorter.setSortsOnUpdates(true);
 
