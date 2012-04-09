@@ -22,19 +22,22 @@ public class Projekt extends DBEntity {
 	 */
 	public Projekt(String[] inhalt) throws IllegalArgumentException {
 		String exception = "";
-		if (inhalt[0] == null || inhalt[0].isEmpty()) {
-			exception += "Name ist ungültig\n";
+
+		this.projektID = -1;
+		try {
+			setName(inhalt[0]);
+		} catch (IllegalArgumentException e) {
+			exception += e.getMessage() + "\n";
 		}
-		if (inhalt[1] == null || inhalt[1].isEmpty()) {
-			exception += "Beschreibung ist ungültig\n";
+		try {
+			setBeschreibung(inhalt[1]);
+		} catch (IllegalArgumentException e) {
+			exception += e.getMessage() + "\n";
 		}
+
 		if (!exception.isEmpty()) {
 			throw new IllegalArgumentException(exception);
 		}
-
-		this.projektID = -1;
-		this.name = inhalt[0];
-		this.beschreibung = inhalt[1];
 
 	}
 
@@ -50,7 +53,10 @@ public class Projekt extends DBEntity {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(String name) throws IllegalArgumentException {
+		if (name == null || name.isEmpty()) {
+			throw new IllegalArgumentException("Name ist ungültig");
+		}
 		this.name = name;
 	}
 
@@ -59,6 +65,9 @@ public class Projekt extends DBEntity {
 	}
 
 	public void setBeschreibung(String beschreibung) {
+		if (beschreibung == null || beschreibung.isEmpty()) {
+			throw new IllegalArgumentException("Beschreibung ist ungültig");
+		}
 		this.beschreibung = beschreibung;
 	}
 

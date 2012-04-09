@@ -116,6 +116,21 @@ public class BL {
 		p.setId(projektID++);
 		projektliste.add(p);
 	}
+	
+	public static void updateProjekt(Projekt p)
+			throws DALException, InvalidObjectException {
+		String exception = "";
+		// ... überprüfen
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		for (Projekt projekt : projektliste) {
+			if (projekt.getId() == p.getId()) {
+				projekt = p;
+			}
+		}
+	}
 
 	public static ArrayList<Angebot> getAngebotsListe() throws DALException {
 		return angebotsliste;

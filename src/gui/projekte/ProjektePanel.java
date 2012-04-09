@@ -16,11 +16,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import bl.BL;
+import bl.objects.Projekt;
 
 public class ProjektePanel extends JPanel implements ActionListener {
 	private JButton add, edit, delete, angebote;
@@ -118,6 +118,12 @@ public class ProjektePanel extends JPanel implements ActionListener {
 				BL.deleteProjekt(Integer.valueOf((String) (tModel.getValueAt(b
 						- i, 0))));
 			}
+			tModel.refresh();
+		} else if (e.getSource() == edit) {
+			int a = table.convertRowIndexToModel(table.getSelectedRow());
+			Projekt p = BL.getProjekt(Integer.valueOf((String) tModel
+					.getValueAt(a, 0)));
+			new EditProjektDialog(owner, p);
 			tModel.refresh();
 		}
 	}
