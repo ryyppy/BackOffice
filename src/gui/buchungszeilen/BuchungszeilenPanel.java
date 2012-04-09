@@ -25,7 +25,7 @@ import bl.objects.Kategorie;
 
 public class BuchungszeilenPanel extends JPanel implements ActionListener {
 	private JButton add, edit, delete, addKategorie, kategorieInfo,
-			showRechnungen;
+			selectRechnungen;
 	private JTable table;
 	private JScrollPane scrollpane;
 	private BuchungszeilenTableModel tModel;
@@ -57,14 +57,14 @@ public class BuchungszeilenPanel extends JPanel implements ActionListener {
 		delete = new JButton("Delete");
 		addKategorie = new JButton("Add Kategorie");
 		kategorieInfo = new JButton("Kategorieinfo");
-		showRechnungen = new JButton("Show Rechnungen");
+		selectRechnungen = new JButton("Select Rechnungen");
 
 		add.addActionListener(this);
 		edit.addActionListener(this);
 		delete.addActionListener(this);
 		addKategorie.addActionListener(this);
 		kategorieInfo.addActionListener(this);
-		showRechnungen.addActionListener(this);
+		selectRechnungen.addActionListener(this);
 
 		JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		panel1.add(add);
@@ -74,7 +74,7 @@ public class BuchungszeilenPanel extends JPanel implements ActionListener {
 		JPanel panel2 = new JPanel(new GridLayout(3, 1));
 		panel2.add(addKategorie);
 		panel2.add(kategorieInfo);
-		panel2.add(showRechnungen);
+		panel2.add(selectRechnungen);
 
 		JPanel panel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -136,7 +136,7 @@ public class BuchungszeilenPanel extends JPanel implements ActionListener {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
 			Kategorie k = BL.getKategorie((Integer) tModel.getValueAt(a, 4));
 			JOptionPane.showMessageDialog(this, k.toString());
-		} else if (e.getSource() == showRechnungen) {
+		} else if (e.getSource() == selectRechnungen) {
 			// int a = table.convertRowIndexToModel(table.getSelectedRow());
 			// int ausgangsrechnungsID = (Integer) tModel.getValueAt(a, 0);
 			// int kundenID = (Integer) tModel.getValueAt(a, 2);

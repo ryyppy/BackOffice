@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
+
 import dal.DBEntity;
 
 public class Kunde extends DBEntity {
@@ -34,27 +36,25 @@ public class Kunde extends DBEntity {
 	public Kunde(String[] inhalt) throws ParseException,
 			IllegalArgumentException {
 		String exception = "";
-		if (inhalt[0] == null || inhalt[0].isEmpty()) {
-			exception += "Vorname ist ungültig\n";
+		this.kundenID = -1;
+		try {
+			setVorname(inhalt[0]);
+		} catch (IllegalArgumentException e) {
+			exception += e.getMessage() + "\n";
 		}
-		if (inhalt[1] == null || inhalt[1].isEmpty()) {
-			exception += "Nachname ist ungültig\n";
+		try {
+			setNachname(inhalt[1]);
+		} catch (IllegalArgumentException e) {
+			exception += e.getMessage() + "\n";
 		}
-		if (inhalt[2] == null) {
-			exception += "Geburtsdatum ist ungültig\n";
-		}
-		if (!exception.isEmpty()) {
-			throw new IllegalArgumentException(exception);
+		try {
+			setGeburtsdatum(inhalt[2]);
+		} catch (IllegalArgumentException e) {
+			exception += e.getMessage() + "\n";
 		}
 
-		this.kundenID = -1;
-		this.vorname = inhalt[0];
-		this.nachname = inhalt[1];
-		try {
-			this.geburtsdatum = dateFormat.parse(inhalt[2]);
-		} catch (ParseException e) {
-			throw new ParseException("Datumsformat ungültig - (TT.MM.JJJJ)",
-					e.getErrorOffset());
+		if (!exception.isEmpty()) {
+			throw new IllegalArgumentException(exception);
 		}
 
 	}
@@ -71,7 +71,10 @@ public class Kunde extends DBEntity {
 		return vorname;
 	}
 
-	public void setVorname(String vorname) {
+	public void setVorname(String vorname) throws IllegalArgumentException {
+		if (vorname == null || vorname.isEmpty() || vorname == "") {
+			throw new IllegalArgumentException("Vorname ist ungültig");
+		}
 		this.vorname = vorname;
 	}
 
@@ -79,7 +82,10 @@ public class Kunde extends DBEntity {
 		return nachname;
 	}
 
-	public void setNachname(String nachname) {
+	public void setNachname(String nachname) throws IllegalArgumentException {
+		if (nachname == null || nachname.isEmpty() || nachname == "") {
+			throw new IllegalArgumentException("Nachname ist ungültig");
+		}
 		this.nachname = nachname;
 	}
 
@@ -93,6 +99,19 @@ public class Kunde extends DBEntity {
 
 	public void setGeburtsdatum(Date geburtsdatum) {
 		this.geburtsdatum = geburtsdatum;
+	}
+
+	public void setGeburtsdatum(String geburtsdatum) throws ParseException,
+			IllegalArgumentException {
+		if (geburtsdatum == null || geburtsdatum.isEmpty()) {
+			throw new IllegalArgumentException("Geburtsdatum ist ungültig");
+		}
+		try {
+			this.geburtsdatum = dateFormat.parse(geburtsdatum);
+		} catch (ParseException e) {
+			throw new ParseException("Datumsformat ungültig - (TT.MM.JJJJ)",
+					e.getErrorOffset());
+		}
 	}
 
 	public String toString() {

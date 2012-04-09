@@ -69,6 +69,21 @@ public class BL {
 		k.setId(kundenID++);
 		kundenliste.add(k);
 	}
+	
+	public static void updateKunde(Kunde k)
+			throws DALException, InvalidObjectException {
+		String exception = "";
+		// ... überprüfen
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		for (Kunde kunde : kundenliste) {
+			if (kunde.getId() == k.getId()) {
+				kunde = k;
+			}
+		}
+	}
 
 	public static ArrayList<Projekt> getProjektListe() throws DALException {
 		return projektliste;

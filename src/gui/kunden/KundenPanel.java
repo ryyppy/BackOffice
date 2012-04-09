@@ -1,6 +1,7 @@
 package gui.kunden;
 
 import gui.models.tablemodels.KundenTableModel;
+import gui.rechnungen.EditAusgangsrechnungDialog;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -10,20 +11,17 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import bl.BL;
+import bl.objects.Kunde;
 
 public class KundenPanel extends JPanel implements ActionListener {
 	private JButton add, edit, delete, angebote;
@@ -143,6 +141,11 @@ public class KundenPanel extends JPanel implements ActionListener {
 				BL.deleteKunde(Integer.valueOf((String) (tModel.getValueAt(b
 						- i, 0))));
 			}
+			tModel.refresh();
+		} else if (e.getSource() == edit) {
+			int a = table.convertRowIndexToModel(table.getSelectedRow());
+			Kunde k = BL.getKunde(Integer.valueOf((String)tModel.getValueAt(a, 0)));
+			new EditKundeDialog(owner, k);
 			tModel.refresh();
 		}
 	}
