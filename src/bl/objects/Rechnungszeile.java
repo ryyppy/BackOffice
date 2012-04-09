@@ -2,17 +2,18 @@ package bl.objects;
 
 import dal.DBEntity;
 
-public class Rechnungszeile extends DBEntity{
+public class Rechnungszeile extends DBEntity {
 	private int rechnungszeileID, rechnungID, angebotsID;
 	private String kommentar;
 	private double steuersatz, betrag;
 
-	public Rechnungszeile(int id, String kommentar, double betrag,
+	public Rechnungszeile(int id, String kommentar, double steuersatz, double betrag,
 			int rechnungID, int angebotsID) {
 		super();
 		this.rechnungszeileID = id;
 		this.rechnungID = rechnungID;
 		this.angebotsID = angebotsID;
+		this.steuersatz=steuersatz;
 		this.kommentar = kommentar;
 		this.betrag = betrag;
 	}
@@ -49,13 +50,13 @@ public class Rechnungszeile extends DBEntity{
 					"Steuersatz darf nur zw. 0 und 100 sein");
 		}
 		if (inhalt[3].isEmpty()) {
-			throw new IllegalArgumentException("Chance muss festgelegt werden");
+			throw new IllegalArgumentException("Betrag muss festgelegt werden");
 		}
 		this.betrag = Double.parseDouble(inhalt[3]);
 		if (betrag < 0) {
 			throw new IllegalArgumentException("Betrag darf nicht negativ sein");
 		}
-		
+
 		this.angebotsID = Integer.valueOf(inhalt[4]);
 	}
 
@@ -108,7 +109,9 @@ public class Rechnungszeile extends DBEntity{
 	}
 
 	public String toString() {
-		return rechnungszeileID + "\n" + rechnungID + "\n" + kommentar + "\n"
-				+ steuersatz + "\n" + betrag + "\n" + angebotsID;
+		return "Rechnungszeile-ID: " + rechnungszeileID + "\nRechnung-ID: "
+				+ rechnungID + "\nKommentar: " + kommentar + "\nSteuersatz: "
+				+ steuersatz + "\nBetrag: " + betrag + "\nAngebot-ID: "
+				+ angebotsID;
 	}
 }

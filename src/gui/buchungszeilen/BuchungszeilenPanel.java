@@ -1,6 +1,6 @@
-package gui.angebote;
+package gui.buchungszeilen;
 
-import gui.models.tablemodels.AngebotTableModel;
+import gui.models.tablemodels.BuchungszeilenTableModel;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -21,21 +21,20 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import bl.BL;
-import bl.objects.Angebot;
-import bl.objects.Kunde;
-import bl.objects.Projekt;
+import bl.objects.Kategorie;
 
-public class AngebotePanel extends JPanel implements ActionListener {
-	private JButton add, edit, delete, kunden_info, projekt_info;
+public class BuchungszeilenPanel extends JPanel implements ActionListener {
+	private JButton add, edit, delete, addKategorie, kategorieInfo,
+			selectRechnungen;
 	private JTable table;
 	private JScrollPane scrollpane;
-	private AngebotTableModel tModel;
+	private BuchungszeilenTableModel tModel;
 	private TableRowSorter<TableModel> tSorter;
 
 	private JFrame owner;
 
-	public AngebotePanel(JFrame owner) {
-		// super("EPU - Angebote");
+	public BuchungszeilenPanel(JFrame owner) {
+		// super("EPU - Rechnungen");
 		setSize(500, 300);
 		// setLocationRelativeTo(null);
 		setLayout(new BorderLayout());
@@ -56,23 +55,26 @@ public class AngebotePanel extends JPanel implements ActionListener {
 		add = new JButton("Add");
 		edit = new JButton("Edit");
 		delete = new JButton("Delete");
-		kunden_info = new JButton("Kundeninfo");
-		projekt_info = new JButton("Projektinfo");
+		addKategorie = new JButton("Add Kategorie");
+		kategorieInfo = new JButton("Kategorieinfo");
+		selectRechnungen = new JButton("Select Rechnungen");
 
 		add.addActionListener(this);
 		edit.addActionListener(this);
 		delete.addActionListener(this);
-		kunden_info.addActionListener(this);
-		projekt_info.addActionListener(this);
+		addKategorie.addActionListener(this);
+		kategorieInfo.addActionListener(this);
+		selectRechnungen.addActionListener(this);
 
 		JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		panel1.add(add);
 		panel1.add(edit);
 		panel1.add(delete);
 
-		JPanel panel2 = new JPanel(new GridLayout(2, 1));
-		panel2.add(kunden_info);
-		panel2.add(projekt_info);
+		JPanel panel2 = new JPanel(new GridLayout(3, 1));
+		panel2.add(addKategorie);
+		panel2.add(kategorieInfo);
+		panel2.add(selectRechnungen);
 
 		JPanel panel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -95,7 +97,7 @@ public class AngebotePanel extends JPanel implements ActionListener {
 
 	public void initTable() {
 
-		tModel = new AngebotTableModel(BL.getAngebotsListe());
+		tModel = new BuchungszeilenTableModel(BL.getBuchungszeilenListe());
 
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
@@ -104,9 +106,7 @@ public class AngebotePanel extends JPanel implements ActionListener {
 		tSorter = new TableRowSorter<TableModel>(table.getModel());
 		tSorter.toggleSortOrder(0);
 		tSorter.setSortsOnUpdates(true);
-
 		table.setRowSorter(tSorter);
-
 		scrollpane = new JScrollPane(table);
 	}
 
@@ -114,29 +114,33 @@ public class AngebotePanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			new AddAngebotDialog(owner);
+			new AddBuchungszeileDialog(owner);
 			tModel.refresh();
 		} else if (e.getSource() == delete) {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
-				BL.deleteAngebot(Integer.valueOf((String) (tModel.getValueAt(b
-						- i, 0))));
+				BL.deleteBuchungszeile(Integer.valueOf((String) (tModel
+						.getValueAt(b - i, 0))));
 			}
 			tModel.refresh();
 		} else if (e.getSource() == edit) {
+			// int a = table.convertRowIndexToModel(table.getSelectedRow());
+			// Ausgangsrechnung ar =
+			// BL.getAusgangsrechnung((Integer)tModel.getValueAt(a, 0));
+			// new EditAusgangsrechnungDialog(owner, ar);
+			// tModel.refresh();
+		} else if (e.getSource() == addKategorie) {
+			new AddKategorieDialog(owner);
+		} else if (e.getSource() == kategorieInfo) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Angebot aa = BL.getAngebot(Integer.valueOf(String.valueOf(tModel.getValueAt(a, 0))));
-			new EditAngebotDialog(owner, aa);
-			tModel.refresh();
-		} else if (e.getSource() == kunden_info) {
-			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Kunde k = BL.getKunde((Integer) tModel.getValueAt(a, 5));
+			Kategorie k = BL.getKategorie((Integer) tModel.getValueAt(a, 4));
 			JOptionPane.showMessageDialog(this, k.toString());
-		} else if (e.getSource() == projekt_info) {
-			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Projekt p = BL.getProjekt((Integer) tModel.getValueAt(a, 6));
-			JOptionPane.showMessageDialog(this, p.toString());
+		} else if (e.getSource() == selectRechnungen) {
+			// int a = table.convertRowIndexToModel(table.getSelectedRow());
+			// int ausgangsrechnungsID = (Integer) tModel.getValueAt(a, 0);
+			// int kundenID = (Integer) tModel.getValueAt(a, 2);
+			// new RechnungszeilenFrame(owner, ausgangsrechnungsID, kundenID);
 		}
 	}
 }

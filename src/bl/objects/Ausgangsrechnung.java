@@ -34,7 +34,7 @@ public class Ausgangsrechnung extends Rechnung {
 	}
 
 	public String toString() {
-		return "Ausgangsrechnung:\n" + super.toString() + "\nKundenID: "
+		return "Ausgangsrechnung:\n" + super.toString() + "\nKunden-ID: "
 				+ kundenID;
 	}
 }

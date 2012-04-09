@@ -3,14 +3,14 @@ package bl;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 
-import dal.DALException;
-
 import bl.objects.Angebot;
 import bl.objects.Ausgangsrechnung;
+import bl.objects.Buchungszeile;
+import bl.objects.Kategorie;
 import bl.objects.Kunde;
 import bl.objects.Projekt;
 import bl.objects.Rechnungszeile;
-import bl.objects.patrick.*;
+import dal.DALException;
 
 public class BL {
 	private static ArrayList<Projekt> projektliste = new ArrayList<Projekt>();
@@ -23,6 +23,10 @@ public class BL {
 	private static int rechnungID = 0;
 	private static ArrayList<Rechnungszeile> rechnungszeilenliste = new ArrayList<Rechnungszeile>();
 	private static int rechnungszeileID = 0;
+	private static ArrayList<Buchungszeile> buchungszeilenliste = new ArrayList<Buchungszeile>();
+	private static int buchungszeileID = 0;
+	private static ArrayList<Kategorie> kategorieliste = new ArrayList<Kategorie>();
+	private static int kategorieID = 0;
 
 	public BL() {
 		projektliste = new ArrayList<Projekt>();
@@ -30,7 +34,8 @@ public class BL {
 		angebotsliste = new ArrayList<Angebot>();
 		ausgangsrechnungenliste = new ArrayList<Ausgangsrechnung>();
 		rechnungszeilenliste = new ArrayList<Rechnungszeile>();
-
+		buchungszeilenliste = new ArrayList<Buchungszeile>();
+		kategorieliste = new ArrayList<Kategorie>();
 	}
 
 	public static ArrayList<Kunde> getKundenListe() throws DALException {
@@ -64,6 +69,21 @@ public class BL {
 		k.setId(kundenID++);
 		kundenliste.add(k);
 	}
+	
+	public static void updateKunde(Kunde k)
+			throws DALException, InvalidObjectException {
+		String exception = "";
+		// ... überprüfen
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		for (Kunde kunde : kundenliste) {
+			if (kunde.getId() == k.getId()) {
+				kunde = k;
+			}
+		}
+	}
 
 	public static ArrayList<Projekt> getProjektListe() throws DALException {
 		return projektliste;
@@ -95,6 +115,21 @@ public class BL {
 
 		p.setId(projektID++);
 		projektliste.add(p);
+	}
+	
+	public static void updateProjekt(Projekt p)
+			throws DALException, InvalidObjectException {
+		String exception = "";
+		// ... überprüfen
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		for (Projekt projekt : projektliste) {
+			if (projekt.getId() == p.getId()) {
+				projekt = p;
+			}
+		}
 	}
 
 	public static ArrayList<Angebot> getAngebotsListe() throws DALException {
@@ -138,6 +173,21 @@ public class BL {
 
 		a.setId(angebotID++);
 		angebotsliste.add(a);
+	}
+	
+	public static void updateAngebot(Angebot a)
+			throws DALException, InvalidObjectException {
+		String exception = "";
+		// ... Kunden-ID und Projekt-ID überprüfen
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		for (Angebot angebot : angebotsliste) {
+			if (angebot.getId() == a.getId()) {
+				angebot = a;
+			}
+		}
 	}
 
 	public static ArrayList<Ausgangsrechnung> getAusgangsrechnungenListe()
@@ -189,15 +239,17 @@ public class BL {
 			}
 		}
 	}
+
 	public static ArrayList<Rechnungszeile> getRechnungszeilenListe()
 			throws DALException {
 		return rechnungszeilenliste;
 	}
-	public static ArrayList<Rechnungszeile> getRechnungszeilenListe(int rechnungID)
-			throws DALException {
+
+	public static ArrayList<Rechnungszeile> getRechnungszeilenListe(
+			int rechnungID) throws DALException {
 		ArrayList<Rechnungszeile> ret = new ArrayList<Rechnungszeile>();
-		for(Rechnungszeile r : rechnungszeilenliste){
-			if(r.getRechnungID() == rechnungID){
+		for (Rechnungszeile r : rechnungszeilenliste) {
+			if (r.getRechnungID() == rechnungID) {
 				ret.add(r);
 			}
 		}
@@ -234,4 +286,64 @@ public class BL {
 		rechnungszeilenliste.add(r);
 	}
 
+	public static ArrayList<Buchungszeile> getBuchungszeilenListe()
+			throws DALException {
+		return buchungszeilenliste;
+	}
+
+	public static void saveBuchungszeile(Buchungszeile b) throws DALException,
+			InvalidObjectException {
+		String exception = "";
+		// ... kategorie-ID überprüfen
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		b.setId(buchungszeileID++);
+		buchungszeilenliste.add(b);
+	}
+
+	public static Buchungszeile getBuchungszeile(int buchungszeileID)
+			throws DALException {
+		for (int i = 0; i < buchungszeilenliste.size(); i++) {
+			if (buchungszeilenliste.get(i).getId() == buchungszeileID) {
+				return buchungszeilenliste.get(i);
+			}
+		}
+		throw new DALException("Buchungszeile-ID nicht vorhanden");
+	}
+
+	public static void deleteBuchungszeile(int buchungszeileID)
+			throws DALException {
+		Buchungszeile r = getBuchungszeile(buchungszeileID);
+		if (r != null) {
+			buchungszeilenliste.remove(r);
+		}
+	}
+
+	public static ArrayList<Kategorie> getKategorieListe() throws DALException {
+		return kategorieliste;
+	}
+
+	public static void saveKategorie(Kategorie k) throws DALException,
+			InvalidObjectException {
+		String exception = "";
+		// ... überprüfen ob kategorie vorhanden
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		k.setId(kategorieID++);
+		kategorieliste.add(k);
+	}
+	
+	public static Kategorie getKategorie(int kategorieID)
+			throws DALException {
+		for (int i = 0; i < kategorieliste.size(); i++) {
+			if (kategorieliste.get(i).getId() == kategorieID) {
+				return kategorieliste.get(i);
+			}
+		}
+		throw new DALException("Kategorie-ID nicht vorhanden");
+	}
 }

@@ -1,6 +1,7 @@
 package gui;
 
 import gui.angebote.AngebotePanel;
+import gui.buchungszeilen.BuchungszeilenPanel;
 import gui.kunden.KundenPanel;
 import gui.projekte.ProjektePanel;
 import gui.rechnungen.AusgangsrechnungenPanel;
@@ -30,6 +31,7 @@ public class Haupt_Frame extends JFrame {
 		reiter.addTab("Projekte", new ProjektePanel(this));
 		reiter.addTab("Angebote", new AngebotePanel(this));
 		reiter.addTab("Rechnungen", new AusgangsrechnungenPanel(this));
+		reiter.addTab("Buchungszeilen", new BuchungszeilenPanel(this));
 
 		add(reiter);
 
