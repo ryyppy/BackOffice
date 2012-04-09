@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import bl.objects.Angebot;
 import bl.objects.Ausgangsrechnung;
 import bl.objects.Buchungszeile;
+import bl.objects.Eingangsrechnung;
 import bl.objects.Kategorie;
+import bl.objects.Kontakt;
 import bl.objects.Kunde;
 import bl.objects.Projekt;
 import bl.objects.Rechnungszeile;
@@ -17,9 +19,12 @@ public class BL {
 	private static int projektID = 0;
 	private static ArrayList<Kunde> kundenliste = new ArrayList<Kunde>();
 	private static int kundenID = 0;
+	private static ArrayList<Kontakt> kontakteliste = new ArrayList<Kontakt>();
+	private static int kontaktID = 0;
 	private static ArrayList<Angebot> angebotsliste = new ArrayList<Angebot>();
 	private static int angebotID = 0;
 	private static ArrayList<Ausgangsrechnung> ausgangsrechnungenliste = new ArrayList<Ausgangsrechnung>();
+	private static ArrayList<Eingangsrechnung> eingangsrechnungenliste = new ArrayList<Eingangsrechnung>();
 	private static int rechnungID = 0;
 	private static ArrayList<Rechnungszeile> rechnungszeilenliste = new ArrayList<Rechnungszeile>();
 	private static int rechnungszeileID = 0;
@@ -31,11 +36,60 @@ public class BL {
 	public BL() {
 		projektliste = new ArrayList<Projekt>();
 		kundenliste = new ArrayList<Kunde>();
+		kontakteliste = new ArrayList<Kontakt>();
 		angebotsliste = new ArrayList<Angebot>();
 		ausgangsrechnungenliste = new ArrayList<Ausgangsrechnung>();
+		eingangsrechnungenliste = new ArrayList<Eingangsrechnung>();
 		rechnungszeilenliste = new ArrayList<Rechnungszeile>();
 		buchungszeilenliste = new ArrayList<Buchungszeile>();
 		kategorieliste = new ArrayList<Kategorie>();
+	}
+
+	public static ArrayList<Kontakt> getKontaktListe() throws DALException {
+		return kontakteliste;
+	}
+
+	public static Kontakt getKontakt(int kontaktID) throws DALException {
+		for (int i = 0; i < kontakteliste.size(); i++) {
+			if (kontakteliste.get(i).getId() == kontaktID) {
+				return kontakteliste.get(i);
+			}
+		}
+		throw new DALException("Kunden-ID nicht vorhanden");
+	}
+
+	public static void deleteKontakt(int kontaktID) throws DALException {
+		Kontakt k = getKontakt(kontaktID);
+		if (k != null) {
+			kontakteliste.remove(k);
+		}
+	}
+
+	public static void saveKontakt(Kontakt k) throws DALException,
+			InvalidObjectException {
+		String exception = "";
+		// ...
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		k.setId(kontaktID++);
+		kontakteliste.add(k);
+	}
+
+	public static void updateKontakt(Kontakt k) throws DALException,
+			InvalidObjectException {
+		String exception = "";
+		// ... überprüfen
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		for (Kontakt kontakt : kontakteliste) {
+			if (kontakt.getId() == k.getId()) {
+				kontakt = k;
+			}
+		}
 	}
 
 	public static ArrayList<Kunde> getKundenListe() throws DALException {
@@ -69,9 +123,9 @@ public class BL {
 		k.setId(kundenID++);
 		kundenliste.add(k);
 	}
-	
-	public static void updateKunde(Kunde k)
-			throws DALException, InvalidObjectException {
+
+	public static void updateKunde(Kunde k) throws DALException,
+			InvalidObjectException {
 		String exception = "";
 		// ... überprüfen
 		if (!exception.isEmpty()) {
@@ -116,9 +170,9 @@ public class BL {
 		p.setId(projektID++);
 		projektliste.add(p);
 	}
-	
-	public static void updateProjekt(Projekt p)
-			throws DALException, InvalidObjectException {
+
+	public static void updateProjekt(Projekt p) throws DALException,
+			InvalidObjectException {
 		String exception = "";
 		// ... überprüfen
 		if (!exception.isEmpty()) {
@@ -174,9 +228,9 @@ public class BL {
 		a.setId(angebotID++);
 		angebotsliste.add(a);
 	}
-	
-	public static void updateAngebot(Angebot a)
-			throws DALException, InvalidObjectException {
+
+	public static void updateAngebot(Angebot a) throws DALException,
+			InvalidObjectException {
 		String exception = "";
 		// ... Kunden-ID und Projekt-ID überprüfen
 		if (!exception.isEmpty()) {
@@ -193,6 +247,24 @@ public class BL {
 	public static ArrayList<Ausgangsrechnung> getAusgangsrechnungenListe()
 			throws DALException {
 		return ausgangsrechnungenliste;
+	}
+
+	public static Eingangsrechnung getEingangsrechnung(int rechnungID)
+			throws DALException {
+		for (int i = 0; i < eingangsrechnungenliste.size(); i++) {
+			if (eingangsrechnungenliste.get(i).getId() == rechnungID) {
+				return eingangsrechnungenliste.get(i);
+			}
+		}
+		throw new DALException("Rechnung-ID nicht vorhanden");
+	}
+
+	public static void deleteEingangsrechnung(int rechnungID)
+			throws DALException {
+		Eingangsrechnung a = getEingangsrechnung(rechnungID);
+		if (a != null) {
+			eingangsrechnungenliste.remove(a);
+		}
 	}
 
 	public static Ausgangsrechnung getAusgangsrechnung(int rechnungID)
@@ -238,6 +310,23 @@ public class BL {
 				ar = a;
 			}
 		}
+	}
+
+	public static ArrayList<Eingangsrechnung> getEingangsrechnungenListe()
+			throws DALException {
+		return eingangsrechnungenliste;
+	}
+
+	public static void saveEingangsrechnung(Eingangsrechnung e)
+			throws DALException, InvalidObjectException {
+		String exception = "";
+		// ... Kontakt-ID überprüfen
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		e.setId(rechnungID++);
+		eingangsrechnungenliste.add(e);
 	}
 
 	public static ArrayList<Rechnungszeile> getRechnungszeilenListe()
@@ -336,9 +425,8 @@ public class BL {
 		k.setId(kategorieID++);
 		kategorieliste.add(k);
 	}
-	
-	public static Kategorie getKategorie(int kategorieID)
-			throws DALException {
+
+	public static Kategorie getKategorie(int kategorieID) throws DALException {
 		for (int i = 0; i < kategorieliste.size(); i++) {
 			if (kategorieliste.get(i).getId() == kategorieID) {
 				return kategorieliste.get(i);

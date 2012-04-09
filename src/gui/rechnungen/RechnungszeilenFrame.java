@@ -33,7 +33,7 @@ public class RechnungszeilenFrame extends JFrame implements ActionListener {
 
 	public RechnungszeilenFrame(JFrame owner, int ausgangsrechnungsID,
 			int kundenID) {
-		super("EPU - Rechnungszeilen für AusgangsrechnungsID "
+		super("EPU - Rechnungszeilen für RechnungsID "
 				+ ausgangsrechnungsID);
 		setSize(500, 300);
 		setLocationRelativeTo(owner);
