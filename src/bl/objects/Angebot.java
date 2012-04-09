@@ -38,17 +38,29 @@ public class Angebot extends DBEntity {
 	 */
 	public Angebot(String[] inhalt) throws IllegalArgumentException {
 		this.angebotID = -1;
+		setInhalt(inhalt);
+	}
+
+	public void setInhalt(String[] inhalt) throws IllegalArgumentException {
 		if (inhalt[0].isEmpty()) {
 			throw new IllegalArgumentException("Summe muss festgelegt werden");
 		}
-		this.summe = Double.parseDouble(inhalt[0]);
+		try {
+			this.summe = Double.parseDouble(inhalt[0]);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException("Summe ungültig");
+		}
 		if (summe < 0) {
 			throw new IllegalArgumentException("Summe kann nicht negativ sein");
 		}
 		if (inhalt[1].isEmpty()) {
 			throw new IllegalArgumentException("Dauer muss festgelegt werden");
 		}
-		this.dauer = Double.parseDouble(inhalt[1]);
+		try {
+			this.dauer = Double.parseDouble(inhalt[1]);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException("Dauer ungültig");
+		}
 		if (dauer < 0) {
 			throw new IllegalArgumentException("Dauer kann nicht negativ sein");
 		}
@@ -56,7 +68,11 @@ public class Angebot extends DBEntity {
 		if (inhalt[2].isEmpty()) {
 			throw new IllegalArgumentException("Chance muss festgelegt werden");
 		}
-		this.chance = Double.parseDouble(inhalt[2]);
+		try {
+			this.chance = Double.parseDouble(inhalt[2]);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException("Chance ungültig");
+		}
 		if (chance < 0 || chance > 100) {
 			throw new IllegalArgumentException(
 					"Chance darf nur zw. 0.0 und 100.0 sein");

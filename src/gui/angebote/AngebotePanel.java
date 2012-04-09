@@ -17,11 +17,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import bl.BL;
+import bl.objects.Angebot;
 import bl.objects.Kunde;
 import bl.objects.Projekt;
 
@@ -125,7 +125,10 @@ public class AngebotePanel extends JPanel implements ActionListener {
 			}
 			tModel.refresh();
 		} else if (e.getSource() == edit) {
-
+			int a = table.convertRowIndexToModel(table.getSelectedRow());
+			Angebot aa = BL.getAngebot(Integer.valueOf(String.valueOf(tModel.getValueAt(a, 0))));
+			new EditAngebotDialog(owner, aa);
+			tModel.refresh();
 		} else if (e.getSource() == kunden_info) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
 			Kunde k = BL.getKunde((Integer) tModel.getValueAt(a, 5));

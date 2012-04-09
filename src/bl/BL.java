@@ -174,6 +174,21 @@ public class BL {
 		a.setId(angebotID++);
 		angebotsliste.add(a);
 	}
+	
+	public static void updateAngebot(Angebot a)
+			throws DALException, InvalidObjectException {
+		String exception = "";
+		// ... Kunden-ID und Projekt-ID überprüfen
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		for (Angebot angebot : angebotsliste) {
+			if (angebot.getId() == a.getId()) {
+				angebot = a;
+			}
+		}
+	}
 
 	public static ArrayList<Ausgangsrechnung> getAusgangsrechnungenListe()
 			throws DALException {
