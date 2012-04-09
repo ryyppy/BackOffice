@@ -144,7 +144,7 @@ public class Angebot extends DBEntity {
 
 	public String toString() {
 		return "Angebot-ID: " + angebotID + "\nSumme: " + summe + "\nDauer: "
-				+ dauer + "\n" + getDatumString() + "\nChance:" + chance
-				+ "\nKunden-ID:" + kundenID + "\nProjektID: " + projektID;
+				+ dauer + "\nDatum: " + getDatumString() + "\nChance: " + chance
+				+ "\nKunden-ID: " + kundenID + "\nProjektID: " + projektID;
 	}
 }
