@@ -411,6 +411,15 @@ public class BL {
 	}
 
 	public static ArrayList<Kategorie> getKategorieListe() throws DALException {
+		// nur zum testen BEGIN
+		if (kategorieliste.size() == 0) {
+			kategorieliste.add(new Kategorie(0, "Einnahme", "Einnahme"));
+			kategorieliste.add(new Kategorie(1, "Ausgabe", "Ausgabe"));
+			kategorieliste.add(new Kategorie(2, "Steuer", "Steuer"));
+			kategorieliste.add(new Kategorie(3, "SVA",
+					"Sozialversicherungsanstalt-Beitrag"));
+		}
+		// nur zum teste END
 		return kategorieliste;
 	}
 

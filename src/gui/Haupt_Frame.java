@@ -30,7 +30,7 @@ public class Haupt_Frame extends JFrame {
 		reiter.addTab("Angebote", new AngebotePanel(this));
 		reiter.addTab("Ausgangsrechnungen", new AusgangsrechnungenPanel(this));
 		reiter.addTab("Eingangsrechnungen", new EingangsrechnungenPanel(this));
-		reiter.addTab("Buchungszeilen", new BuchungszeilenPanel(this));
+		reiter.addTab("Bankkonto", new BuchungszeilenPanel(this));
 
 		add(reiter);
 
