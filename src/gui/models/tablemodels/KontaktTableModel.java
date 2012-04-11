@@ -33,7 +33,7 @@ public class KontaktTableModel extends AbstractTableModel {
 		Kontakt k = kontake.get(row);
 		switch (col) {
 		case 0:
-			return String.valueOf(k.getId());
+			return k.getKontaktID();
 		case 1:
 			return k.getFirma();
 		case 2:

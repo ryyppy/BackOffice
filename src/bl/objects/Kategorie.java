@@ -38,12 +38,16 @@ public class Kategorie extends DBEntity {
 
 	}
 
-	public int getId() {
+	public Object getID() {
+		return getKategorieID();
+	}
+
+	public int getKategorieID() {
 		return kategorieID;
 	}
 
-	public void setId(int id) {
-		this.kategorieID = id;
+	public void setKategorieID(int kategorieID) {
+		this.kategorieID = kategorieID;
 	}
 
 	public String getKbz() {

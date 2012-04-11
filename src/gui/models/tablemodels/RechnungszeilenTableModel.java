@@ -37,7 +37,7 @@ public class RechnungszeilenTableModel extends AbstractTableModel {
 		Rechnungszeile r = rechnungszeilen.get(row);
 		switch (col) {
 		case 0:
-			return r.getId();
+			return r.getRechnungszeileID();
 		case 1:
 			return r.getRechnungID();
 		case 2:

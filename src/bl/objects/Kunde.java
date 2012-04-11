@@ -59,12 +59,16 @@ public class Kunde extends DBEntity {
 
 	}
 
-	public int getId() {
+	public Object getID() {
+		return getKundenID();
+	}
+
+	public int getKundenID() {
 		return kundenID;
 	}
 
-	public void setId(int id) {
-		this.kundenID = id;
+	public void setKundenID(int kundenID) {
+		this.kundenID = kundenID;
 	}
 
 	public String getVorname() {

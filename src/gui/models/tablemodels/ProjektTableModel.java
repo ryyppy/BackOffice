@@ -33,7 +33,7 @@ public class ProjektTableModel extends AbstractTableModel {
 		Projekt p = projekte.get(row);
 		switch (col) {
 		case 0:
-			return String.valueOf(p.getId());
+			return p.getProjektID();
 		case 1:
 			return p.getName();
 		case 2:

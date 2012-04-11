@@ -33,7 +33,7 @@ public class KundenTableModel extends AbstractTableModel {
 		Kunde k = kunden.get(row);
 		switch (col) {
 		case 0:
-			return String.valueOf(k.getId());
+			return k.getKundenID();
 		case 1:
 			return k.getVorname();
 		case 2:

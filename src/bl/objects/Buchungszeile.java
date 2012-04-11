@@ -58,12 +58,16 @@ public class Buchungszeile extends DBEntity {
 		this.kategorieID = Integer.valueOf(inhalt[3]);
 	}
 
-	public int getId() {
+	public Object getID() {
+		return getBuchungszeileID();
+	}
+
+	public int getBuchungszeileID() {
 		return buchungszeileID;
 	}
 
-	public void setId(int id) {
-		this.buchungszeileID = id;
+	public void setBuchungszeileID(int buchungszeileID) {
+		this.buchungszeileID = buchungszeileID;
 	}
 
 	public String getKommentar() {

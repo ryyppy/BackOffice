@@ -33,7 +33,7 @@ public class BuchungszeilenTableModel extends AbstractTableModel {
 		Buchungszeile b = buchungszeilen.get(row);
 		switch (col) {
 		case 0:
-			return b.getId();
+			return b.getBuchungszeileID();
 		case 1:
 			return b.getKommentar();
 		case 2:

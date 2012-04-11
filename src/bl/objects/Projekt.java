@@ -41,12 +41,16 @@ public class Projekt extends DBEntity {
 
 	}
 
-	public int getId() {
+	public Object getID() {
+		return getProjektID();
+	}
+
+	public int getProjektID() {
 		return projektID;
 	}
 
-	public void setId(int id) {
-		this.projektID = id;
+	public void setProjektID(int projektID) {
+		this.projektID = projektID;
 	}
 
 	public String getName() {

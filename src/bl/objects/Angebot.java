@@ -81,12 +81,17 @@ public class Angebot extends DBEntity {
 		this.projektID = Integer.valueOf(inhalt[4]);
 	}
 
-	public int getId() {
+	@Override
+	public Object getID() {
+		return getAngebotID();
+	}
+
+	public int getAngebotID() {
 		return angebotID;
 	}
 
-	public void setId(int id) {
-		this.angebotID = id;
+	public void setAngebotID(int angebotID) {
+		this.angebotID = angebotID;
 	}
 
 	public double getSumme() {
@@ -144,7 +149,8 @@ public class Angebot extends DBEntity {
 
 	public String toString() {
 		return "Angebot-ID: " + angebotID + "\nSumme: " + summe + "\nDauer: "
-				+ dauer + "\nDatum: " + getDatumString() + "\nChance: " + chance
-				+ "\nKunden-ID: " + kundenID + "\nProjektID: " + projektID;
+				+ dauer + "\nDatum: " + getDatumString() + "\nChance: "
+				+ chance + "\nKunden-ID: " + kundenID + "\nProjektID: "
+				+ projektID;
 	}
 }

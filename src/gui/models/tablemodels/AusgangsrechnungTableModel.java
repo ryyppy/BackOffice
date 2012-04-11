@@ -35,7 +35,7 @@ public class AusgangsrechnungTableModel extends AbstractTableModel {
 		Ausgangsrechnung a = ausgangsrechnungen.get(row);
 		switch (col) {
 		case 0:
-			return a.getId();
+			return a.getRechnungID();
 		case 1:
 			return a.getStatus();
 		case 2:

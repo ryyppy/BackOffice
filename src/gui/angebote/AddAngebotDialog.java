@@ -124,10 +124,10 @@ public class AddAngebotDialog extends JDialog implements ActionListener {
 			}
 			try {
 				inhalt[columnNames.length - 2] = String
-						.valueOf(((Kunde) (kunden.getSelectedItem())).getId());
+						.valueOf(((Kunde) (kunden.getSelectedItem())).getKundenID());
 				inhalt[columnNames.length - 1] = String
 						.valueOf(((Projekt) (projekte.getSelectedItem()))
-								.getId());
+								.getProjektID());
 				Angebot a = new Angebot(inhalt);
 				BL.saveAngebot(a);
 				dispose();

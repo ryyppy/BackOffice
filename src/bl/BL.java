@@ -51,7 +51,7 @@ public class BL {
 
 	public static Kontakt getKontakt(int kontaktID) throws DALException {
 		for (int i = 0; i < kontakteliste.size(); i++) {
-			if (kontakteliste.get(i).getId() == kontaktID) {
+			if (kontakteliste.get(i).getKontaktID() == kontaktID) {
 				return kontakteliste.get(i);
 			}
 		}
@@ -73,7 +73,7 @@ public class BL {
 			throw new InvalidObjectException(exception);
 		}
 
-		k.setId(kontaktID++);
+		k.setKontaktID(kontaktID++);
 		kontakteliste.add(k);
 	}
 
@@ -86,7 +86,7 @@ public class BL {
 		}
 
 		for (Kontakt kontakt : kontakteliste) {
-			if (kontakt.getId() == k.getId()) {
+			if (kontakt.getID() == k.getID()) {
 				kontakt = k;
 			}
 		}
@@ -98,7 +98,7 @@ public class BL {
 
 	public static Kunde getKunde(int kundenID) throws DALException {
 		for (int i = 0; i < kundenliste.size(); i++) {
-			if (kundenliste.get(i).getId() == kundenID) {
+			if (kundenliste.get(i).getKundenID() == kundenID) {
 				return kundenliste.get(i);
 			}
 		}
@@ -120,7 +120,7 @@ public class BL {
 			throw new InvalidObjectException(exception);
 		}
 
-		k.setId(kundenID++);
+		k.setKundenID(kundenID++);
 		kundenliste.add(k);
 	}
 
@@ -133,7 +133,7 @@ public class BL {
 		}
 
 		for (Kunde kunde : kundenliste) {
-			if (kunde.getId() == k.getId()) {
+			if (kunde.getKundenID() == k.getKundenID()) {
 				kunde = k;
 			}
 		}
@@ -145,7 +145,7 @@ public class BL {
 
 	public static Projekt getProjekt(int projektID) throws DALException {
 		for (int i = 0; i < projektliste.size(); i++) {
-			if (projektliste.get(i).getId() == projektID) {
+			if (projektliste.get(i).getProjektID() == projektID) {
 				return projektliste.get(i);
 			}
 		}
@@ -167,7 +167,7 @@ public class BL {
 			throw new InvalidObjectException(exception);
 		}
 
-		p.setId(projektID++);
+		p.setProjektID(projektID++);
 		projektliste.add(p);
 	}
 
@@ -180,7 +180,7 @@ public class BL {
 		}
 
 		for (Projekt projekt : projektliste) {
-			if (projekt.getId() == p.getId()) {
+			if (projekt.getProjektID() == p.getProjektID()) {
 				projekt = p;
 			}
 		}
@@ -203,7 +203,7 @@ public class BL {
 
 	public static Angebot getAngebot(int angebotID) throws DALException {
 		for (int i = 0; i < angebotsliste.size(); i++) {
-			if (angebotsliste.get(i).getId() == angebotID) {
+			if (angebotsliste.get(i).getAngebotID() == angebotID) {
 				return angebotsliste.get(i);
 			}
 		}
@@ -225,7 +225,7 @@ public class BL {
 			throw new InvalidObjectException(exception);
 		}
 
-		a.setId(angebotID++);
+		a.setAngebotID(angebotID++);
 		angebotsliste.add(a);
 	}
 
@@ -238,7 +238,7 @@ public class BL {
 		}
 
 		for (Angebot angebot : angebotsliste) {
-			if (angebot.getId() == a.getId()) {
+			if (angebot.getAngebotID() == a.getAngebotID()) {
 				angebot = a;
 			}
 		}
@@ -252,7 +252,7 @@ public class BL {
 	public static Eingangsrechnung getEingangsrechnung(int rechnungID)
 			throws DALException {
 		for (int i = 0; i < eingangsrechnungenliste.size(); i++) {
-			if (eingangsrechnungenliste.get(i).getId() == rechnungID) {
+			if (eingangsrechnungenliste.get(i).getRechnungID() == rechnungID) {
 				return eingangsrechnungenliste.get(i);
 			}
 		}
@@ -270,7 +270,7 @@ public class BL {
 	public static Ausgangsrechnung getAusgangsrechnung(int rechnungID)
 			throws DALException {
 		for (int i = 0; i < ausgangsrechnungenliste.size(); i++) {
-			if (ausgangsrechnungenliste.get(i).getId() == rechnungID) {
+			if (ausgangsrechnungenliste.get(i).getRechnungID() == rechnungID) {
 				return ausgangsrechnungenliste.get(i);
 			}
 		}
@@ -293,7 +293,7 @@ public class BL {
 			throw new InvalidObjectException(exception);
 		}
 
-		a.setId(rechnungID++);
+		a.setRechnungID(rechnungID++);
 		ausgangsrechnungenliste.add(a);
 	}
 
@@ -306,7 +306,7 @@ public class BL {
 		}
 
 		for (Ausgangsrechnung ar : ausgangsrechnungenliste) {
-			if (ar.getId() == a.getId()) {
+			if (ar.getRechnungID() == a.getRechnungID()) {
 				ar = a;
 			}
 		}
@@ -325,7 +325,7 @@ public class BL {
 			throw new InvalidObjectException(exception);
 		}
 
-		e.setId(rechnungID++);
+		e.setRechnungID(rechnungID++);
 		eingangsrechnungenliste.add(e);
 	}
 
@@ -348,7 +348,7 @@ public class BL {
 	public static Rechnungszeile getRechnungszeile(int rechnungszeileID)
 			throws DALException {
 		for (int i = 0; i < rechnungszeilenliste.size(); i++) {
-			if (rechnungszeilenliste.get(i).getId() == rechnungszeileID) {
+			if (rechnungszeilenliste.get(i).getRechnungszeileID() == rechnungszeileID) {
 				return rechnungszeilenliste.get(i);
 			}
 		}
@@ -371,7 +371,7 @@ public class BL {
 			throw new InvalidObjectException(exception);
 		}
 
-		r.setId(rechnungszeileID++);
+		r.setRechnungszeileID(rechnungszeileID++);
 		rechnungszeilenliste.add(r);
 	}
 
@@ -388,14 +388,14 @@ public class BL {
 			throw new InvalidObjectException(exception);
 		}
 
-		b.setId(buchungszeileID++);
+		b.setBuchungszeileID(buchungszeileID++);
 		buchungszeilenliste.add(b);
 	}
 
 	public static Buchungszeile getBuchungszeile(int buchungszeileID)
 			throws DALException {
 		for (int i = 0; i < buchungszeilenliste.size(); i++) {
-			if (buchungszeilenliste.get(i).getId() == buchungszeileID) {
+			if (buchungszeilenliste.get(i).getBuchungszeileID() == buchungszeileID) {
 				return buchungszeilenliste.get(i);
 			}
 		}
@@ -431,13 +431,13 @@ public class BL {
 			throw new InvalidObjectException(exception);
 		}
 
-		k.setId(kategorieID++);
+		k.setKategorieID(kategorieID++);
 		kategorieliste.add(k);
 	}
 
 	public static Kategorie getKategorie(int kategorieID) throws DALException {
 		for (int i = 0; i < kategorieliste.size(); i++) {
-			if (kategorieliste.get(i).getId() == kategorieID) {
+			if (kategorieliste.get(i).getKategorieID() == kategorieID) {
 				return kategorieliste.get(i);
 			}
 		}

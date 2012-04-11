@@ -109,7 +109,7 @@ public class AddBuchungszeileDialog extends JDialog implements ActionListener {
 			try {
 				inhalt[columnNames.length - 1] = String
 						.valueOf(((Kategorie) (kategorie.getSelectedItem()))
-								.getId());
+								.getKategorieID());
 				Buchungszeile b = new Buchungszeile(inhalt);
 				BL.saveBuchungszeile(b);
 				dispose();

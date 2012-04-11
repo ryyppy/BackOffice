@@ -53,12 +53,16 @@ public class Kontakt extends DBEntity {
 
 	}
 
-	public int getId() {
+	public Object getID() {
+		return getKontaktID();
+	}
+
+	public int getKontaktID() {
 		return kontaktID;
 	}
 
-	public void setId(int id) {
-		this.kontaktID = id;
+	public void setKontaktID(int kontaktID) {
+		this.kontaktID = kontaktID;
 	}
 
 	public String getFirma() {

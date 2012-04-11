@@ -11,11 +11,15 @@ public abstract class Rechnung extends DBEntity {
 		this.status = status;
 	}
 
-	public int getId() {
+	public Object getID() {
+		return getRechnungID();
+	}
+
+	public int getRechnungID() {
 		return rechnungID;
 	}
 
-	public void setId(int rechnungID) {
+	public void setRechnungID(int rechnungID) {
 		this.rechnungID = rechnungID;
 	}
 

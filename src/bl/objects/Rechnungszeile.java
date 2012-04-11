@@ -7,13 +7,13 @@ public class Rechnungszeile extends DBEntity {
 	private String kommentar;
 	private double steuersatz, betrag;
 
-	public Rechnungszeile(int id, String kommentar, double steuersatz, double betrag,
-			int rechnungID, int angebotsID) {
+	public Rechnungszeile(int id, String kommentar, double steuersatz,
+			double betrag, int rechnungID, int angebotsID) {
 		super();
 		this.rechnungszeileID = id;
 		this.rechnungID = rechnungID;
 		this.angebotsID = angebotsID;
-		this.steuersatz=steuersatz;
+		this.steuersatz = steuersatz;
 		this.kommentar = kommentar;
 		this.betrag = betrag;
 	}
@@ -60,12 +60,16 @@ public class Rechnungszeile extends DBEntity {
 		this.angebotsID = Integer.valueOf(inhalt[4]);
 	}
 
-	public int getId() {
+	public Object getID() {
+		return getRechnungszeileID();
+	}
+
+	public int getRechnungszeileID() {
 		return rechnungszeileID;
 	}
 
-	public void setId(int id) {
-		this.rechnungszeileID = id;
+	public void setRechnungszeileID(int rechnungszeileID) {
+		this.rechnungszeileID = rechnungszeileID;
 	}
 
 	public int getRechnungID() {

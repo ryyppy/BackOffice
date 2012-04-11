@@ -33,7 +33,7 @@ public class AngebotTableModel extends AbstractTableModel {
 		Angebot a = angebote.get(row);
 		switch (col) {
 		case 0:
-			return a.getId();
+			return a.getAngebotID();
 		case 1:
 			return a.getSumme();
 		case 2:
