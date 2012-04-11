@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import bl.BL;
 import bl.objects.Kunde;
 
 public class KundenTableModel extends AbstractTableModel {
@@ -11,8 +12,8 @@ public class KundenTableModel extends AbstractTableModel {
 	private String[] columnNames = { "Kunden-ID", "Vorname", "Nachname",
 			"Geburtsdatum" };
 
-	public KundenTableModel(ArrayList<Kunde> kunden) {
-		this.kunden = kunden;
+	public KundenTableModel() {
+		this.refresh();
 	}
 
 	@Override
@@ -66,6 +67,7 @@ public class KundenTableModel extends AbstractTableModel {
 	}
 
 	public void refresh() {
+		kunden = BL.getKundenListe();
 		super.fireTableDataChanged();
 	}
 }

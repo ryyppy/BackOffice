@@ -4,17 +4,14 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
-
 import bl.BL;
-import bl.objects.Angebot;
-import bl.objects.Ausgangsrechnung;
+import bl.objects.Eingangsrechnung;
 
-public class AusgangsrechnungTableModel extends AbstractTableModel {
-	private ArrayList<Ausgangsrechnung> ausgangsrechnungen;
-	private String[] columnNames = { "Rechnung-ID", "Status", "Kunden-ID" };
+public class EingangsrechnungTableModel extends AbstractTableModel {
+	private ArrayList<Eingangsrechnung> eingangsrechnungen;
+	private String[] columnNames = { "Rechnung-ID", "Status", "Kontakt-ID" };
 
-	public AusgangsrechnungTableModel() {
+	public EingangsrechnungTableModel() {
 		this.refresh();
 	}
 
@@ -27,19 +24,19 @@ public class AusgangsrechnungTableModel extends AbstractTableModel {
 	@Override
 	public int getRowCount() {
 		// TODO Auto-generated method stub
-		return ausgangsrechnungen.size();
+		return eingangsrechnungen.size();
 	}
 
 	@Override
 	public Object getValueAt(int row, int col) {
-		Ausgangsrechnung a = ausgangsrechnungen.get(row);
+		Eingangsrechnung e = eingangsrechnungen.get(row);
 		switch (col) {
 		case 0:
-			return a.getId();
+			return e.getId();
 		case 1:
-			return a.getStatus();
+			return e.getStatus();
 		case 2:
-			return a.getKundenID();
+			return e.getKontaktID();
 		default:
 			return "";
 		}
@@ -55,7 +52,7 @@ public class AusgangsrechnungTableModel extends AbstractTableModel {
 	}
 
 	public void refresh() {
-		ausgangsrechnungen = BL.getAusgangsrechnungenListe();
+		eingangsrechnungen = BL.getEingangsrechnungenListe();
 		super.fireTableDataChanged();
 	}
 }

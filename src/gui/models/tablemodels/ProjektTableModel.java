@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import bl.BL;
 import bl.objects.Kunde;
 import bl.objects.Projekt;
 
@@ -11,8 +12,8 @@ public class ProjektTableModel extends AbstractTableModel {
 	private ArrayList<Projekt> projekte;
 	private String[] columnNames = { "Projekt-ID", "Name", "Beschreibung" };
 
-	public ProjektTableModel(ArrayList<Projekt> projekte) {
-		this.projekte = projekte;
+	public ProjektTableModel() {
+		this.refresh();
 	}
 
 	@Override
@@ -52,6 +53,7 @@ public class ProjektTableModel extends AbstractTableModel {
 	}
 
 	public void refresh() {
+		projekte = BL.getProjektListe();
 		super.fireTableDataChanged();
 	}
 }

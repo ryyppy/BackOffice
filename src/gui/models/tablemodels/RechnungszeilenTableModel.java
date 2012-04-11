@@ -11,11 +11,13 @@ import bl.objects.Rechnungszeile;
 
 public class RechnungszeilenTableModel extends AbstractTableModel {
 	private ArrayList<Rechnungszeile> rechnungszeilen;
-	private String[] columnNames = { "Rechnungszeile-ID", "Rechnung-ID", "Kommentar", "Steuersatz", "Betrag", "Angebot-ID" };
+	private int rechnungID;
+	private String[] columnNames = { "Rechnungszeile-ID", "Rechnung-ID",
+			"Kommentar", "Steuersatz", "Betrag", "Angebot-ID" };
 
-	public RechnungszeilenTableModel(
-			ArrayList<Rechnungszeile> rechnungszeilen) {
-		this.rechnungszeilen = rechnungszeilen;
+	public RechnungszeilenTableModel(int rechnungID) {
+		this.rechnungID = rechnungID;
+		this.refresh();
 	}
 
 	@Override
@@ -61,6 +63,7 @@ public class RechnungszeilenTableModel extends AbstractTableModel {
 	}
 
 	public void refresh() {
+		rechnungszeilen = BL.getRechnungszeilenListe(rechnungID);
 		super.fireTableDataChanged();
 	}
 }

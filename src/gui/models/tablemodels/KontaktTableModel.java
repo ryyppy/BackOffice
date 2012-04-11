@@ -4,17 +4,15 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
-
 import bl.BL;
-import bl.objects.Angebot;
-import bl.objects.Ausgangsrechnung;
+import bl.objects.Kontakt;
+import bl.objects.Kunde;
 
-public class AusgangsrechnungTableModel extends AbstractTableModel {
-	private ArrayList<Ausgangsrechnung> ausgangsrechnungen;
-	private String[] columnNames = { "Rechnung-ID", "Status", "Kunden-ID" };
+public class KontaktTableModel extends AbstractTableModel {
+	private ArrayList<Kontakt> kontake;
+	private String[] columnNames = { "Kontakt-ID", "Firma", "Name", "Telefon" };
 
-	public AusgangsrechnungTableModel() {
+	public KontaktTableModel() {
 		this.refresh();
 	}
 
@@ -27,19 +25,21 @@ public class AusgangsrechnungTableModel extends AbstractTableModel {
 	@Override
 	public int getRowCount() {
 		// TODO Auto-generated method stub
-		return ausgangsrechnungen.size();
+		return kontake.size();
 	}
 
 	@Override
 	public Object getValueAt(int row, int col) {
-		Ausgangsrechnung a = ausgangsrechnungen.get(row);
+		Kontakt k = kontake.get(row);
 		switch (col) {
 		case 0:
-			return a.getId();
+			return String.valueOf(k.getId());
 		case 1:
-			return a.getStatus();
+			return k.getFirma();
 		case 2:
-			return a.getKundenID();
+			return k.getName();
+		case 3:
+			return k.getTelefon();
 		default:
 			return "";
 		}
@@ -48,6 +48,18 @@ public class AusgangsrechnungTableModel extends AbstractTableModel {
 	@Override
 	public String getColumnName(int column) {
 		return columnNames[column];
+		// switch (column) {
+		// case 0:
+		// return "Kunden-ID";
+		// case 1:
+		// return "Vorname";
+		// case 2:
+		// return "Nachname";
+		// case 3:
+		// return "Geburtsdatum";
+		// default:
+		// return "";
+		// }
 	}
 
 	public String[] getColumnNames() {
@@ -55,7 +67,7 @@ public class AusgangsrechnungTableModel extends AbstractTableModel {
 	}
 
 	public void refresh() {
-		ausgangsrechnungen = BL.getAusgangsrechnungenListe();
+		kontake = BL.getKontaktListe();
 		super.fireTableDataChanged();
 	}
 }

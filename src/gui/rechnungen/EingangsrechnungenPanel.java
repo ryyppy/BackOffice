@@ -1,6 +1,6 @@
 package gui.rechnungen;
 
-import gui.models.tablemodels.AusgangsrechnungTableModel;
+import gui.models.tablemodels.EingangsrechnungTableModel;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -17,25 +17,24 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import bl.BL;
-import bl.objects.Ausgangsrechnung;
-import bl.objects.Kunde;
+import bl.objects.Eingangsrechnung;
+import bl.objects.Kontakt;
 
-public class AusgangsrechnungenPanel extends JPanel implements ActionListener {
-	private JButton add, edit, delete, kundenInfo, showRechnungszeilen,
+public class EingangsrechnungenPanel extends JPanel implements ActionListener {
+	private JButton add, edit, delete, kontaktInfo, showRechnungszeilen,
 			selectBuchungszeilen;
 	private JTable table;
 	private JScrollPane scrollpane;
-	private AusgangsrechnungTableModel tModel;
+	private EingangsrechnungTableModel tModel;
 	private TableRowSorter<TableModel> tSorter;
 
 	private JFrame owner;
 
-	public AusgangsrechnungenPanel(JFrame owner) {
+	public EingangsrechnungenPanel(JFrame owner) {
 		// super("EPU - Rechnungen");
 		setSize(500, 300);
 		// setLocationRelativeTo(null);
@@ -57,14 +56,14 @@ public class AusgangsrechnungenPanel extends JPanel implements ActionListener {
 		add = new JButton("Add");
 		edit = new JButton("Edit");
 		delete = new JButton("Delete");
-		kundenInfo = new JButton("Kundeninfo");
+		kontaktInfo = new JButton("Kontaktinfo");
 		showRechnungszeilen = new JButton("Show Rechnungszeilen");
 		selectBuchungszeilen = new JButton("Select Buchungszeilen");
 
 		add.addActionListener(this);
 		edit.addActionListener(this);
 		delete.addActionListener(this);
-		kundenInfo.addActionListener(this);
+		kontaktInfo.addActionListener(this);
 		showRechnungszeilen.addActionListener(this);
 		selectBuchungszeilen.addActionListener(this);
 
@@ -74,7 +73,7 @@ public class AusgangsrechnungenPanel extends JPanel implements ActionListener {
 		panel1.add(delete);
 
 		JPanel panel2 = new JPanel(new GridLayout(3, 1));
-		panel2.add(kundenInfo);
+		panel2.add(kontaktInfo);
 		panel2.add(showRechnungszeilen);
 		panel2.add(selectBuchungszeilen);
 
@@ -99,7 +98,7 @@ public class AusgangsrechnungenPanel extends JPanel implements ActionListener {
 
 	public void initTable() {
 
-		tModel = new AusgangsrechnungTableModel();
+		tModel = new EingangsrechnungTableModel();
 
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
@@ -116,31 +115,31 @@ public class AusgangsrechnungenPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			new AddAusgangsrechnungDialog(owner);
+			new AddEingangsrechnungDialog(owner);
 			tModel.refresh();
 		} else if (e.getSource() == delete) {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
-				BL.deleteAusgangsrechnung(Integer.valueOf((String) (tModel
+				BL.deleteEingangsrechnung(Integer.valueOf((String) (tModel
 						.getValueAt(b - i, 0))));
 			}
 			tModel.refresh();
 		} else if (e.getSource() == edit) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Ausgangsrechnung ar = BL.getAusgangsrechnung((Integer) tModel
+			Eingangsrechnung ar = BL.getEingangsrechnung((Integer) tModel
 					.getValueAt(a, 0));
-			new EditAusgangsrechnungDialog(owner, ar);
+			// new EditEingangsrechnungDialog(owner, ar);
 			tModel.refresh();
-		} else if (e.getSource() == kundenInfo) {
+		} else if (e.getSource() == kontaktInfo) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Kunde k = BL.getKunde((Integer) tModel.getValueAt(a, 2));
+			Kontakt k = BL.getKontakt((Integer) tModel.getValueAt(a, 2));
 			JOptionPane.showMessageDialog(this, k.toString());
 		} else if (e.getSource() == showRechnungszeilen) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			int ausgangsrechnungsID = (Integer) tModel.getValueAt(a, 0);
-			int kundenID = (Integer) tModel.getValueAt(a, 2);
-			new RechnungszeilenFrame(owner, ausgangsrechnungsID, kundenID);
+			int eingangsrechnungsID = (Integer) tModel.getValueAt(a, 0);
+			int kontaktID = (Integer) tModel.getValueAt(a, 2);
+			new RechnungszeilenFrame(owner, eingangsrechnungsID, kontaktID);
 		} else if (e.getSource() == selectBuchungszeilen) {
 
 		}

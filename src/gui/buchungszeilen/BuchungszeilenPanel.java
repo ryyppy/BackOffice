@@ -97,7 +97,7 @@ public class BuchungszeilenPanel extends JPanel implements ActionListener {
 
 	public void initTable() {
 
-		tModel = new BuchungszeilenTableModel(BL.getBuchungszeilenListe());
+		tModel = new BuchungszeilenTableModel();
 
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
@@ -120,8 +120,8 @@ public class BuchungszeilenPanel extends JPanel implements ActionListener {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
-				BL.deleteBuchungszeile(Integer.valueOf((String) (tModel
-						.getValueAt(b - i, 0))));
+				BL.deleteBuchungszeile(Integer.valueOf(String.valueOf((tModel
+						.getValueAt(b - i, 0)))));
 			}
 			tModel.refresh();
 		} else if (e.getSource() == edit) {

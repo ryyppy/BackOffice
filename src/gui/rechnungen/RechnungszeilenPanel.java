@@ -81,7 +81,7 @@ public class RechnungszeilenPanel extends JPanel implements ActionListener {
 	}
 
 	public void initTable() {
-		tModel = new RechnungszeilenTableModel(BL.getRechnungszeilenListe(rechnungsID));
+		tModel = new RechnungszeilenTableModel(rechnungsID);
 
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));

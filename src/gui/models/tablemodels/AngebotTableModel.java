@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import bl.BL;
 import bl.objects.Angebot;
 
 public class AngebotTableModel extends AbstractTableModel {
@@ -11,8 +12,8 @@ public class AngebotTableModel extends AbstractTableModel {
 	private String[] columnNames = { "Angebot-ID", "Summe", "Dauer", "Datum",
 			"Chance", "Kunde-ID", "Projekt-ID" };
 
-	public AngebotTableModel(ArrayList<Angebot> angebote) {
-		this.angebote = angebote;
+	public AngebotTableModel() {
+		this.refresh();
 	}
 
 	@Override
@@ -60,6 +61,7 @@ public class AngebotTableModel extends AbstractTableModel {
 	}
 
 	public void refresh() {
+		angebote = BL.getAngebotsListe();
 		super.fireTableDataChanged();
 	}
 }
