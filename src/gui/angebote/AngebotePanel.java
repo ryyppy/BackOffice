@@ -95,7 +95,7 @@ public class AngebotePanel extends JPanel implements ActionListener {
 
 	public void initTable() {
 
-		tModel = new AngebotTableModel(BL.getAngebotsListe());
+		tModel = new AngebotTableModel();
 
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));

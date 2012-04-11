@@ -113,7 +113,7 @@ public class KontaktPanel extends JPanel implements ActionListener {
 
 	public void initTable() {
 		// tModel = new DefaultTableModel(rows, columnNames);
-		tModel = new KontaktTableModel(BL.getKontaktListe());
+		tModel = new KontaktTableModel();
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.setFillsViewportHeight(true);

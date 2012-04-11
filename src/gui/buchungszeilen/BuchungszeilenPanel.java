@@ -97,7 +97,7 @@ public class BuchungszeilenPanel extends JPanel implements ActionListener {
 
 	public void initTable() {
 
-		tModel = new BuchungszeilenTableModel(BL.getBuchungszeilenListe());
+		tModel = new BuchungszeilenTableModel();
 
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));

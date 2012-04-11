@@ -4,16 +4,16 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import bl.BL;
 import bl.objects.Kontakt;
 import bl.objects.Kunde;
 
 public class KontaktTableModel extends AbstractTableModel {
 	private ArrayList<Kontakt> kontake;
-	private String[] columnNames = { "Kontakt-ID", "Firma", "Name",
-			"Telefon" };
+	private String[] columnNames = { "Kontakt-ID", "Firma", "Name", "Telefon" };
 
-	public KontaktTableModel(ArrayList<Kontakt> kontake) {
-		this.kontake = kontake;
+	public KontaktTableModel() {
+		this.refresh();
 	}
 
 	@Override
@@ -67,6 +67,7 @@ public class KontaktTableModel extends AbstractTableModel {
 	}
 
 	public void refresh() {
+		kontake = BL.getKontaktListe();
 		super.fireTableDataChanged();
 	}
 }

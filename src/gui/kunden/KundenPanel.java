@@ -114,7 +114,7 @@ public class KundenPanel extends JPanel implements ActionListener {
 
 	public void initTable() {
 		// tModel = new DefaultTableModel(rows, columnNames);
-		tModel = new KundenTableModel(BL.getKundenListe());
+		tModel = new KundenTableModel();
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.setFillsViewportHeight(true);

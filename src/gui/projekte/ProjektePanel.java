@@ -90,7 +90,7 @@ public class ProjektePanel extends JPanel implements ActionListener {
 	}
 
 	public void initTable() {
-		tModel = new ProjektTableModel(BL.getProjektListe());
+		tModel = new ProjektTableModel();
 
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));

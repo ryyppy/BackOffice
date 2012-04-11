@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import bl.BL;
 import bl.objects.Buchungszeile;
 
 public class BuchungszeilenTableModel extends AbstractTableModel {
@@ -11,8 +12,8 @@ public class BuchungszeilenTableModel extends AbstractTableModel {
 	private String[] columnNames = { "Buchungszeile-ID", "Kommentar",
 			"Steuersatz", "Betrag", "KategorieID" };
 
-	public BuchungszeilenTableModel(ArrayList<Buchungszeile> buchungszeilen) {
-		this.buchungszeilen = buchungszeilen;
+	public BuchungszeilenTableModel() {
+		this.refresh();
 	}
 
 	@Override
@@ -56,6 +57,7 @@ public class BuchungszeilenTableModel extends AbstractTableModel {
 	}
 
 	public void refresh() {
+		buchungszeilen = BL.getBuchungszeilenListe();
 		super.fireTableDataChanged();
 	}
 }

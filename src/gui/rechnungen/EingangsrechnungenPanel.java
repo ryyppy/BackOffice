@@ -98,7 +98,7 @@ public class EingangsrechnungenPanel extends JPanel implements ActionListener {
 
 	public void initTable() {
 
-		tModel = new EingangsrechnungTableModel(BL.getEingangsrechnungenListe());
+		tModel = new EingangsrechnungTableModel();
 
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));

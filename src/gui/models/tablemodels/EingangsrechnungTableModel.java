@@ -4,17 +4,16 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import bl.BL;
 import bl.objects.Eingangsrechnung;
 
 public class EingangsrechnungTableModel extends AbstractTableModel {
 	private ArrayList<Eingangsrechnung> eingangsrechnungen;
 	private String[] columnNames = { "Rechnung-ID", "Status", "Kontakt-ID" };
 
-	public EingangsrechnungTableModel(
-			ArrayList<Eingangsrechnung> eingangsrechnungen) {
-		this.eingangsrechnungen = eingangsrechnungen;
+	public EingangsrechnungTableModel() {
+		this.refresh();
 	}
-	
 
 	@Override
 	public int getColumnCount() {
@@ -53,6 +52,7 @@ public class EingangsrechnungTableModel extends AbstractTableModel {
 	}
 
 	public void refresh() {
+		eingangsrechnungen = BL.getEingangsrechnungenListe();
 		super.fireTableDataChanged();
 	}
 }

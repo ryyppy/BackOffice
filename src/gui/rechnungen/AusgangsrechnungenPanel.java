@@ -99,7 +99,7 @@ public class AusgangsrechnungenPanel extends JPanel implements ActionListener {
 
 	public void initTable() {
 
-		tModel = new AusgangsrechnungTableModel(BL.getAusgangsrechnungenListe());
+		tModel = new AusgangsrechnungTableModel();
 
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));

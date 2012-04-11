@@ -79,7 +79,7 @@ public class RechnungszeilenFrame extends JFrame implements ActionListener {
 	}
 
 	public void initTable() {
-		tModel = new RechnungszeilenTableModel(BL.getRechnungszeilenListe(ausgangsrechnungsID));
+		tModel = new RechnungszeilenTableModel(ausgangsrechnungsID);
 
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
@@ -100,6 +100,7 @@ public class RechnungszeilenFrame extends JFrame implements ActionListener {
 		if (e.getSource() == add) {
 			new AddRechnungszeileDialog(this, ausgangsrechnungsID, kundenID);
 			tModel.refresh();
+			
 		} else if (e.getSource() == delete) {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {

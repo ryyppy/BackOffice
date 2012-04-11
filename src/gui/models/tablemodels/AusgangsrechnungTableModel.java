@@ -6,6 +6,7 @@ import javax.swing.table.AbstractTableModel;
 
 import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
 
+import bl.BL;
 import bl.objects.Angebot;
 import bl.objects.Ausgangsrechnung;
 
@@ -13,11 +14,9 @@ public class AusgangsrechnungTableModel extends AbstractTableModel {
 	private ArrayList<Ausgangsrechnung> ausgangsrechnungen;
 	private String[] columnNames = { "Rechnung-ID", "Status", "Kunden-ID" };
 
-	public AusgangsrechnungTableModel(
-			ArrayList<Ausgangsrechnung> ausgangsrechnungen) {
-		this.ausgangsrechnungen = ausgangsrechnungen;
+	public AusgangsrechnungTableModel() {
+		this.refresh();
 	}
-	
 
 	@Override
 	public int getColumnCount() {
@@ -56,6 +55,7 @@ public class AusgangsrechnungTableModel extends AbstractTableModel {
 	}
 
 	public void refresh() {
+		ausgangsrechnungen = BL.getAusgangsrechnungenListe();
 		super.fireTableDataChanged();
 	}
 }
