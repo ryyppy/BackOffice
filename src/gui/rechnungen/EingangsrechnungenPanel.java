@@ -25,8 +25,7 @@ import bl.objects.Eingangsrechnung;
 import bl.objects.Kontakt;
 
 public class EingangsrechnungenPanel extends JPanel implements ActionListener {
-	private JButton add, edit, delete, kontaktInfo, showRechnungszeilen,
-			selectBuchungszeilen;
+	private JButton add, edit, delete, kontaktInfo, showRechnungszeilen;
 	private JTable table;
 	private JScrollPane scrollpane;
 	private EingangsrechnungTableModel tModel;
@@ -58,14 +57,12 @@ public class EingangsrechnungenPanel extends JPanel implements ActionListener {
 		delete = new JButton("Delete");
 		kontaktInfo = new JButton("Kontaktinfo");
 		showRechnungszeilen = new JButton("Show Rechnungszeilen");
-		selectBuchungszeilen = new JButton("Select Buchungszeilen");
 
 		add.addActionListener(this);
 		edit.addActionListener(this);
 		delete.addActionListener(this);
 		kontaktInfo.addActionListener(this);
 		showRechnungszeilen.addActionListener(this);
-		selectBuchungszeilen.addActionListener(this);
 
 		JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		panel1.add(add);
@@ -75,7 +72,6 @@ public class EingangsrechnungenPanel extends JPanel implements ActionListener {
 		JPanel panel2 = new JPanel(new GridLayout(3, 1));
 		panel2.add(kontaktInfo);
 		panel2.add(showRechnungszeilen);
-		panel2.add(selectBuchungszeilen);
 
 		JPanel panel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -140,8 +136,6 @@ public class EingangsrechnungenPanel extends JPanel implements ActionListener {
 			int eingangsrechnungsID = (Integer) tModel.getValueAt(a, 0);
 			int kontaktID = (Integer) tModel.getValueAt(a, 3);
 			new RechnungszeilenFrame(owner, eingangsrechnungsID, kontaktID);
-		} else if (e.getSource() == selectBuchungszeilen) {
-
 		}
 	}
 }
