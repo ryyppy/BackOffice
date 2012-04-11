@@ -21,6 +21,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import bl.BL;
+import bl.objects.Buchungszeile;
 import bl.objects.Kategorie;
 
 public class BuchungszeilenPanel extends JPanel implements ActionListener {
@@ -114,7 +115,7 @@ public class BuchungszeilenPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			new AddBuchungszeileDialog(owner);
+			new EditBuchungszeileDialog(owner);
 			tModel.refresh();
 		} else if (e.getSource() == delete) {
 			int[] a = table.getSelectedRows();
@@ -125,11 +126,11 @@ public class BuchungszeilenPanel extends JPanel implements ActionListener {
 			}
 			tModel.refresh();
 		} else if (e.getSource() == edit) {
-			// int a = table.convertRowIndexToModel(table.getSelectedRow());
-			// Ausgangsrechnung ar =
-			// BL.getAusgangsrechnung((Integer)tModel.getValueAt(a, 0));
-			// new EditAusgangsrechnungDialog(owner, ar);
-			// tModel.refresh();
+			int a = table.convertRowIndexToModel(table.getSelectedRow());
+			Buchungszeile b = BL.getBuchungszeile((Integer) tModel.getValueAt(
+					a, 0));
+			new EditBuchungszeileDialog(owner, b);
+			tModel.refresh();
 		} else if (e.getSource() == addKategorie) {
 			new AddKategorieDialog(owner);
 		} else if (e.getSource() == kategorieInfo) {

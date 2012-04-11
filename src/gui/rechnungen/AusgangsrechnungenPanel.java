@@ -116,13 +116,13 @@ public class AusgangsrechnungenPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			new AddAusgangsrechnungDialog(owner);
+			new EditAusgangsrechnungDialog(owner);
 			tModel.refresh();
 		} else if (e.getSource() == delete) {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
-				BL.deleteAusgangsrechnung(Integer.valueOf((String) (tModel
+				BL.deleteAusgangsrechnung(Integer.valueOf(String.valueOf(tModel
 						.getValueAt(b - i, 0))));
 			}
 			tModel.refresh();
@@ -134,12 +134,13 @@ public class AusgangsrechnungenPanel extends JPanel implements ActionListener {
 			tModel.refresh();
 		} else if (e.getSource() == kundenInfo) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Kunde k = BL.getKunde((Integer) tModel.getValueAt(a, 2));
+			Kunde k = BL.getKunde((Integer) tModel.getValueAt(a, 3));
 			JOptionPane.showMessageDialog(this, k.toString());
 		} else if (e.getSource() == showRechnungszeilen) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
 			int ausgangsrechnungsID = (Integer) tModel.getValueAt(a, 0);
-			int kundenID = (Integer) tModel.getValueAt(a, 2);
+			int kundenID = Integer.valueOf(String.valueOf(tModel.getValueAt(a,
+					3)));
 			new RechnungszeilenFrame(owner, ausgangsrechnungsID, kundenID);
 		} else if (e.getSource() == selectBuchungszeilen) {
 

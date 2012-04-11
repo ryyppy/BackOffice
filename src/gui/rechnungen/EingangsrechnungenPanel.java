@@ -115,7 +115,7 @@ public class EingangsrechnungenPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			new AddEingangsrechnungDialog(owner);
+			new EditEingangsrechnungDialog(owner);
 			tModel.refresh();
 		} else if (e.getSource() == delete) {
 			int[] a = table.getSelectedRows();
@@ -127,18 +127,18 @@ public class EingangsrechnungenPanel extends JPanel implements ActionListener {
 			tModel.refresh();
 		} else if (e.getSource() == edit) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Eingangsrechnung ar = BL.getEingangsrechnung((Integer) tModel
+			Eingangsrechnung er = BL.getEingangsrechnung((Integer) tModel
 					.getValueAt(a, 0));
-			// new EditEingangsrechnungDialog(owner, ar);
+			new EditEingangsrechnungDialog(owner, er);
 			tModel.refresh();
 		} else if (e.getSource() == kontaktInfo) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Kontakt k = BL.getKontakt((Integer) tModel.getValueAt(a, 2));
+			Kontakt k = BL.getKontakt((Integer) tModel.getValueAt(a, 3));
 			JOptionPane.showMessageDialog(this, k.toString());
 		} else if (e.getSource() == showRechnungszeilen) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
 			int eingangsrechnungsID = (Integer) tModel.getValueAt(a, 0);
-			int kontaktID = (Integer) tModel.getValueAt(a, 2);
+			int kontaktID = (Integer) tModel.getValueAt(a, 3);
 			new RechnungszeilenFrame(owner, eingangsrechnungsID, kontaktID);
 		} else if (e.getSource() == selectBuchungszeilen) {
 

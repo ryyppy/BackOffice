@@ -131,19 +131,19 @@ public class KontaktPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			new AddKontaktDialog(owner);
+			new EditKontaktDialog(owner);
 			tModel.refresh();
 		} else if (e.getSource() == delete) {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
-				BL.deleteKontakt(Integer.valueOf((String) (tModel.getValueAt(b
+				BL.deleteKontakt(Integer.valueOf(String.valueOf(tModel.getValueAt(b
 						- i, 0))));
 			}
 			tModel.refresh();
 		} else if (e.getSource() == edit) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Kontakt k = BL.getKontakt(Integer.valueOf((String)tModel.getValueAt(a, 0)));
+			Kontakt k = BL.getKontakt(Integer.valueOf(String.valueOf(tModel.getValueAt(a, 0))));
 			new EditKontaktDialog(owner, k);
 			tModel.refresh();
 		}

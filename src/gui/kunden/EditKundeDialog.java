@@ -6,7 +6,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.InvalidObjectException;
-import java.text.ParseException;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -16,27 +16,40 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import dal.DALException;
-
 import bl.BL;
 import bl.objects.Kunde;
+import dal.DALException;
+import databinding.BirthdayRule;
+import databinding.DataBinder;
+import databinding.Error;
+import databinding.StandardRule;
 
 public class EditKundeDialog extends JDialog implements ActionListener {
 	private JTextField[] textfeld;
 	private JButton save, cancel;
-	
+
 	private Kunde k;
 
 	private String[] columnNames = { "Vorname", "Nachname", "Geburtsdatum" };
 
-	public EditKundeDialog(JFrame owner, Kunde k ) {
+	public EditKundeDialog(JFrame owner) {
+		super(owner, "Kunde hinzufügen", true);
+		this.k = null;
+
+		initDialog();
+	}
+
+	public EditKundeDialog(JFrame owner, Kunde k) {
 		super(owner, "Kunde bearbeiten", true);
+		this.k = k;
+		initDialog();
+	}
+
+	public void initDialog() {
 		setSize(300, 200);
-		setLocationRelativeTo(owner);
+		setLocationRelativeTo(getOwner());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
-		
-		this.k=k;
 
 		JPanel buttonPanel = initButtons();
 		JPanel fields = initTextFields();
@@ -69,6 +82,7 @@ public class EditKundeDialog extends JDialog implements ActionListener {
 
 		for (int i = 0; i < textfeld.length; i++) {
 			textfeld[i] = new JTextField(20);
+			textfeld[i].setName(columnNames[i]);
 			JLabel l = new JLabel(columnNames[i]);
 
 			JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -77,9 +91,11 @@ public class EditKundeDialog extends JDialog implements ActionListener {
 
 			panel.add(p);
 		}
-		textfeld[0].setText(k.getVorname());
-		textfeld[1].setText(k.getNachname());
-		textfeld[2].setText(k.getGeburtsdatumString());
+		if (k != null) {
+			textfeld[0].setText(k.getVorname());
+			textfeld[1].setText(k.getNachname());
+			textfeld[2].setText(k.getGeburtsdatumString());
+		}
 
 		return panel;
 	}
@@ -88,19 +104,34 @@ public class EditKundeDialog extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == save) {
-			
+
 			try {
-				k.setVorname(textfeld[0].getText());
-				k.setNachname(textfeld[1].getText());
-				k.setGeburtsdatum(textfeld[2].getText());
-				BL.updateKunde(k);
-				dispose();
+				DataBinder b = new DataBinder();
+				String vorname = b.bindFrom_String(textfeld[0],
+						new StandardRule());
+				String nachname = b.bindFrom_String(textfeld[1],
+						new StandardRule());
+				Date geburtsdatum = b.bindFrom_Date(textfeld[2],
+						new BirthdayRule());
+
+				if (!b.hasErrors()) {
+					if (k != null) {
+						k.setVorname(vorname);
+						k.setNachname(nachname);
+						k.setGeburtsdatum(geburtsdatum);
+						BL.updateKunde(k);
+					} else {
+						 k = new Kunde(-1, vorname, nachname, geburtsdatum);
+						BL.saveKunde(k);
+					}
+					dispose();
+				} else {
+					JOptionPane.showMessageDialog(this, b.getErrors());
+				}
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
 			} catch (InvalidObjectException ioe) {
 				JOptionPane.showMessageDialog(this, ioe.getMessage());
-			} catch (ParseException pe) {
-				JOptionPane.showMessageDialog(this, pe.getMessage());
 			} catch (DALException de) {
 				JOptionPane.showMessageDialog(this, de.getMessage());
 			}

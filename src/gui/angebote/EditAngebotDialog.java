@@ -10,6 +10,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.InvalidObjectException;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -19,14 +20,15 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-
-import dal.DALException;
 
 import bl.BL;
 import bl.objects.Angebot;
 import bl.objects.Kunde;
 import bl.objects.Projekt;
+import dal.DALException;
+import databinding.DataBinder;
+import databinding.PercentRule;
+import databinding.StandardRule;
 
 public class EditAngebotDialog extends JDialog implements ActionListener {
 	private JTextField[] textfeld;
@@ -39,14 +41,23 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 	private String[] columnNames = { "Summe", "Dauer", "Chance", "Kunde-ID",
 			"Projekt-ID" };
 
-	public EditAngebotDialog(JFrame owner, Angebot a) {
+	public EditAngebotDialog(JFrame owner) {
 		super(owner, "Angebot hinzufuegen", true);
+		this.a = null;
+		initDialog();
+	}
+
+	public EditAngebotDialog(JFrame owner, Angebot a) {
+		super(owner, "Angebot bearbeiten", true);
+		this.a = a;
+		initDialog();
+	}
+
+	public void initDialog() {
 		setSize(300, 250);
-		setLocationRelativeTo(owner);
+		setLocationRelativeTo(this.getOwner());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
-
-		this.a = a;
 
 		JPanel buttonPanel = initButtons();
 		JPanel fields = initTextFields();
@@ -79,6 +90,7 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 
 		for (int i = 0; i < textfeld.length; i++) {
 			textfeld[i] = new JTextField(15);
+			textfeld[i].setName(columnNames[i]);
 			JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 			JLabel l = new JLabel(columnNames[i]);
 			p.add(l);
@@ -90,15 +102,11 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 			panel.add(p);
 
 		}
-		textfeld[0].setText(String.valueOf(a.getSumme()));
-		textfeld[1].setText(String.valueOf(a.getDauer()));
-		textfeld[2].setText(String.valueOf(a.getChance()));
 
 		kunden = new JComboBox<Kunde>(new KundenComboBoxModel(
 				BL.getKundenListe()));
-		kunden.setSelectedItem(BL.getKunde(a.getKundenID()));
 		kunden.setRenderer(new MyListCellRenderer("nachname"));
-
+		kunden.setName(columnNames[columnNames.length - 2]);
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		JLabel l = new JLabel(columnNames[columnNames.length - 2]);
 		p.add(l);
@@ -110,8 +118,8 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 
 		projekte = new JComboBox<Projekt>(new ProjekteComboBoxModel(
 				BL.getProjektListe()));
-		projekte.setSelectedItem(BL.getProjekt(a.getProjektID()));
 		projekte.setRenderer(new MyListCellRenderer("name"));
+		projekte.setName(columnNames[columnNames.length - 1]);
 		p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		l = new JLabel(columnNames[columnNames.length - 1]);
 		p.add(l);
@@ -121,6 +129,14 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 		p.add(projekte);
 		panel.add(p);
 
+		if (a != null) {
+			textfeld[0].setText(String.valueOf(a.getSumme()));
+			textfeld[1].setText(String.valueOf(a.getDauer()));
+			textfeld[2].setText(String.valueOf(a.getChance()));
+			kunden.setSelectedItem(BL.getKunde(a.getKundenID()));
+			projekte.setSelectedItem(BL.getProjekt(a.getProjektID()));
+		}
+
 		return panel;
 	}
 
@@ -128,19 +144,34 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == save) {
-			String[] inhalt = new String[columnNames.length];
-			for (int i = 0; i < textfeld.length; i++) {
-				inhalt[i] = textfeld[i].getText();
-			}
 			try {
-				inhalt[columnNames.length - 2] = String
-						.valueOf(((Kunde) (kunden.getSelectedItem())).getKundenID());
-				inhalt[columnNames.length - 1] = String
-						.valueOf(((Projekt) (projekte.getSelectedItem()))
-								.getProjektID());
-				a.setInhalt(inhalt);
-				BL.updateAngebot(a);
-				dispose();
+				DataBinder b = new DataBinder();
+				double summe = b.bindFrom_double(textfeld[0],
+						new StandardRule());
+				double dauer = b.bindFrom_double(textfeld[1],
+						new StandardRule());
+				double chance = b.bindFrom_double(textfeld[2],
+						new PercentRule());
+				int kundenID = b.bindFrom_int(kunden, null);
+				int projektID = b.bindFrom_int(projekte, null);
+
+				if (!b.hasErrors()) {
+					if (a != null) {
+						a.setSumme(summe);
+						a.setDauer(dauer);
+						a.setChance(chance);
+						a.setKundenID(kundenID);
+						a.setProjektID(projektID);
+						BL.updateAngebot(a);
+					} else {
+						a = new Angebot(-1, summe, dauer, new Date(), chance,
+								kundenID, projektID);
+						BL.saveAngebot(a);
+					}
+					dispose();
+				} else {
+					JOptionPane.showMessageDialog(this, b.getErrors());
+				}
 			} catch (NullPointerException npe) {
 				JOptionPane.showMessageDialog(this,
 						"Kunde bzw. Projekt müssen ausgewählt sein");

@@ -114,19 +114,20 @@ public class AngebotePanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			new AddAngebotDialog(owner);
+			new EditAngebotDialog(owner);
 			tModel.refresh();
 		} else if (e.getSource() == delete) {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
-				BL.deleteAngebot(Integer.valueOf((String) (tModel.getValueAt(b
+				BL.deleteAngebot(Integer.valueOf(String.valueOf (tModel.getValueAt(b
 						- i, 0))));
 			}
 			tModel.refresh();
 		} else if (e.getSource() == edit) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Angebot aa = BL.getAngebot(Integer.valueOf(String.valueOf(tModel.getValueAt(a, 0))));
+			Angebot aa = BL.getAngebot(Integer.valueOf(String.valueOf(tModel
+					.getValueAt(a, 0))));
 			new EditAngebotDialog(owner, aa);
 			tModel.refresh();
 		} else if (e.getSource() == kunden_info) {

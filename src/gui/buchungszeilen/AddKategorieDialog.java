@@ -24,6 +24,8 @@ import bl.objects.Angebot;
 import bl.objects.Buchungszeile;
 import bl.objects.Kategorie;
 import dal.DALException;
+import databinding.DataBinder;
+import databinding.StandardRule;
 
 public class AddKategorieDialog extends JDialog implements ActionListener {
 	private JTextField[] textfeld;
@@ -80,7 +82,7 @@ public class AddKategorieDialog extends JDialog implements ActionListener {
 			panel.add(p);
 
 		}
-		
+
 		return panel;
 	}
 
@@ -88,18 +90,23 @@ public class AddKategorieDialog extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			String[] inhalt = new String[columnNames.length];
-			for (int i = 0; i < textfeld.length; i++) {
-				inhalt[i] = textfeld[i].getText();
-			}
+
 			try {
-				
-				Kategorie k = new Kategorie(inhalt);
-				BL.saveKategorie(k);
-				JOptionPane.showMessageDialog(this, "Kategorie wurde erfolgreich hinzugefügt");
-				dispose();
-			}catch (NullPointerException npe){
-				JOptionPane.showMessageDialog(this, "Kategorie muss ausgewählt sein");
+				DataBinder b = new DataBinder();
+				String kbz = b.bindFrom_String(textfeld[0], new StandardRule());
+				String beschreibung = b.bindFrom_String(textfeld[1],
+						new StandardRule());
+
+				if (!b.hasErrors()) {
+					Kategorie k = new Kategorie(-1, kbz, beschreibung);
+					BL.saveKategorie(k);
+					dispose();
+				} else {
+					JOptionPane.showMessageDialog(this, b.getErrors());
+				}
+			} catch (NullPointerException npe) {
+				JOptionPane.showMessageDialog(this,
+						"Kategorie muss ausgewählt sein");
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
 			} catch (InvalidObjectException ioe) {

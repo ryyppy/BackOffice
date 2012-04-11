@@ -1,28 +1,14 @@
 package bl.objects;
 
+import java.util.Date;
+
 public class Eingangsrechnung extends Rechnung {
 	private int kontaktID;
 
-	public Eingangsrechnung(int rechnungID, String status, int kontaktID) {
-		super(rechnungID, status);
+	public Eingangsrechnung(int rechnungID, String status, Date datum,
+			int kontaktID) {
+		super(rechnungID, status, datum);
 		this.kontaktID = kontaktID;
-	}
-
-	/**
-	 * 
-	 * @param inhalt
-	 * @param inhalt
-	 *            [0]=status;
-	 * @param inhalt
-	 *            [1]=kundenid;
-	 */
-	public Eingangsrechnung(String[] inhalt) throws IllegalArgumentException {
-		super(-1, "");
-		if (inhalt[0] == null || inhalt[0].isEmpty()) {
-			throw new IllegalArgumentException("Status ist ungültig");
-		}
-		setStatus(inhalt[0]);
-		this.kontaktID = Integer.valueOf(inhalt[1]);
 	}
 
 	public int getKontaktID() {
