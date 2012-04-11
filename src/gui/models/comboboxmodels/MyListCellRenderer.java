@@ -11,7 +11,7 @@ public class MyListCellRenderer extends DefaultListCellRenderer {
 
 	public MyListCellRenderer(String property) {
 		super();
-		getter = "getId";
+		getter = "getID";
 		getter2 = "get" + Character.toUpperCase(property.charAt(0))
 				+ property.substring(1);
 	}

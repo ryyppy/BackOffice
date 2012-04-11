@@ -103,7 +103,7 @@ public class AddAusgangsrechnungDialog extends JDialog implements
 			try {
 				inhalt[0] = (String) status.getSelectedItem();
 				inhalt[1] = String.valueOf(((Kunde) (kunden.getSelectedItem()))
-						.getId());
+						.getKundenID());
 				Ausgangsrechnung a = new Ausgangsrechnung(inhalt);
 				BL.saveAusgangsrechnung(a);
 				dispose();

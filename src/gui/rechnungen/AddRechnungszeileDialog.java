@@ -124,7 +124,7 @@ public class AddRechnungszeileDialog extends JDialog implements ActionListener {
 			try {
 				inhalt[columnNames.length - 1] = String
 						.valueOf(((Angebot) (angebote.getSelectedItem()))
-								.getId());
+								.getAngebotID());
 				Rechnungszeile r = new Rechnungszeile(inhalt);
 				BL.saveRechnungszeile(r);
 				dispose();

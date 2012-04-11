@@ -102,7 +102,7 @@ public class AddEingangsrechnungDialog extends JDialog implements
 			try {
 				inhalt[0] = (String) status.getSelectedItem();
 				inhalt[1] = String.valueOf(((Kontakt) (kontakt.getSelectedItem()))
-						.getId());
+						.getKontaktID());
 				Eingangsrechnung a = new Eingangsrechnung(inhalt);
 				BL.saveEingangsrechnung(a);
 				dispose();

@@ -51,7 +51,7 @@ public class EditAusgangsrechnungDialog extends JDialog implements
 
 		add(buttonPanel, BorderLayout.SOUTH);
 		add(fields, BorderLayout.NORTH);
-		add(new RechnungszeilenPanel(owner, ar.getId(), ar.getKundenID()));
+		add(new RechnungszeilenPanel(owner, ar.getRechnungID(), ar.getKundenID()));
 
 		setVisible(true);
 	}
@@ -109,7 +109,7 @@ public class EditAusgangsrechnungDialog extends JDialog implements
 			String[] inhalt = new String[columnNames.length];
 			try {
 				ar.setStatus((String)status.getSelectedItem());
-				ar.setKundenID(((Kunde) (kunden.getSelectedItem())).getId());
+				ar.setKundenID(((Kunde) (kunden.getSelectedItem())).getKundenID());
 				BL.updateAusgangsrechnung(ar);
 				dispose();
 			} catch (NullPointerException npe) {
