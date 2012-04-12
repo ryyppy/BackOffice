@@ -1,6 +1,8 @@
 package dal;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
 
 public abstract class DatabaseAdapter {
@@ -9,7 +11,9 @@ public abstract class DatabaseAdapter {
     private String dbPassword = null;
     private String dbUrl = null;
     protected Connection con = null;
-    private boolean isTransaction = false;
+
+    private boolean connected = false;
+    private boolean transaction = false;
 
     protected DatabaseAdapter(String jdbcDriver, String dbUser, String dbPassword, String dbUrl){
         this.jdbcDriver = jdbcDriver;
@@ -28,13 +32,14 @@ public abstract class DatabaseAdapter {
     public void connect() throws SQLException {
         if (con == null) {
             con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+            connected = true;
         }
     }
 
     public void beginTransaction() throws DALException{
         try{
             con.setAutoCommit(false);
-            isTransaction = true;
+            transaction = true;
         }catch(SQLException sqle){
             throw new DALException("Transaction could not be initialized...", sqle);
         }
@@ -42,23 +47,23 @@ public abstract class DatabaseAdapter {
     
     public void commit() throws DALException{
         try{
-            if(isTransaction)
+            if(transaction)
                 con.commit();
         }catch(SQLException sqle){
             throw new DALException("Error while trying to commit!", sqle);
         }finally{
-            isTransaction = false;
+            transaction = false;
         }
     }
     
     public void rollback() throws DALException{
         try{
-            if(isTransaction)
+            if(transaction)
                 con.rollback();
         }catch(SQLException sqle){
             throw new DALException("Error while trying to rollback!", sqle);
         }finally{
-            isTransaction = false;
+            transaction = false;
         }
     }
 
@@ -71,16 +76,15 @@ public abstract class DatabaseAdapter {
                 throw new DALException("Error while closing database-connection!", sqle);
             }
             con = null;
+            connected = false;
         }
     }
 
     public boolean isConnected(){
-        return con != null;
+        return connected;
     }
 
-    public abstract void generateTable(Class<? extends DBEntity> entityClass);
-
-    public abstract DBEntity getEntityByID(Object id, Class<? extends DBEntity> entityClass) throws DALException;
+    public abstract <T extends DBEntity> T getEntityByID(Object id, Class<T> entityClass) throws DALException;
 
 
     /**
@@ -94,5 +98,5 @@ public abstract class DatabaseAdapter {
     
     public abstract void deleteEntity(Object id, Class<? extends DBEntity> entityClass) throws DALException;
     
-    public abstract List<DBEntity> getEntityList(Class<? extends DBEntity> entityClass) throws DALException;
+    public abstract <T extends DBEntity> List<T> getEntityList(Class<T> entityClass) throws DALException;
 }
