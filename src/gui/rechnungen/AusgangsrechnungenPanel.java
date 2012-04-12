@@ -137,7 +137,7 @@ public class AusgangsrechnungenPanel extends JPanel implements ActionListener {
 			int ausgangsrechnungsID = (Integer) tModel.getValueAt(a, 0);
 			int kundenID = Integer.valueOf(String.valueOf(tModel.getValueAt(a,
 					3)));
-			new RechnungszeilenFrame(owner, ausgangsrechnungsID, kundenID);
+			new RechnungszeilenDialog(owner, ausgangsrechnungsID, kundenID);
 		}
 	}
 }

@@ -135,7 +135,7 @@ public class EingangsrechnungenPanel extends JPanel implements ActionListener {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
 			int eingangsrechnungsID = (Integer) tModel.getValueAt(a, 0);
 			int kontaktID = (Integer) tModel.getValueAt(a, 3);
-			new RechnungszeilenFrame(owner, eingangsrechnungsID, kontaktID);
+			new RechnungszeilenDialog(owner, eingangsrechnungsID, kontaktID);
 		}
 	}
 }
