@@ -2,53 +2,55 @@ show tables;
 
 DROP TABLE (show tables);
 
-CREATE TABLE angebot(
-	angebotID integer, 
-	summe double, 
-	dauer integer,
-	datum date,
-	chance double,
-	PRIMARY KEY (angebotID)
-);
 
 CREATE TABLE projekt(
 	projektID 		integer,
-	name 					varchar(30),
+	name 			varchar(30),
 	beschreibung	varchar(100),
 	PRIMARY KEY (projektID)
 );
 
-CREATE TABLE rechnungszeile(
-	rechnungszeileID integer,
-	rechnungID 			 integer,
-	ust 						 double,
-	summe						 double,
-	PRIMARY KEY (rechnungszeileID)
+CREATE TABLE kunde(
+	kundeID 		integer,
+	vorname 		varchar(50),
+	nachname 		varchar(50),
+	geburtsdatum 	date,
+	PRIMARY KEY (kundeID)
+);
+
+CREATE TABLE angebot(
+	angebotID 		integer, 
+	summe 			double, 
+	dauer 			integer,
+	datum 			date,
+	chance 			double,
+	kundeID 		integer,
+	projektID 		integer,
+	PRIMARY KEY (angebotID),
+	FOREIGN KEY (kundeID) REFERENCES kunde(kundeID) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (projektID) REFERENCES projekt(projekt) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE kontakt(
+	kontaktID 		integer,
+	firma    		varchar(50),
+	name			varchar(50),
+	telefon  		varchar(20),
+	PRIMARY KEY (kontaktID)
+);
+
+CREATE TABLE rechnung(
+	rechnungID 		integer,
+	status 			varchar(20),
+	datum 			date,
+	PRIMARY KEY (rechnungID)
 );
 
 CREATE TABLE ausgangsrechnung(
 	rechnungID integer,
 	projektID integer,
 	PRIMARY KEY (rechnungID, projektID)
-);
-
-CREATE TABLE kunde(
-	kontaktID integer,
-	vorname varchar(50),
-	nachname varchar(50),
-	PRIMARY KEY (kontaktID)
-);
-
-CREATE TABLE kontakt(
-	kontaktID integer,
-	firma    varchar(50),
-	telefon  varchar(20),
-	email 	 varchar(30),
-	fax 		 varchar(20),
-	strasse varchar(50),
-	plz 	  varchar(10),
-	ort     varchar(50),
-	PRIMARY KEY (kontaktID)
 );
 
 CREATE TABLE eingangsrechnung(
@@ -58,12 +60,20 @@ CREATE TABLE eingangsrechnung(
 	PRIMARY KEY (rechnungID)
 );
 
-CREATE TABLE rechnung(
-	rechnungID integer,
-	kontaktID integer,
-	kundenID integer,
-	PRIMARY KEY (rechnungID)
+
+CREATE TABLE rechnungszeile(
+	rechnungszeileID	integer,
+	rechnungID			integer,
+	kommentar			varchar(100),
+	steuersatz			double,
+	betrag				double,
+	angebotID			integer,
+	PRIMARY KEY (rechnungszeileID),
+	FOREIGN KEY (rechnungID) REFERENCES rechnung(rechnungID) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (angebotID) REFERENCES angebot(angebotID) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+
 
 CREATE TABLE buchungszeile(
 	buchungszeileID integer,
