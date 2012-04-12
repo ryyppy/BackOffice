@@ -1,6 +1,7 @@
 package gui.buchungszeilen;
 
 import gui.models.tablemodels.BuchungszeilenTableModel;
+import gui.models.tablemodels.CheckBoxCellEditor;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -12,11 +13,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -138,10 +141,10 @@ public class BuchungszeilenPanel extends JPanel implements ActionListener {
 			Kategorie k = BL.getKategorie((Integer) tModel.getValueAt(a, 4));
 			JOptionPane.showMessageDialog(this, k.toString());
 		} else if (e.getSource() == selectRechnungen) {
-			// int a = table.convertRowIndexToModel(table.getSelectedRow());
-			// int ausgangsrechnungsID = (Integer) tModel.getValueAt(a, 0);
-			// int kundenID = (Integer) tModel.getValueAt(a, 2);
-			// new RechnungszeilenFrame(owner, ausgangsrechnungsID, kundenID);
+			int a = table.convertRowIndexToModel(table.getSelectedRow());
+			Buchungszeile b = BL.getBuchungszeile((Integer) tModel.getValueAt(
+					a, 0));
+			new RechnungenDialog(owner, b);
 		}
 	}
 }

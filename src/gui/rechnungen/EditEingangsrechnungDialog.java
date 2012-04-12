@@ -114,7 +114,7 @@ public class EditEingangsrechnungDialog extends JDialog implements
 		kontakt = new JComboBox<Kontakt>(new KontaktComboBoxModel(
 				BL.getKontaktListe()));
 		kontakt.setName(columnNames[2]);
-		kontakt.setRenderer(new MyListCellRenderer("name"));
+		kontakt.setRenderer(new MyListCellRenderer("firma"));
 		p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		l = new JLabel(columnNames[2]);
 		p.add(l);

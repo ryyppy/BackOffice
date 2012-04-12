@@ -6,6 +6,7 @@ public class Buchungszeile extends DBEntity {
 	private int buchungszeileID, kategorieID;
 	private String kommentar;
 	private double betrag, steuersatz;
+	public boolean auswahl=false;
 
 	public Buchungszeile(int id, String kommentar, double steuersatz,
 			double betrag, int kategorieID) {

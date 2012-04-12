@@ -11,7 +11,9 @@ import bl.objects.Kategorie;
 import bl.objects.Kontakt;
 import bl.objects.Kunde;
 import bl.objects.Projekt;
+import bl.objects.Rechnung;
 import bl.objects.Rechnungszeile;
+import bl.objects.Rechung_Buchungszeile;
 import dal.DALException;
 
 public class BL {
@@ -32,6 +34,7 @@ public class BL {
 	private static int buchungszeileID = 0;
 	private static ArrayList<Kategorie> kategorieliste = new ArrayList<Kategorie>();
 	private static int kategorieID = 0;
+	private static ArrayList<Rechung_Buchungszeile> rechnungen_buchungszeilen = new ArrayList<Rechung_Buchungszeile>();
 
 	public BL() {
 		projektliste = new ArrayList<Projekt>();
@@ -340,6 +343,61 @@ public class BL {
 		for (Ausgangsrechnung ar : ausgangsrechnungenliste) {
 			if (ar.getRechnungID() == a.getRechnungID()) {
 				ar = a;
+			}
+		}
+	}
+
+	public static ArrayList<Rechnung> getRechnungsListe() throws DALException {
+		ArrayList<Rechnung> ar = new ArrayList<Rechnung>();
+		ar.addAll(ausgangsrechnungenliste);
+		ar.addAll(eingangsrechnungenliste);
+		return ar;
+	}
+
+	public static ArrayList<Rechung_Buchungszeile> getRechnungsListe(
+			int buchungszeileID) throws DALException {
+		ArrayList<Rechung_Buchungszeile> ret = new ArrayList<Rechung_Buchungszeile>();
+		for (Rechung_Buchungszeile rb : rechnungen_buchungszeilen) {
+			if (rb.getBuchungszeileID() == buchungszeileID) {
+				ret.add(rb);
+			}
+		}
+		return ret;
+	}
+
+	public static void saveRechnung_Buchungszeile(Rechung_Buchungszeile rb)
+			throws DALException, InvalidObjectException {
+		String exception = "";
+		// ... rechnung & buchungszeile-ID überprüfen
+		for (Rechung_Buchungszeile rbz : rechnungen_buchungszeilen) {
+			if (rbz.getBuchungszeileID() == rb.getBuchungszeileID()
+					&& rbz.getRechnungsID() == rb.getRechnungsID()) {
+				exception += "Verknüpfung bereits vorhanden";
+				break;
+			}
+		}
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		rechnungen_buchungszeilen.add(rb);
+	}
+
+	public static void saveRechnung_Buchungszeile(
+			ArrayList<Rechung_Buchungszeile> rbs) throws DALException,
+			InvalidObjectException {
+		for (Rechung_Buchungszeile rbz : rbs) {
+			saveRechnung_Buchungszeile(rbz);
+		}
+	}
+
+	public static void deleteRechnung_Buchungszeile(int buchungszeileID)
+			throws DALException, InvalidObjectException {
+		for (int i = 0; i < rechnungen_buchungszeilen.size(); i++) {
+			Rechung_Buchungszeile rbz = rechnungen_buchungszeilen.get(i);
+			if (rbz.getBuchungszeileID() == buchungszeileID) {
+				rechnungen_buchungszeilen.remove(i);
+				i--;
 			}
 		}
 	}

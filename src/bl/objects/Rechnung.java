@@ -10,6 +10,7 @@ public abstract class Rechnung extends DBEntity {
 	private int rechnungID;
 	private String status;
 	private Date datum;
+	public boolean ausgewaehlt=false;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
 	public Rechnung(int rechnungID, String status, Date datum) {

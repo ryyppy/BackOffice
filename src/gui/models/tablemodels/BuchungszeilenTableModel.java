@@ -1,8 +1,11 @@
 package gui.models.tablemodels;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
 
 import bl.BL;
 import bl.objects.Buchungszeile;
@@ -41,7 +44,7 @@ public class BuchungszeilenTableModel extends AbstractTableModel {
 		case 3:
 			return b.getBetrag();
 		case 4:
-			return b.getKategorieID();
+			return BL.getKategorie(b.getKategorieID()).getKbz();
 		default:
 			return "";
 		}
