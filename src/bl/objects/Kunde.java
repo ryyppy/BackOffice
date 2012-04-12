@@ -22,43 +22,6 @@ public class Kunde extends DBEntity {
 		this.geburtsdatum = geburtsdatum;
 	}
 
-	/**
-	 * 
-	 * @param inhalt
-	 * @param inhalt
-	 *            [0]=vorname;
-	 * @param inhalt
-	 *            [1]=nachname;
-	 * @param inhalt
-	 *            [2]=geburtsdatum;
-	 * @throws ParseException
-	 */
-	public Kunde(String[] inhalt) throws ParseException,
-			IllegalArgumentException {
-		String exception = "";
-		this.kundenID = -1;
-		try {
-			setVorname(inhalt[0]);
-		} catch (IllegalArgumentException e) {
-			exception += e.getMessage() + "\n";
-		}
-		try {
-			setNachname(inhalt[1]);
-		} catch (IllegalArgumentException e) {
-			exception += e.getMessage() + "\n";
-		}
-		try {
-			setGeburtsdatum(inhalt[2]);
-		} catch (IllegalArgumentException e) {
-			exception += e.getMessage() + "\n";
-		}
-
-		if (!exception.isEmpty()) {
-			throw new IllegalArgumentException(exception);
-		}
-
-	}
-
 	public Object getID() {
 		return getKundenID();
 	}
@@ -75,10 +38,7 @@ public class Kunde extends DBEntity {
 		return vorname;
 	}
 
-	public void setVorname(String vorname) throws IllegalArgumentException {
-		if (vorname == null || vorname.isEmpty() || vorname == "") {
-			throw new IllegalArgumentException("Vorname ist ungültig");
-		}
+	public void setVorname(String vorname) {
 		this.vorname = vorname;
 	}
 
@@ -86,10 +46,7 @@ public class Kunde extends DBEntity {
 		return nachname;
 	}
 
-	public void setNachname(String nachname) throws IllegalArgumentException {
-		if (nachname == null || nachname.isEmpty() || nachname == "") {
-			throw new IllegalArgumentException("Nachname ist ungültig");
-		}
+	public void setNachname(String nachname) {
 		this.nachname = nachname;
 	}
 
@@ -105,17 +62,8 @@ public class Kunde extends DBEntity {
 		this.geburtsdatum = geburtsdatum;
 	}
 
-	public void setGeburtsdatum(String geburtsdatum) throws ParseException,
-			IllegalArgumentException {
-		if (geburtsdatum == null || geburtsdatum.isEmpty()) {
-			throw new IllegalArgumentException("Geburtsdatum ist ungültig");
-		}
-		try {
-			this.geburtsdatum = dateFormat.parse(geburtsdatum);
-		} catch (ParseException e) {
-			throw new ParseException("Datumsformat ungültig - (TT.MM.JJJJ)",
-					e.getErrorOffset());
-		}
+	public void setGeburtsdatum(String geburtsdatum) throws ParseException {
+		this.geburtsdatum = dateFormat.parse(geburtsdatum);
 	}
 
 	public String toString() {

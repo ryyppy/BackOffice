@@ -100,7 +100,7 @@ public class RechnungszeilenPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			new AddRechnungszeileDialog(owner, rechnungsID, kundenID);
+			new EditRechnungszeileDialog(owner, rechnungsID, kundenID);
 			//refresh bug
 			tModel.refresh();
 		} else if (e.getSource() == delete) {

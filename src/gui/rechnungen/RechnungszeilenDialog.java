@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -21,25 +22,29 @@ import javax.swing.table.TableRowSorter;
 
 import bl.BL;
 import bl.objects.Angebot;
+import bl.objects.Eingangsrechnung;
+import bl.objects.Rechnungszeile;
 
-public class RechnungszeilenFrame extends JFrame implements ActionListener {
+public class RechnungszeilenDialog extends JDialog implements ActionListener {
 	private JButton add, edit, delete, angebotInfo;
 	private JTable table;
 	private JScrollPane scrollpane;
 	private RechnungszeilenTableModel tModel;
 	private TableRowSorter<TableModel> tSorter;
 
+	private JFrame owner;
+	
 	private int ausgangsrechnungsID, kundenID;
 
-	public RechnungszeilenFrame(JFrame owner, int ausgangsrechnungsID,
+	public RechnungszeilenDialog(JFrame owner, int ausgangsrechnungsID,
 			int kundenID) {
-		super("EPU - Rechnungszeilen für RechnungsID "
-				+ ausgangsrechnungsID);
+		super(owner, "EPU - Rechnungszeilen für RechnungsID " + ausgangsrechnungsID, true);
 		setSize(500, 300);
 		setLocationRelativeTo(owner);
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
+		this.owner=owner;
 		this.ausgangsrechnungsID = ausgangsrechnungsID;
 		this.kundenID = kundenID;
 
@@ -98,9 +103,9 @@ public class RechnungszeilenFrame extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			new AddRechnungszeileDialog(this, ausgangsrechnungsID, kundenID);
+			new EditRechnungszeileDialog(owner, ausgangsrechnungsID, kundenID);
 			tModel.refresh();
-			
+
 		} else if (e.getSource() == delete) {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
@@ -109,7 +114,11 @@ public class RechnungszeilenFrame extends JFrame implements ActionListener {
 			}
 			tModel.refresh();
 		} else if (e.getSource() == edit) {
-
+			int a = table.convertRowIndexToModel(table.getSelectedRow());
+			Rechnungszeile r = BL.getRechnungszeile((Integer) tModel
+					.getValueAt(a, 0));
+			new EditRechnungszeileDialog(owner, ausgangsrechnungsID, kundenID, r);
+			tModel.refresh();
 		} else if (e.getSource() == angebotInfo) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
 			Angebot an = BL.getAngebot((Integer) tModel.getValueAt(a, 5));

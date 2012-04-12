@@ -1,8 +1,11 @@
 package gui.models.tablemodels;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
 
 import bl.BL;
 import bl.objects.Buchungszeile;

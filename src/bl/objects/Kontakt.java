@@ -16,43 +16,6 @@ public class Kontakt extends DBEntity {
 		this.telefon = telefon;
 	}
 
-	/**
-	 * 
-	 * @param inhalt
-	 * @param inhalt
-	 *            [0]=firma;
-	 * @param inhalt
-	 *            [1]=name;
-	 * @param inhalt
-	 *            [2]=telefon;
-	 * @throws ParseException
-	 */
-	public Kontakt(String[] inhalt) throws ParseException,
-			IllegalArgumentException {
-		String exception = "";
-		this.kontaktID = -1;
-		try {
-			setFirma(inhalt[0]);
-		} catch (IllegalArgumentException e) {
-			exception += e.getMessage() + "\n";
-		}
-		try {
-			setName(inhalt[1]);
-		} catch (IllegalArgumentException e) {
-			exception += e.getMessage() + "\n";
-		}
-		try {
-			setTelefon(inhalt[2]);
-		} catch (IllegalArgumentException e) {
-			exception += e.getMessage() + "\n";
-		}
-
-		if (!exception.isEmpty()) {
-			throw new IllegalArgumentException(exception);
-		}
-
-	}
-
 	public Object getID() {
 		return getKontaktID();
 	}
@@ -69,10 +32,7 @@ public class Kontakt extends DBEntity {
 		return firma;
 	}
 
-	public void setFirma(String firma) throws IllegalArgumentException {
-		if (firma == null || firma.isEmpty() || firma == "") {
-			throw new IllegalArgumentException("Firma ist ungültig");
-		}
+	public void setFirma(String firma) {
 		this.firma = firma;
 	}
 
@@ -80,10 +40,7 @@ public class Kontakt extends DBEntity {
 		return name;
 	}
 
-	public void setName(String name) throws IllegalArgumentException {
-		if (name == null || name.isEmpty() || name == "") {
-			throw new IllegalArgumentException("Name ist ungültig");
-		}
+	public void setName(String name) {
 		this.name = name;
 	}
 
@@ -91,11 +48,7 @@ public class Kontakt extends DBEntity {
 		return telefon;
 	}
 
-	public void setTelefon(String telefon) throws ParseException,
-			IllegalArgumentException {
-		if (telefon == null || telefon.isEmpty()) {
-			throw new IllegalArgumentException("Telefon ist ungültig");
-		}
+	public void setTelefon(String telefon) {
 		this.telefon = telefon;
 
 	}

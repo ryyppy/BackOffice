@@ -25,8 +25,7 @@ import bl.objects.Eingangsrechnung;
 import bl.objects.Kontakt;
 
 public class EingangsrechnungenPanel extends JPanel implements ActionListener {
-	private JButton add, edit, delete, kontaktInfo, showRechnungszeilen,
-			selectBuchungszeilen;
+	private JButton add, edit, delete, kontaktInfo, showRechnungszeilen;
 	private JTable table;
 	private JScrollPane scrollpane;
 	private EingangsrechnungTableModel tModel;
@@ -58,14 +57,12 @@ public class EingangsrechnungenPanel extends JPanel implements ActionListener {
 		delete = new JButton("Delete");
 		kontaktInfo = new JButton("Kontaktinfo");
 		showRechnungszeilen = new JButton("Show Rechnungszeilen");
-		selectBuchungszeilen = new JButton("Select Buchungszeilen");
 
 		add.addActionListener(this);
 		edit.addActionListener(this);
 		delete.addActionListener(this);
 		kontaktInfo.addActionListener(this);
 		showRechnungszeilen.addActionListener(this);
-		selectBuchungszeilen.addActionListener(this);
 
 		JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		panel1.add(add);
@@ -75,7 +72,6 @@ public class EingangsrechnungenPanel extends JPanel implements ActionListener {
 		JPanel panel2 = new JPanel(new GridLayout(3, 1));
 		panel2.add(kontaktInfo);
 		panel2.add(showRechnungszeilen);
-		panel2.add(selectBuchungszeilen);
 
 		JPanel panel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -115,7 +111,7 @@ public class EingangsrechnungenPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			new AddEingangsrechnungDialog(owner);
+			new EditEingangsrechnungDialog(owner);
 			tModel.refresh();
 		} else if (e.getSource() == delete) {
 			int[] a = table.getSelectedRows();
@@ -127,21 +123,19 @@ public class EingangsrechnungenPanel extends JPanel implements ActionListener {
 			tModel.refresh();
 		} else if (e.getSource() == edit) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Eingangsrechnung ar = BL.getEingangsrechnung((Integer) tModel
+			Eingangsrechnung er = BL.getEingangsrechnung((Integer) tModel
 					.getValueAt(a, 0));
-			// new EditEingangsrechnungDialog(owner, ar);
+			new EditEingangsrechnungDialog(owner, er);
 			tModel.refresh();
 		} else if (e.getSource() == kontaktInfo) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Kontakt k = BL.getKontakt((Integer) tModel.getValueAt(a, 2));
+			Kontakt k = BL.getKontakt((Integer) tModel.getValueAt(a, 3));
 			JOptionPane.showMessageDialog(this, k.toString());
 		} else if (e.getSource() == showRechnungszeilen) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
 			int eingangsrechnungsID = (Integer) tModel.getValueAt(a, 0);
-			int kontaktID = (Integer) tModel.getValueAt(a, 2);
-			new RechnungszeilenFrame(owner, eingangsrechnungsID, kontaktID);
-		} else if (e.getSource() == selectBuchungszeilen) {
-
+			int kontaktID = (Integer) tModel.getValueAt(a, 3);
+			new RechnungszeilenDialog(owner, eingangsrechnungsID, kontaktID);
 		}
 	}
 }

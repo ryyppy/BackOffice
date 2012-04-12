@@ -9,6 +9,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.InvalidObjectException;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -21,11 +22,14 @@ import javax.swing.JTextField;
 
 import bl.BL;
 import bl.objects.Angebot;
+import bl.objects.Ausgangsrechnung;
 import bl.objects.Buchungszeile;
 import bl.objects.Kategorie;
 import dal.DALException;
+import databinding.DataBinder;
+import databinding.StandardRule;
 
-public class AddBuchungszeileDialog extends JDialog implements ActionListener {
+public class EditBuchungszeileDialog extends JDialog implements ActionListener {
 	private JTextField[] textfeld;
 	private JComboBox<Kategorie> kategorie;
 	private JButton add, cancel;
@@ -33,10 +37,23 @@ public class AddBuchungszeileDialog extends JDialog implements ActionListener {
 	private String[] columnNames = { "Kommentar", "Steuersatz", "Betrag",
 			"KategorieID" };
 
-	public AddBuchungszeileDialog(JFrame owner) {
+	private Buchungszeile b;
+
+	public EditBuchungszeileDialog(JFrame owner) {
 		super(owner, "Buchungszeile hinzufuegen", true);
+		this.b = null;
+		initDialog();
+	}
+
+	public EditBuchungszeileDialog(JFrame owner, Buchungszeile b) {
+		super(owner, "Buchungszeile bearbeiten", true);
+		this.b = b;
+		initDialog();
+	}
+
+	public void initDialog() {
 		setSize(300, 200);
-		setLocationRelativeTo(owner);
+		setLocationRelativeTo(getOwner());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
 
@@ -52,7 +69,7 @@ public class AddBuchungszeileDialog extends JDialog implements ActionListener {
 	public JPanel initButtons() {
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-		add = new JButton("Add");
+		add = new JButton("Save");
 		cancel = new JButton("Cancel");
 
 		add.addActionListener(this);
@@ -71,6 +88,7 @@ public class AddBuchungszeileDialog extends JDialog implements ActionListener {
 
 		for (int i = 0; i < textfeld.length; i++) {
 			textfeld[i] = new JTextField(15);
+			textfeld[i].setName(columnNames[i]);
 			JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 			JLabel l = new JLabel(columnNames[i]);
 			p.add(l);
@@ -84,6 +102,7 @@ public class AddBuchungszeileDialog extends JDialog implements ActionListener {
 		}
 		kategorie = new JComboBox<Kategorie>(new KategorieComboBoxModel(
 				BL.getKategorieListe()));
+		kategorie.setName(columnNames[columnNames.length - 1]);
 		kategorie.setRenderer(new MyListCellRenderer("kbz"));
 
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -95,6 +114,13 @@ public class AddBuchungszeileDialog extends JDialog implements ActionListener {
 		p.add(kategorie);
 		panel.add(p);
 
+		if (b != null) {
+			textfeld[0].setText(b.getKommentar());
+			textfeld[1].setText(String.valueOf(b.getSteuersatz()));
+			textfeld[2].setText(String.valueOf(b.getBetrag()));
+			kategorie.setSelectedItem(BL.getKategorie(b.getKategorieID()));
+		}
+
 		return panel;
 	}
 
@@ -102,17 +128,33 @@ public class AddBuchungszeileDialog extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			String[] inhalt = new String[columnNames.length];
-			for (int i = 0; i < textfeld.length; i++) {
-				inhalt[i] = textfeld[i].getText();
-			}
+
 			try {
-				inhalt[columnNames.length - 1] = String
-						.valueOf(((Kategorie) (kategorie.getSelectedItem()))
-								.getKategorieID());
-				Buchungszeile b = new Buchungszeile(inhalt);
-				BL.saveBuchungszeile(b);
-				dispose();
+				DataBinder b = new DataBinder();
+				String kommentar = b.bindFrom_String(textfeld[0],
+						new StandardRule());
+				double steuersatz = b.bindFrom_double(textfeld[1],
+						new StandardRule());
+				double betrag = b.bindFrom_double(textfeld[2],
+						new StandardRule());
+				int kategorieID = b.bindFrom_int(kategorie, null);
+
+				if (!b.hasErrors()) {
+					if (this.b != null) {
+						this.b.setKommentar(kommentar);
+						this.b.setSteuersatz(steuersatz);
+						this.b.setBetrag(betrag);
+						this.b.setKategorieID(kategorieID);
+						BL.updateBuchungszeile(this.b);
+					} else {
+						this.b = new Buchungszeile(-1, kommentar, steuersatz,
+								betrag, kategorieID);
+						BL.saveBuchungszeile(this.b);
+					}
+					dispose();
+				} else {
+					JOptionPane.showMessageDialog(this, b.getErrors());
+				}
 			} catch (NullPointerException npe) {
 				JOptionPane.showMessageDialog(this,
 						"Kategorie muss ausgewählt sein", "Error",

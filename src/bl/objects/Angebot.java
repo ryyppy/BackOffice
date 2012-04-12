@@ -22,65 +22,6 @@ public class Angebot extends DBEntity {
 		this.projektID = projektID;
 	}
 
-	/**
-	 * 
-	 * @param inhalt
-	 * @param inhalt
-	 *            [0]=summe
-	 * @param inhalt
-	 *            [1]=dauer
-	 * @param inhalt
-	 *            [2]=chance
-	 * @param inhalt
-	 *            [3]=kundenID
-	 * @param inhalt
-	 *            [4]=projektID
-	 */
-	public Angebot(String[] inhalt) throws IllegalArgumentException {
-		this.angebotID = -1;
-		setInhalt(inhalt);
-	}
-
-	public void setInhalt(String[] inhalt) throws IllegalArgumentException {
-		if (inhalt[0].isEmpty()) {
-			throw new IllegalArgumentException("Summe muss festgelegt werden");
-		}
-		try {
-			this.summe = Double.parseDouble(inhalt[0]);
-		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException("Summe ungültig");
-		}
-		if (summe < 0) {
-			throw new IllegalArgumentException("Summe kann nicht negativ sein");
-		}
-		if (inhalt[1].isEmpty()) {
-			throw new IllegalArgumentException("Dauer muss festgelegt werden");
-		}
-		try {
-			this.dauer = Double.parseDouble(inhalt[1]);
-		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException("Dauer ungültig");
-		}
-		if (dauer < 0) {
-			throw new IllegalArgumentException("Dauer kann nicht negativ sein");
-		}
-		this.date = new Date();
-		if (inhalt[2].isEmpty()) {
-			throw new IllegalArgumentException("Chance muss festgelegt werden");
-		}
-		try {
-			this.chance = Double.parseDouble(inhalt[2]);
-		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException("Chance ungültig");
-		}
-		if (chance < 0 || chance > 100) {
-			throw new IllegalArgumentException(
-					"Chance darf nur zw. 0.0 und 100.0 sein");
-		}
-		this.kundenID = Integer.valueOf(inhalt[3]);
-		this.projektID = Integer.valueOf(inhalt[4]);
-	}
-
 	@Override
 	public Object getID() {
 		return getAngebotID();

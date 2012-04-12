@@ -132,19 +132,19 @@ public class KundenPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			new AddKundeDialog(owner);
+			new EditKundeDialog(owner);
 			tModel.refresh();
 		} else if (e.getSource() == delete) {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
-				BL.deleteKunde(Integer.valueOf((String) (tModel.getValueAt(b
+				BL.deleteKunde(Integer.valueOf(String.valueOf (tModel.getValueAt(b
 						- i, 0))));
 			}
 			tModel.refresh();
 		} else if (e.getSource() == edit) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Kunde k = BL.getKunde(Integer.valueOf((String)tModel.getValueAt(a, 0)));
+			Kunde k = BL.getKunde(Integer.valueOf(String.valueOf(tModel.getValueAt(a, 0))));
 			new EditKundeDialog(owner, k);
 			tModel.refresh();
 		}

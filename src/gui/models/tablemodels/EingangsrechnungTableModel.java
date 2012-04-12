@@ -9,7 +9,8 @@ import bl.objects.Eingangsrechnung;
 
 public class EingangsrechnungTableModel extends AbstractTableModel {
 	private ArrayList<Eingangsrechnung> eingangsrechnungen;
-	private String[] columnNames = { "Rechnung-ID", "Status", "Kontakt-ID" };
+	private String[] columnNames = { "Rechnung-ID", "Status", "Datum",
+			"Kontakt-ID" };
 
 	public EingangsrechnungTableModel() {
 		this.refresh();
@@ -36,6 +37,8 @@ public class EingangsrechnungTableModel extends AbstractTableModel {
 		case 1:
 			return e.getStatus();
 		case 2:
+			return e.getDatumString();
+		case 3:
 			return e.getKontaktID();
 		default:
 			return "";

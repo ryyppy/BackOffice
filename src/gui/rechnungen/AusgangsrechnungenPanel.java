@@ -26,8 +26,7 @@ import bl.objects.Ausgangsrechnung;
 import bl.objects.Kunde;
 
 public class AusgangsrechnungenPanel extends JPanel implements ActionListener {
-	private JButton add, edit, delete, kundenInfo, showRechnungszeilen,
-			selectBuchungszeilen;
+	private JButton add, edit, delete, kundenInfo, showRechnungszeilen;
 	private JTable table;
 	private JScrollPane scrollpane;
 	private AusgangsrechnungTableModel tModel;
@@ -59,24 +58,21 @@ public class AusgangsrechnungenPanel extends JPanel implements ActionListener {
 		delete = new JButton("Delete");
 		kundenInfo = new JButton("Kundeninfo");
 		showRechnungszeilen = new JButton("Show Rechnungszeilen");
-		selectBuchungszeilen = new JButton("Select Buchungszeilen");
 
 		add.addActionListener(this);
 		edit.addActionListener(this);
 		delete.addActionListener(this);
 		kundenInfo.addActionListener(this);
 		showRechnungszeilen.addActionListener(this);
-		selectBuchungszeilen.addActionListener(this);
 
 		JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		panel1.add(add);
 		panel1.add(edit);
 		panel1.add(delete);
 
-		JPanel panel2 = new JPanel(new GridLayout(3, 1));
+		JPanel panel2 = new JPanel(new GridLayout(2, 1));
 		panel2.add(kundenInfo);
 		panel2.add(showRechnungszeilen);
-		panel2.add(selectBuchungszeilen);
 
 		JPanel panel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -116,13 +112,13 @@ public class AusgangsrechnungenPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			new AddAusgangsrechnungDialog(owner);
+			new EditAusgangsrechnungDialog(owner);
 			tModel.refresh();
 		} else if (e.getSource() == delete) {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
-				BL.deleteAusgangsrechnung(Integer.valueOf((String) (tModel
+				BL.deleteAusgangsrechnung(Integer.valueOf(String.valueOf(tModel
 						.getValueAt(b - i, 0))));
 			}
 			tModel.refresh();
@@ -134,15 +130,14 @@ public class AusgangsrechnungenPanel extends JPanel implements ActionListener {
 			tModel.refresh();
 		} else if (e.getSource() == kundenInfo) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Kunde k = BL.getKunde((Integer) tModel.getValueAt(a, 2));
+			Kunde k = BL.getKunde((Integer) tModel.getValueAt(a, 3));
 			JOptionPane.showMessageDialog(this, k.toString());
 		} else if (e.getSource() == showRechnungszeilen) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
 			int ausgangsrechnungsID = (Integer) tModel.getValueAt(a, 0);
-			int kundenID = (Integer) tModel.getValueAt(a, 2);
-			new RechnungszeilenFrame(owner, ausgangsrechnungsID, kundenID);
-		} else if (e.getSource() == selectBuchungszeilen) {
-
+			int kundenID = Integer.valueOf(String.valueOf(tModel.getValueAt(a,
+					3)));
+			new RechnungszeilenDialog(owner, ausgangsrechnungsID, kundenID);
 		}
 	}
 }

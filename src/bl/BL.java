@@ -11,7 +11,9 @@ import bl.objects.Kategorie;
 import bl.objects.Kontakt;
 import bl.objects.Kunde;
 import bl.objects.Projekt;
+import bl.objects.Rechnung;
 import bl.objects.Rechnungszeile;
+import bl.objects.Rechung_Buchungszeile;
 import dal.DALException;
 
 public class BL {
@@ -32,6 +34,7 @@ public class BL {
 	private static int buchungszeileID = 0;
 	private static ArrayList<Kategorie> kategorieliste = new ArrayList<Kategorie>();
 	private static int kategorieID = 0;
+	private static ArrayList<Rechung_Buchungszeile> rechnungen_buchungszeilen = new ArrayList<Rechung_Buchungszeile>();
 
 	public BL() {
 		projektliste = new ArrayList<Projekt>();
@@ -244,11 +247,6 @@ public class BL {
 		}
 	}
 
-	public static ArrayList<Ausgangsrechnung> getAusgangsrechnungenListe()
-			throws DALException {
-		return ausgangsrechnungenliste;
-	}
-
 	public static Eingangsrechnung getEingangsrechnung(int rechnungID)
 			throws DALException {
 		for (int i = 0; i < eingangsrechnungenliste.size(); i++) {
@@ -265,6 +263,43 @@ public class BL {
 		if (a != null) {
 			eingangsrechnungenliste.remove(a);
 		}
+	}
+
+	public static ArrayList<Eingangsrechnung> getEingangsrechnungenListe()
+			throws DALException {
+		return eingangsrechnungenliste;
+	}
+
+	public static void saveEingangsrechnung(Eingangsrechnung e)
+			throws DALException, InvalidObjectException {
+		String exception = "";
+		// ... Kontakt-ID überprüfen
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		e.setRechnungID(rechnungID++);
+		eingangsrechnungenliste.add(e);
+	}
+
+	public static void updateEingangsrechnung(Eingangsrechnung e)
+			throws DALException, InvalidObjectException {
+		String exception = "";
+		// ... Kontakt-ID überprüfen
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		for (Eingangsrechnung er : eingangsrechnungenliste) {
+			if (er.getRechnungID() == e.getRechnungID()) {
+				er = e;
+			}
+		}
+	}
+
+	public static ArrayList<Ausgangsrechnung> getAusgangsrechnungenListe()
+			throws DALException {
+		return ausgangsrechnungenliste;
 	}
 
 	public static Ausgangsrechnung getAusgangsrechnung(int rechnungID)
@@ -312,21 +347,59 @@ public class BL {
 		}
 	}
 
-	public static ArrayList<Eingangsrechnung> getEingangsrechnungenListe()
-			throws DALException {
-		return eingangsrechnungenliste;
+	public static ArrayList<Rechnung> getRechnungsListe() throws DALException {
+		ArrayList<Rechnung> ar = new ArrayList<Rechnung>();
+		ar.addAll(ausgangsrechnungenliste);
+		ar.addAll(eingangsrechnungenliste);
+		return ar;
 	}
 
-	public static void saveEingangsrechnung(Eingangsrechnung e)
+	public static ArrayList<Rechung_Buchungszeile> getRechnungsListe(
+			int buchungszeileID) throws DALException {
+		ArrayList<Rechung_Buchungszeile> ret = new ArrayList<Rechung_Buchungszeile>();
+		for (Rechung_Buchungszeile rb : rechnungen_buchungszeilen) {
+			if (rb.getBuchungszeileID() == buchungszeileID) {
+				ret.add(rb);
+			}
+		}
+		return ret;
+	}
+
+	public static void saveRechnung_Buchungszeile(Rechung_Buchungszeile rb)
 			throws DALException, InvalidObjectException {
 		String exception = "";
-		// ... Kontakt-ID überprüfen
+		// ... rechnung & buchungszeile-ID überprüfen
+		for (Rechung_Buchungszeile rbz : rechnungen_buchungszeilen) {
+			if (rbz.getBuchungszeileID() == rb.getBuchungszeileID()
+					&& rbz.getRechnungsID() == rb.getRechnungsID()) {
+				exception += "Verknüpfung bereits vorhanden";
+				break;
+			}
+		}
 		if (!exception.isEmpty()) {
 			throw new InvalidObjectException(exception);
 		}
 
-		e.setRechnungID(rechnungID++);
-		eingangsrechnungenliste.add(e);
+		rechnungen_buchungszeilen.add(rb);
+	}
+
+	public static void saveRechnung_Buchungszeile(
+			ArrayList<Rechung_Buchungszeile> rbs) throws DALException,
+			InvalidObjectException {
+		for (Rechung_Buchungszeile rbz : rbs) {
+			saveRechnung_Buchungszeile(rbz);
+		}
+	}
+
+	public static void deleteRechnung_Buchungszeile(int buchungszeileID)
+			throws DALException, InvalidObjectException {
+		for (int i = 0; i < rechnungen_buchungszeilen.size(); i++) {
+			Rechung_Buchungszeile rbz = rechnungen_buchungszeilen.get(i);
+			if (rbz.getBuchungszeileID() == buchungszeileID) {
+				rechnungen_buchungszeilen.remove(i);
+				i--;
+			}
+		}
 	}
 
 	public static ArrayList<Rechnungszeile> getRechnungszeilenListe()
@@ -375,6 +448,21 @@ public class BL {
 		rechnungszeilenliste.add(r);
 	}
 
+	public static void updateRechnungszeile(Rechnungszeile r)
+			throws DALException, InvalidObjectException {
+		String exception = "";
+		// ... Rechnung- und Angebot-ID überprüfen
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		for (Rechnungszeile rz : rechnungszeilenliste) {
+			if (rz.getRechnungszeileID() == r.getRechnungszeileID()) {
+				rz = r;
+			}
+		}
+	}
+
 	public static ArrayList<Buchungszeile> getBuchungszeilenListe()
 			throws DALException {
 		return buchungszeilenliste;
@@ -407,6 +495,21 @@ public class BL {
 		Buchungszeile r = getBuchungszeile(buchungszeileID);
 		if (r != null) {
 			buchungszeilenliste.remove(r);
+		}
+	}
+
+	public static void updateBuchungszeile(Buchungszeile b)
+			throws DALException, InvalidObjectException {
+		String exception = "";
+		// ... Kategorie-ID überprüfen
+		if (!exception.isEmpty()) {
+			throw new InvalidObjectException(exception);
+		}
+
+		for (Buchungszeile bz : buchungszeilenliste) {
+			if (bz.getBuchungszeileID() == b.getBuchungszeileID()) {
+				bz = b;
+			}
 		}
 	}
 

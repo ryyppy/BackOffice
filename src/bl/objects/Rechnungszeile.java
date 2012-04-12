@@ -18,48 +18,6 @@ public class Rechnungszeile extends DBEntity {
 		this.betrag = betrag;
 	}
 
-	/**
-	 * 
-	 * @param inhalt
-	 * @param inhalt
-	 *            [0]=rechnungid
-	 * @param inhalt
-	 *            [1]=kommentar
-	 * @param inhalt
-	 *            [2]=steuersatz
-	 * @param inhalt
-	 *            [3]=betrag
-	 * @param inhalt
-	 *            [4]=angebotid
-	 */
-	public Rechnungszeile(String[] inhalt) {
-		this.rechnungszeileID = -1;
-		this.rechnungID = Integer.valueOf(inhalt[0]);
-
-		if (inhalt[1].isEmpty() || inhalt[1] == null) {
-			throw new IllegalArgumentException("Kommentar ist ungültig");
-		}
-		this.kommentar = inhalt[1];
-		if (inhalt[2].isEmpty()) {
-			throw new IllegalArgumentException(
-					"Steuersatz muss festgelegt werden");
-		}
-		this.steuersatz = Double.parseDouble(inhalt[2]);
-		if (steuersatz < 0 || steuersatz > 100) {
-			throw new IllegalArgumentException(
-					"Steuersatz darf nur zw. 0 und 100 sein");
-		}
-		if (inhalt[3].isEmpty()) {
-			throw new IllegalArgumentException("Betrag muss festgelegt werden");
-		}
-		this.betrag = Double.parseDouble(inhalt[3]);
-		if (betrag < 0) {
-			throw new IllegalArgumentException("Betrag darf nicht negativ sein");
-		}
-
-		this.angebotsID = Integer.valueOf(inhalt[4]);
-	}
-
 	public Object getID() {
 		return getRechnungszeileID();
 	}

@@ -6,36 +6,10 @@ public class Kategorie extends DBEntity {
 	private int kategorieID;
 	private String kbz, beschreibung;
 
-	public Kategorie(int id, String name, String beschreibung) {
+	public Kategorie(int id, String kbz, String beschreibung) {
 		this.kategorieID = id;
-		this.kbz = name;
+		this.kbz = kbz;
 		this.beschreibung = beschreibung;
-	}
-
-	/**
-	 * 
-	 * @param inhalt
-	 * @param inhalt
-	 *            [0] =kbz
-	 * @param inhalt
-	 *            [1] =beschreibung
-	 */
-	public Kategorie(String[] inhalt) throws IllegalArgumentException {
-		String exception = "";
-		if (inhalt[0] == null || inhalt[0].isEmpty()) {
-			exception += "Kurzbezeichnung ist ungültig\n";
-		}
-		if (inhalt[1] == null || inhalt[1].isEmpty()) {
-			exception += "Beschreibung ist ungültig\n";
-		}
-		if (!exception.isEmpty()) {
-			throw new IllegalArgumentException(exception);
-		}
-
-		this.kategorieID = -1;
-		this.kbz = inhalt[0];
-		this.beschreibung = inhalt[1];
-
 	}
 
 	public Object getID() {

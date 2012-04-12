@@ -109,20 +109,20 @@ public class ProjektePanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			new AddProjektDialog(owner);
+			new EditProjektDialog(owner);
 			tModel.refresh();
 		} else if (e.getSource() == delete) {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
-				BL.deleteProjekt(Integer.valueOf((String) (tModel.getValueAt(b
+				BL.deleteProjekt(Integer.valueOf(String.valueOf (tModel.getValueAt(b
 						- i, 0))));
 			}
 			tModel.refresh();
 		} else if (e.getSource() == edit) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Projekt p = BL.getProjekt(Integer.valueOf((String) tModel
-					.getValueAt(a, 0)));
+			Projekt p = BL.getProjekt(Integer.valueOf(String.valueOf(tModel
+					.getValueAt(a, 0))));
 			new EditProjektDialog(owner, p);
 			tModel.refresh();
 		}

@@ -12,7 +12,8 @@ import bl.objects.Ausgangsrechnung;
 
 public class AusgangsrechnungTableModel extends AbstractTableModel {
 	private ArrayList<Ausgangsrechnung> ausgangsrechnungen;
-	private String[] columnNames = { "Rechnung-ID", "Status", "Kunden-ID" };
+	private String[] columnNames = { "Rechnung-ID", "Status", "Datum",
+			"Kunden-ID" };
 
 	public AusgangsrechnungTableModel() {
 		this.refresh();
@@ -39,6 +40,8 @@ public class AusgangsrechnungTableModel extends AbstractTableModel {
 		case 1:
 			return a.getStatus();
 		case 2:
+			return a.getDatumString();
+		case 3:
 			return a.getKundenID();
 		default:
 			return "";

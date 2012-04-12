@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.InvalidObjectException;
 import java.text.ParseException;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -17,26 +18,39 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import dal.DALException;
+import databinding.BirthdayRule;
+import databinding.DataBinder;
+import databinding.StandardRule;
 
 import bl.BL;
+import bl.objects.Kunde;
 import bl.objects.Projekt;
 
 public class EditProjektDialog extends JDialog implements ActionListener {
 	private JTextField[] textfeld;
 	private JButton save, cancel;
-	
+
 	private Projekt p;
 
 	private String[] columnNames = { "Name", "Beschreibung" };
 
+	public EditProjektDialog(JFrame owner) {
+		super(owner, "Projekt hinzufuegen", true);
+		this.p = null;
+		initDialog();
+	}
+
 	public EditProjektDialog(JFrame owner, Projekt p) {
-		super(owner, "Kunde hinzufuegen", true);
+		super(owner, "Projekt bearbeiten", true);
+		this.p = p;
+		initDialog();
+	}
+
+	public void initDialog() {
 		setSize(300, 150);
-		setLocationRelativeTo(owner);
+		setLocationRelativeTo(getOwner());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
-		
-		this.p = p;
 
 		JPanel buttonPanel = initButtons();
 		JPanel fields = initTextFields();
@@ -69,6 +83,7 @@ public class EditProjektDialog extends JDialog implements ActionListener {
 
 		for (int i = 0; i < textfeld.length; i++) {
 			textfeld[i] = new JTextField(20);
+			textfeld[i].setName(columnNames[i]);
 			JLabel l = new JLabel(columnNames[i]);
 
 			JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -77,9 +92,11 @@ public class EditProjektDialog extends JDialog implements ActionListener {
 
 			panel.add(p);
 		}
-		
-		textfeld[0].setText(p.getName());
-		textfeld[1].setText(p.getBeschreibung());
+
+		if (p != null) {
+			textfeld[0].setText(p.getName());
+			textfeld[1].setText(p.getBeschreibung());
+		}
 
 		return panel;
 	}
@@ -89,10 +106,24 @@ public class EditProjektDialog extends JDialog implements ActionListener {
 		// TODO Auto-generated method stub
 		if (e.getSource() == save) {
 			try {
-				p.setName(textfeld[0].getText());
-				p.setBeschreibung(textfeld[1].getText());
-				BL.updateProjekt(p);
-				dispose();
+				DataBinder b = new DataBinder();
+				String name = b
+						.bindFrom_String(textfeld[0], new StandardRule());
+				String beschreibung = b.bindFrom_String(textfeld[1],
+						new StandardRule());
+				if (!b.hasErrors()) {
+					if (p != null) {
+						p.setName(name);
+						p.setBeschreibung(beschreibung);
+						BL.updateProjekt(p);
+					} else {
+						p = new Projekt(-1, name, beschreibung);
+						BL.saveProjekt(p);
+					}
+					dispose();
+				} else {
+					JOptionPane.showMessageDialog(this, b.getErrors());
+				}
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(this, iae.getMessage());
 			} catch (InvalidObjectException ioe) {

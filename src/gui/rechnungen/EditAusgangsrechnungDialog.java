@@ -9,6 +9,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.InvalidObjectException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -21,8 +23,12 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import dal.DALException;
+import databinding.DataBinder;
+import databinding.PercentRule;
+import databinding.StandardRule;
 
 import bl.BL;
+import bl.objects.Angebot;
 import bl.objects.Ausgangsrechnung;
 import bl.objects.Kunde;
 
@@ -30,28 +36,39 @@ public class EditAusgangsrechnungDialog extends JDialog implements
 		ActionListener {
 	private JComboBox<Kunde> kunden;
 	private JComboBox<String> status;
+	private JTextField datum;
 	private JButton save, cancel;
 
 	private Ausgangsrechnung ar;
 
-	private String[] columnNames = { "Status", "Kunde" };
+	private String[] columnNames = { "Status", "Datum", "Kunde" };
 	private String[] statusValues = { "offen", "bezahlt" };
+
+	public EditAusgangsrechnungDialog(JFrame owner) {
+		super(owner, "Ausgangsrechnung hinzufuegen", true);
+		this.ar = null;
+		initDialog();
+	}
 
 	public EditAusgangsrechnungDialog(JFrame owner, Ausgangsrechnung ar) {
 		super(owner, "Ausgangsrechnung bearbeiten", true);
-		setSize(500, 450);
-		setLocationRelativeTo(owner);
+		this.ar = ar;
+		initDialog();
+	}
+
+	public void initDialog() {
+		setSize(300, 170);
+		setLocationRelativeTo(getOwner());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
-
-		this.ar = ar;
 
 		JPanel buttonPanel = initButtons();
 		JPanel fields = initTextFields();
 
 		add(buttonPanel, BorderLayout.SOUTH);
 		add(fields, BorderLayout.NORTH);
-		add(new RechnungszeilenPanel(owner, ar.getId(), ar.getKundenID()));
+		// add(new RechnungszeilenPanel(owner, ar.getRechnungID(),
+		// ar.getKundenID()));
 
 		setVisible(true);
 	}
@@ -76,7 +93,7 @@ public class EditAusgangsrechnungDialog extends JDialog implements
 		JPanel panel = new JPanel(new GridLayout(columnNames.length, 1));
 
 		status = new JComboBox<String>(statusValues);
-		status.setSelectedItem(ar.getStatus());
+		status.setName(columnNames[0]);
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		JLabel l = new JLabel(columnNames[0]);
 		p.add(l);
@@ -86,18 +103,38 @@ public class EditAusgangsrechnungDialog extends JDialog implements
 		p.add(status);
 		panel.add(p);
 
-		kunden = new JComboBox<Kunde>(new KundenComboBoxModel(
-				BL.getKundenListe()));
-		kunden.setSelectedItem(BL.getKunde(ar.getKundenID()));
-		kunden.setRenderer(new MyListCellRenderer("nachname"));
+		datum = new JTextField(15);
+		datum.setName(columnNames[1]);
 		p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		l = new JLabel(columnNames[1]);
 		p.add(l);
 		panel.add(p);
 
 		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		p.add(datum);
+		panel.add(p);
+
+		kunden = new JComboBox<Kunde>(new KundenComboBoxModel(
+				BL.getKundenListe()));
+		kunden.setName(columnNames[2]);
+		kunden.setRenderer(new MyListCellRenderer("nachname"));
+		p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		l = new JLabel(columnNames[2]);
+		p.add(l);
+		panel.add(p);
+
+		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p.add(kunden);
 		panel.add(p);
+
+		if (ar != null) {
+			status.setSelectedItem(ar.getStatus());
+			kunden.setSelectedItem(BL.getKunde(ar.getKundenID()));
+			datum.setText(ar.getDatumString());
+		} else {
+			datum.setText(new StringBuilder(new SimpleDateFormat("dd.MM.yyyy")
+					.format(new Date())).toString());
+		}
 
 		return panel;
 	}
@@ -106,12 +143,26 @@ public class EditAusgangsrechnungDialog extends JDialog implements
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == save) {
-			String[] inhalt = new String[columnNames.length];
 			try {
-				ar.setStatus((String)status.getSelectedItem());
-				ar.setKundenID(((Kunde) (kunden.getSelectedItem())).getId());
-				BL.updateAusgangsrechnung(ar);
-				dispose();
+				DataBinder b = new DataBinder();
+				String status = b.bindFrom_String(this.status, null);
+				Date datum = b.bindFrom_Date(this.datum, new StandardRule());
+				int kundenID = b.bindFrom_int(kunden, null);
+
+				if (!b.hasErrors()) {
+					if (ar != null) {
+						ar.setStatus(status);
+						ar.setDatum(datum);
+						ar.setKundenID(kundenID);
+						BL.updateAusgangsrechnung(ar);
+					} else {
+						ar = new Ausgangsrechnung(-1, status, datum, kundenID);
+						BL.saveAusgangsrechnung(ar);
+					}
+					dispose();
+				} else {
+					JOptionPane.showMessageDialog(this, b.getErrors());
+				}
 			} catch (NullPointerException npe) {
 				JOptionPane.showMessageDialog(this,
 						"Kunde muss ausgewählt sein");
