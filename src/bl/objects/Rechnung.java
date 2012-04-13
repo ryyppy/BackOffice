@@ -49,6 +49,9 @@ public class Rechnung extends DBEntity {
 	}
 
 	public String getDatumString() {
+		if (datum == null) {
+			return null;
+		}
 		return new StringBuilder(
 				new SimpleDateFormat("dd.MM.yyyy").format(datum)).toString();
 	}

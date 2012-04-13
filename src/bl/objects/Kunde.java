@@ -60,7 +60,12 @@ public class Kunde extends DBEntity {
 	}
 
 	public String getGeburtsdatumString() {
-		return new StringBuilder(new SimpleDateFormat("dd.MM.yyyy").format(geburtsdatum)).toString();
+		if (geburtsdatum == null) {
+			return null;
+		}
+		return new StringBuilder(
+				new SimpleDateFormat("dd.MM.yyyy").format(geburtsdatum))
+				.toString();
 	}
 
 	public void setGeburtsdatum(Date geburtsdatum) {
@@ -68,7 +73,8 @@ public class Kunde extends DBEntity {
 	}
 
 	public void setGeburtsdatum(String geburtsdatum) throws ParseException {
-		this.geburtsdatum = new SimpleDateFormat("dd.MM.yyyy").parse(geburtsdatum);
+		this.geburtsdatum = new SimpleDateFormat("dd.MM.yyyy")
+				.parse(geburtsdatum);
 	}
 
 	public String toString() {
