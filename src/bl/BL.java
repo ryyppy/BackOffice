@@ -516,10 +516,10 @@ public class BL {
 	public static ArrayList<Kategorie> getKategorieListe() throws DALException {
 		// nur zum testen BEGIN
 		if (kategorieliste.size() == 0) {
-			kategorieliste.add(new Kategorie(0, "Einnahme", "Einnahme"));
-			kategorieliste.add(new Kategorie(1, "Ausgabe", "Ausgabe"));
-			kategorieliste.add(new Kategorie(2, "Steuer", "Steuer"));
-			kategorieliste.add(new Kategorie(3, "SVA",
+			kategorieliste.add(new Kategorie("Einnahme", "Einnahme"));
+			kategorieliste.add(new Kategorie("Ausgabe", "Ausgabe"));
+			kategorieliste.add(new Kategorie("Steuer", "Steuer"));
+			kategorieliste.add(new Kategorie("SVA",
 					"Sozialversicherungsanstalt-Beitrag"));
 		}
 		// nur zum teste END
@@ -534,13 +534,12 @@ public class BL {
 			throw new InvalidObjectException(exception);
 		}
 
-		k.setKategorieID(kategorieID++);
 		kategorieliste.add(k);
 	}
 
-	public static Kategorie getKategorie(int kategorieID) throws DALException {
+	public static Kategorie getKategorie(String kbz) throws DALException {
 		for (int i = 0; i < kategorieliste.size(); i++) {
-			if (kategorieliste.get(i).getKategorieID() == kategorieID) {
+			if (kategorieliste.get(i).getID() == kbz) {
 				return kategorieliste.get(i);
 			}
 		}

@@ -1,23 +1,22 @@
 package bl.objects;
 
-import java.text.ParseException;
-
 import dal.DBEntity;
+import dal.TableMeta;
 
+@TableMeta(pkFieldName = "kontaktID")
 public class Kontakt extends DBEntity {
 	private int kontaktID;
 	private String firma, name, telefon;
 
+	public Kontakt(){
+		
+	}
 	public Kontakt(int id, String firma, String name, String telefon) {
 		super();
 		this.kontaktID = id;
 		this.firma = firma;
 		this.name = name;
 		this.telefon = telefon;
-	}
-
-	public Object getID() {
-		return getKontaktID();
 	}
 
 	public int getKontaktID() {

@@ -5,22 +5,23 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import dal.DBEntity;
+import dal.TableMeta;
 
+@TableMeta(pkFieldName = "rechnungID")
 public abstract class Rechnung extends DBEntity {
 	private int rechnungID;
 	private String status;
 	private Date datum;
-	public boolean ausgewaehlt=false;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
+	public Rechnung() {
+
+	}
 
 	public Rechnung(int rechnungID, String status, Date datum) {
 		this.rechnungID = rechnungID;
 		this.status = status;
 		this.datum = datum;
-	}
-
-	public Object getID() {
-		return getRechnungID();
 	}
 
 	public int getRechnungID() {

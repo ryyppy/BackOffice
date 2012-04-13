@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import dal.DALException;
+
 import bl.BL;
 import bl.objects.Angebot;
 
@@ -61,7 +63,11 @@ public class AngebotTableModel extends AbstractTableModel {
 	}
 
 	public void refresh() {
-		angebote = BL.getAngebotsListe();
+		try {
+			angebote = BL.getAngebotsListe();
+		} catch (DALException e) {
+			System.out.println(e.getMessage());
+		}
 		super.fireTableDataChanged();
 	}
 }

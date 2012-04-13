@@ -20,6 +20,8 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import dal.DALException;
+
 import bl.BL;
 import bl.objects.Eingangsrechnung;
 import bl.objects.Kontakt;
@@ -117,20 +119,33 @@ public class EingangsrechnungenPanel extends JPanel implements ActionListener {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
-				BL.deleteEingangsrechnung(Integer.valueOf((String) (tModel
-						.getValueAt(b - i, 0))));
+				try {
+					BL.deleteEingangsrechnung(Integer.valueOf((String) (tModel
+							.getValueAt(b - i, 0))));
+				} catch (DALException e1) {
+					JOptionPane.showMessageDialog(this, e1.getMessage());
+				}
 			}
 			tModel.refresh();
 		} else if (e.getSource() == edit) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Eingangsrechnung er = BL.getEingangsrechnung((Integer) tModel
-					.getValueAt(a, 0));
-			new EditEingangsrechnungDialog(owner, er);
-			tModel.refresh();
+			Eingangsrechnung er;
+			try {
+				er = BL.getEingangsrechnung((Integer) tModel.getValueAt(a, 0));
+				new EditEingangsrechnungDialog(owner, er);
+				tModel.refresh();
+			} catch (DALException e1) {
+				JOptionPane.showMessageDialog(this, e1.getMessage());
+			}
 		} else if (e.getSource() == kontaktInfo) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Kontakt k = BL.getKontakt((Integer) tModel.getValueAt(a, 3));
-			JOptionPane.showMessageDialog(this, k.toString());
+			Kontakt k;
+			try {
+				k = BL.getKontakt((Integer) tModel.getValueAt(a, 3));
+				JOptionPane.showMessageDialog(this, k.toString());
+			} catch (DALException e1) {
+				JOptionPane.showMessageDialog(this, e1.getMessage());
+			}
 		} else if (e.getSource() == showRechnungszeilen) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
 			int eingangsrechnungsID = (Integer) tModel.getValueAt(a, 0);

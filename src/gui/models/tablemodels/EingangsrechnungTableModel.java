@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import dal.DALException;
+
 import bl.BL;
 import bl.objects.Eingangsrechnung;
 
@@ -55,7 +57,11 @@ public class EingangsrechnungTableModel extends AbstractTableModel {
 	}
 
 	public void refresh() {
-		eingangsrechnungen = BL.getEingangsrechnungenListe();
+		try {
+			eingangsrechnungen = BL.getEingangsrechnungenListe();
+		} catch (DALException e) {
+			System.out.println(e.getMessage());
+		}
 		super.fireTableDataChanged();
 	}
 }

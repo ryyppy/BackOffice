@@ -16,15 +16,24 @@ public class MyListCellRenderer extends DefaultListCellRenderer {
 				+ property.substring(1);
 	}
 
+	public MyListCellRenderer() {
+		super();
+		getter = "getID";
+	}
+
 	private Object getPropertyValue(Object object) {
 		try {
 			Method method = object.getClass()
 					.getMethod(getter, new Class<?>[0]);
-			Method method2 = object.getClass().getMethod(getter2,
-					new Class<?>[0]);
+			if (getter2 != null) {
+				Method method2 = object.getClass().getMethod(getter2,
+						new Class<?>[0]);
 
-			return method.invoke(object, new Object[0]) + " - "
-					+ method2.invoke(object, new Object[0]);
+				return method.invoke(object, new Object[0]) + " - "
+						+ method2.invoke(object, new Object[0]);
+			} else {
+				return method.invoke(object, new Object[0]);
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 		}

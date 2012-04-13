@@ -1,27 +1,19 @@
 package bl.objects;
 
 import dal.DBEntity;
+import dal.TableMeta;
 
+@TableMeta(pkFieldName = "kbz")
 public class Kategorie extends DBEntity {
-	private int kategorieID;
 	private String kbz, beschreibung;
 
-	public Kategorie(int id, String kbz, String beschreibung) {
-		this.kategorieID = id;
+	public Kategorie() {
+
+	}
+
+	public Kategorie(String kbz, String beschreibung) {
 		this.kbz = kbz;
 		this.beschreibung = beschreibung;
-	}
-
-	public Object getID() {
-		return getKategorieID();
-	}
-
-	public int getKategorieID() {
-		return kategorieID;
-	}
-
-	public void setKategorieID(int kategorieID) {
-		this.kategorieID = kategorieID;
 	}
 
 	public String getKbz() {
@@ -41,7 +33,6 @@ public class Kategorie extends DBEntity {
 	}
 
 	public String toString() {
-		return "Kategorie-ID: " + kategorieID + "\nKurzbezeichnung: " + kbz
-				+ "\nBeschreibung: " + beschreibung;
+		return "Kurzbezeichnung: " + kbz + "\nBeschreibung: " + beschreibung;
 	}
 }

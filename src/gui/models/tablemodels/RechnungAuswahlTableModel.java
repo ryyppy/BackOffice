@@ -49,12 +49,22 @@ public class RechnungAuswahlTableModel extends AbstractTableModel {
 		case 3:
 			if (r instanceof Ausgangsrechnung) {
 				int kundenID = ((Ausgangsrechnung) r).getKundenID();
-				return BL.getKunde(kundenID).getNachname() + " (Kunde: "
-						+ kundenID + ")";
+				try {
+					return BL.getKunde(kundenID).getNachname() + " (Kunde: "
+							+ kundenID + ")";
+				} catch (DALException e) {
+					System.out.println(e.getMessage());
+					return "";
+				}
 			} else if (r instanceof Eingangsrechnung) {
 				int kontaktID = ((Eingangsrechnung) r).getKontaktID();
-				return BL.getKontakt(kontaktID).getFirma() + " (Kontakt: "
-						+ kontaktID + ")";
+				try {
+					return BL.getKontakt(kontaktID).getFirma() + " (Kontakt: "
+							+ kontaktID + ")";
+				} catch (DALException e) {
+					System.out.println(e.getMessage());
+					return "";
+				}
 			} else {
 				return "";
 			}
@@ -117,8 +127,12 @@ public class RechnungAuswahlTableModel extends AbstractTableModel {
 	}
 
 	public void refresh() {
-		rechnungen = BL.getRechnungsListe();
-		rechnungen_buchungszeilen = BL.getRechnungsListe(buchungszeileID);
+		try {
+			rechnungen = BL.getRechnungsListe();
+			rechnungen_buchungszeilen = BL.getRechnungsListe(buchungszeileID);
+		} catch (DALException e) {
+			System.out.println(e.getMessage());
+		}
 		super.fireTableDataChanged();
 	}
 

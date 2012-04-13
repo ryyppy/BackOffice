@@ -117,8 +117,13 @@ public class EditRechnungszeileDialog extends JDialog implements ActionListener 
 			panel.add(p);
 		}
 
-		angebote = new JComboBox<Angebot>(new AngebotComboBoxModel(
-				BL.getAngebotsListe(kundenID)));
+		try {
+			angebote = new JComboBox<Angebot>(new AngebotComboBoxModel(
+					BL.getAngebotsListe(kundenID)));
+		} catch (DALException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+			System.exit(0);
+		}
 		angebote.setName(columnNames[columnNames.length - 1]);
 		angebote.setRenderer(new MyListCellRenderer("DatumString"));
 
@@ -135,7 +140,12 @@ public class EditRechnungszeileDialog extends JDialog implements ActionListener 
 			textfeld[1].setText(r.getKommentar());
 			textfeld[1].setText(String.valueOf(r.getSteuersatz()));
 			textfeld[2].setText(String.valueOf(r.getBetrag()));
-			angebote.setSelectedItem(BL.getAngebot(r.getAngebotsID()));
+			try {
+				angebote.setSelectedItem(BL.getAngebot(r.getAngebotsID()));
+			} catch (DALException e) {
+				JOptionPane.showMessageDialog(this, e.getMessage());
+				System.exit(0);
+			}
 		}
 
 		return panel;

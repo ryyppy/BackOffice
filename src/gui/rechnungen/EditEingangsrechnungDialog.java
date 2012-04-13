@@ -111,8 +111,13 @@ public class EditEingangsrechnungDialog extends JDialog implements
 		p.add(datum);
 		panel.add(p);
 
-		kontakt = new JComboBox<Kontakt>(new KontaktComboBoxModel(
-				BL.getKontaktListe()));
+		try {
+			kontakt = new JComboBox<Kontakt>(new KontaktComboBoxModel(
+					BL.getKontaktListe()));
+		} catch (DALException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+			System.exit(0);
+		}
 		kontakt.setName(columnNames[2]);
 		kontakt.setRenderer(new MyListCellRenderer("firma"));
 		p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -126,7 +131,12 @@ public class EditEingangsrechnungDialog extends JDialog implements
 
 		if (er != null) {
 			status.setSelectedItem(er.getStatus());
-			kontakt.setSelectedItem(BL.getKontakt(er.getKontaktID()));
+			try {
+				kontakt.setSelectedItem(BL.getKontakt(er.getKontaktID()));
+			} catch (DALException e) {
+				JOptionPane.showMessageDialog(this, e.getMessage());
+				System.exit(0);
+			}
 			datum.setText(er.getDatumString());
 		} else {
 			datum.setText(new StringBuilder(new SimpleDateFormat("dd.MM.yyyy")

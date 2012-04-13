@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import dal.DALException;
+
 import bl.BL;
 import bl.objects.Kunde;
 
@@ -67,7 +69,11 @@ public class KundenTableModel extends AbstractTableModel {
 	}
 
 	public void refresh() {
-		kunden = BL.getKundenListe();
+		try {
+			kunden = BL.getKundenListe();
+		} catch (DALException e) {
+			System.out.println(e.getMessage());
+		}
 		super.fireTableDataChanged();
 	}
 }

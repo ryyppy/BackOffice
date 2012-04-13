@@ -103,8 +103,13 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 
 		}
 
-		kunden = new JComboBox<Kunde>(new KundenComboBoxModel(
-				BL.getKundenListe()));
+		try {
+			kunden = new JComboBox<Kunde>(new KundenComboBoxModel(
+					BL.getKundenListe()));
+		} catch (DALException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+			System.exit(0);
+		}
 		kunden.setRenderer(new MyListCellRenderer("nachname"));
 		kunden.setName(columnNames[columnNames.length - 2]);
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -116,8 +121,13 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 		p.add(kunden);
 		panel.add(p);
 
-		projekte = new JComboBox<Projekt>(new ProjekteComboBoxModel(
-				BL.getProjektListe()));
+		try {
+			projekte = new JComboBox<Projekt>(new ProjekteComboBoxModel(
+					BL.getProjektListe()));
+		} catch (DALException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+			System.exit(0);
+		}
 		projekte.setRenderer(new MyListCellRenderer("name"));
 		projekte.setName(columnNames[columnNames.length - 1]);
 		p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -133,8 +143,13 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 			textfeld[0].setText(String.valueOf(a.getSumme()));
 			textfeld[1].setText(String.valueOf(a.getDauer()));
 			textfeld[2].setText(String.valueOf(a.getChance()));
-			kunden.setSelectedItem(BL.getKunde(a.getKundenID()));
-			projekte.setSelectedItem(BL.getProjekt(a.getProjektID()));
+			try {
+				kunden.setSelectedItem(BL.getKunde(a.getKundenID()));
+				projekte.setSelectedItem(BL.getProjekt(a.getProjektID()));
+			} catch (DALException e) {
+				JOptionPane.showMessageDialog(this, e.getMessage());
+				System.exit(0);
+			}
 		}
 
 		return panel;

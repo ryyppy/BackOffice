@@ -98,7 +98,7 @@ public class AddKategorieDialog extends JDialog implements ActionListener {
 						new StandardRule());
 
 				if (!b.hasErrors()) {
-					Kategorie k = new Kategorie(-1, kbz, beschreibung);
+					Kategorie k = new Kategorie(kbz, beschreibung);
 					BL.saveKategorie(k);
 					dispose();
 				} else {

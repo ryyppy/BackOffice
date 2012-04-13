@@ -20,6 +20,8 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import dal.DALException;
+
 import bl.BL;
 import bl.objects.Angebot;
 import bl.objects.Kunde;
@@ -120,24 +122,43 @@ public class AngebotePanel extends JPanel implements ActionListener {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
-				BL.deleteAngebot(Integer.valueOf(String.valueOf (tModel.getValueAt(b
-						- i, 0))));
+				try {
+					BL.deleteAngebot(Integer.valueOf(String.valueOf(tModel
+							.getValueAt(b - i, 0))));
+				} catch (DALException e1) {
+					JOptionPane.showMessageDialog(this, e1.getMessage());
+				}
 			}
 			tModel.refresh();
 		} else if (e.getSource() == edit) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Angebot aa = BL.getAngebot(Integer.valueOf(String.valueOf(tModel
-					.getValueAt(a, 0))));
-			new EditAngebotDialog(owner, aa);
-			tModel.refresh();
+			Angebot aa;
+			try {
+				aa = BL.getAngebot(Integer.valueOf(String.valueOf(tModel
+						.getValueAt(a, 0))));
+				new EditAngebotDialog(owner, aa);
+				tModel.refresh();
+			} catch (DALException e1) {
+				JOptionPane.showMessageDialog(this, e1.getMessage());
+			}
 		} else if (e.getSource() == kunden_info) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Kunde k = BL.getKunde((Integer) tModel.getValueAt(a, 5));
-			JOptionPane.showMessageDialog(this, k.toString());
+			Kunde k;
+			try {
+				k = BL.getKunde((Integer) tModel.getValueAt(a, 5));
+				JOptionPane.showMessageDialog(this, k.toString());
+			} catch (DALException e1) {
+				JOptionPane.showMessageDialog(this, e1.getMessage());
+			}
 		} else if (e.getSource() == projekt_info) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Projekt p = BL.getProjekt((Integer) tModel.getValueAt(a, 6));
-			JOptionPane.showMessageDialog(this, p.toString());
+			Projekt p;
+			try {
+				p = BL.getProjekt((Integer) tModel.getValueAt(a, 6));
+				JOptionPane.showMessageDialog(this, p.toString());
+			} catch (DALException e1) {
+				JOptionPane.showMessageDialog(this, e1.getMessage());
+			}
 		}
 	}
 }

@@ -14,11 +14,14 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+
+import dal.DALException;
 
 import bl.BL;
 import bl.objects.Kunde;
@@ -138,15 +141,25 @@ public class KundenPanel extends JPanel implements ActionListener {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
-				BL.deleteKunde(Integer.valueOf(String.valueOf (tModel.getValueAt(b
-						- i, 0))));
+				try {
+					BL.deleteKunde(Integer.valueOf(String.valueOf(tModel
+							.getValueAt(b - i, 0))));
+				} catch (DALException e1) {
+					JOptionPane.showMessageDialog(this, e1.getMessage());
+				}
 			}
 			tModel.refresh();
 		} else if (e.getSource() == edit) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Kunde k = BL.getKunde(Integer.valueOf(String.valueOf(tModel.getValueAt(a, 0))));
-			new EditKundeDialog(owner, k);
-			tModel.refresh();
+			Kunde k;
+			try {
+				k = BL.getKunde(Integer.valueOf(String.valueOf(tModel
+						.getValueAt(a, 0))));
+				new EditKundeDialog(owner, k);
+				tModel.refresh();
+			} catch (DALException e1) {
+				JOptionPane.showMessageDialog(this, e1.getMessage());
+			}
 		}
 	}
 }

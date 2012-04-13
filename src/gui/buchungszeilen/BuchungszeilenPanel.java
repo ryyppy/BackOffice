@@ -20,6 +20,8 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import dal.DALException;
+
 import bl.BL;
 import bl.objects.Buchungszeile;
 import bl.objects.Kategorie;
@@ -121,27 +123,45 @@ public class BuchungszeilenPanel extends JPanel implements ActionListener {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
-				BL.deleteBuchungszeile(Integer.valueOf(String.valueOf((tModel
-						.getValueAt(b - i, 0)))));
+				try {
+					BL.deleteBuchungszeile(Integer.valueOf(String
+							.valueOf((tModel.getValueAt(b - i, 0)))));
+
+				} catch (DALException e1) {
+					JOptionPane.showMessageDialog(this, e1.getMessage());
+				}
 			}
 			tModel.refresh();
 		} else if (e.getSource() == edit) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Buchungszeile b = BL.getBuchungszeile((Integer) tModel.getValueAt(
-					a, 0));
-			new EditBuchungszeileDialog(owner, b);
-			tModel.refresh();
+			Buchungszeile b;
+			try {
+				b = BL.getBuchungszeile((Integer) tModel.getValueAt(a, 0));
+				new EditBuchungszeileDialog(owner, b);
+				tModel.refresh();
+			} catch (DALException e1) {
+				JOptionPane.showMessageDialog(this, e1.getMessage());
+			}
 		} else if (e.getSource() == addKategorie) {
 			new AddKategorieDialog(owner);
 		} else if (e.getSource() == kategorieInfo) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Kategorie k = BL.getKategorie((Integer) tModel.getValueAt(a, 4));
-			JOptionPane.showMessageDialog(this, k.toString());
+			Kategorie k;
+			try {
+				k = BL.getKategorie(String.valueOf(tModel.getValueAt(a, 5)));
+				JOptionPane.showMessageDialog(this, k.toString());
+			} catch (DALException e1) {
+				JOptionPane.showMessageDialog(this, e1.getMessage());
+			}
 		} else if (e.getSource() == selectRechnungen) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Buchungszeile b = BL.getBuchungszeile((Integer) tModel.getValueAt(
-					a, 0));
-			new RechnungenDialog(owner, b);
+			Buchungszeile b;
+			try {
+				b = BL.getBuchungszeile((Integer) tModel.getValueAt(a, 0));
+				new RechnungenDialog(owner, b);
+			} catch (DALException e1) {
+				JOptionPane.showMessageDialog(this, e1.getMessage());
+			}
 		}
 	}
 }

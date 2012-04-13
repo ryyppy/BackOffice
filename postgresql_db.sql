@@ -120,6 +120,7 @@ INSERT INTO kategorie VALUES ('SVA', 'Sozialversicherungsanstalt-Beitrag');
 DROP TABLE buchungszeile CASCADE;
 CREATE TABLE buchungszeile(
 	buchungszeileID 	serial,
+	datum 				date,
 	kommentar			varchar(100),
 	steuersatz			numeric,
 	betrag				numeric,

@@ -1,19 +1,20 @@
 package bl.objects;
 
 import dal.DBEntity;
+import dal.TableMeta;
 
+@TableMeta(pkFieldName = "projektID")
 public class Projekt extends DBEntity {
 	private int projektID;
 	private String name, beschreibung;
+
+	public Projekt() {
+	}
 
 	public Projekt(int id, String name, String beschreibung) {
 		this.projektID = id;
 		this.name = name;
 		this.beschreibung = beschreibung;
-	}
-
-	public Object getID() {
-		return getProjektID();
 	}
 
 	public int getProjektID() {

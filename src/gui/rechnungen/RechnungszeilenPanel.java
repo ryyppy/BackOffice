@@ -19,6 +19,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import dal.DALException;
+
 import bl.BL;
 import bl.objects.Angebot;
 
@@ -30,20 +32,19 @@ public class RechnungszeilenPanel extends JPanel implements ActionListener {
 	private TableRowSorter<TableModel> tSorter;
 
 	private int rechnungsID, kundenID;
-	
+
 	private JFrame owner;
 
-	public RechnungszeilenPanel(JFrame owner, int rechnungsID,
-			int kundenID) {
+	public RechnungszeilenPanel(JFrame owner, int rechnungsID, int kundenID) {
 		setSize(500, 300);
-		//setLocationRelativeTo(owner);
+		// setLocationRelativeTo(owner);
 		setLayout(new BorderLayout());
-		//setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		// setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		this.rechnungsID = rechnungsID;
 		this.kundenID = kundenID;
-		
-		this.owner=owner;
+
+		this.owner = owner;
 
 		JPanel buttonPanel = initButtons();
 		initTable();
@@ -101,21 +102,31 @@ public class RechnungszeilenPanel extends JPanel implements ActionListener {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
 			new EditRechnungszeileDialog(owner, rechnungsID, kundenID);
-			//refresh bug
+			// refresh bug
 			tModel.refresh();
 		} else if (e.getSource() == delete) {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
-				BL.deleteRechnungszeile((Integer) (tModel.getValueAt(b - i, 0)));
+				try {
+					BL.deleteRechnungszeile((Integer) (tModel.getValueAt(b - i,
+							0)));
+				} catch (DALException e1) {
+					JOptionPane.showMessageDialog(this, e1.getMessage());
+				}
 			}
 			tModel.refresh();
 		} else if (e.getSource() == edit) {
 
 		} else if (e.getSource() == angebotInfo) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Angebot an = BL.getAngebot((Integer) tModel.getValueAt(a, 5));
-			JOptionPane.showMessageDialog(this, an.toString());
+			Angebot an;
+			try {
+				an = BL.getAngebot((Integer) tModel.getValueAt(a, 5));
+				JOptionPane.showMessageDialog(this, an.toString());
+			} catch (DALException e1) {
+				JOptionPane.showMessageDialog(this, e1.getMessage());
+			}
 		}
 	}
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import dal.DALException;
+
 import bl.BL;
 import bl.objects.Kunde;
 import bl.objects.Projekt;
@@ -53,7 +55,11 @@ public class ProjektTableModel extends AbstractTableModel {
 	}
 
 	public void refresh() {
-		projekte = BL.getProjektListe();
+		try {
+			projekte = BL.getProjektListe();
+		} catch (DALException e) {
+			System.out.println(e.getMessage());
+		}
 		super.fireTableDataChanged();
 	}
 }

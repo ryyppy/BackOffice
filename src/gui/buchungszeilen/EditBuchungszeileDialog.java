@@ -9,6 +9,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.InvalidObjectException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -34,8 +35,8 @@ public class EditBuchungszeileDialog extends JDialog implements ActionListener {
 	private JComboBox<Kategorie> kategorie;
 	private JButton add, cancel;
 
-	private String[] columnNames = { "Kommentar", "Steuersatz", "Betrag",
-			"KategorieID" };
+	private String[] columnNames = { "Datum", "Kommentar", "Steuersatz",
+			"Betrag", "KategorieID" };
 
 	private Buchungszeile b;
 
@@ -100,10 +101,15 @@ public class EditBuchungszeileDialog extends JDialog implements ActionListener {
 			panel.add(p);
 
 		}
-		kategorie = new JComboBox<Kategorie>(new KategorieComboBoxModel(
-				BL.getKategorieListe()));
+		try {
+			kategorie = new JComboBox<Kategorie>(new KategorieComboBoxModel(
+					BL.getKategorieListe()));
+		} catch (DALException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+			System.exit(0);
+		}
 		kategorie.setName(columnNames[columnNames.length - 1]);
-		kategorie.setRenderer(new MyListCellRenderer("kbz"));
+		kategorie.setRenderer(new MyListCellRenderer());
 
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		JLabel l = new JLabel(columnNames[columnNames.length - 1]);
@@ -115,10 +121,19 @@ public class EditBuchungszeileDialog extends JDialog implements ActionListener {
 		panel.add(p);
 
 		if (b != null) {
-			textfeld[0].setText(b.getKommentar());
-			textfeld[1].setText(String.valueOf(b.getSteuersatz()));
-			textfeld[2].setText(String.valueOf(b.getBetrag()));
-			kategorie.setSelectedItem(BL.getKategorie(b.getKategorieID()));
+			textfeld[0].setText(b.getDatumString());
+			textfeld[1].setText(b.getKommentar());
+			textfeld[2].setText(String.valueOf(b.getSteuersatz()));
+			textfeld[3].setText(String.valueOf(b.getBetrag()));
+			try {
+				kategorie.setSelectedItem(BL.getKategorie(b.getKategorieKbz()));
+			} catch (DALException e) {
+				JOptionPane.showMessageDialog(this, e.getMessage());
+				System.exit(0);
+			}
+		} else {
+			textfeld[0].setText(new StringBuilder(new SimpleDateFormat(
+					"dd.MM.yyyy").format(new Date())).toString());
 		}
 
 		return panel;
@@ -131,24 +146,25 @@ public class EditBuchungszeileDialog extends JDialog implements ActionListener {
 
 			try {
 				DataBinder b = new DataBinder();
-				String kommentar = b.bindFrom_String(textfeld[0],
+				Date datum = b.bindFrom_Date(textfeld[0], new StandardRule());
+				String kommentar = b.bindFrom_String(textfeld[1],
 						new StandardRule());
-				double steuersatz = b.bindFrom_double(textfeld[1],
+				double steuersatz = b.bindFrom_double(textfeld[2],
 						new StandardRule());
-				double betrag = b.bindFrom_double(textfeld[2],
+				double betrag = b.bindFrom_double(textfeld[3],
 						new StandardRule());
-				int kategorieID = b.bindFrom_int(kategorie, null);
-
+				String kategorieKbz = b.bindFrom_String(kategorie, null);
+				JOptionPane.showMessageDialog(this, kategorieKbz);
 				if (!b.hasErrors()) {
 					if (this.b != null) {
 						this.b.setKommentar(kommentar);
 						this.b.setSteuersatz(steuersatz);
 						this.b.setBetrag(betrag);
-						this.b.setKategorieID(kategorieID);
+						this.b.setKategorieKbz(kategorieKbz);
 						BL.updateBuchungszeile(this.b);
 					} else {
-						this.b = new Buchungszeile(-1, kommentar, steuersatz,
-								betrag, kategorieID);
+						this.b = new Buchungszeile(-1, datum, kommentar,
+								steuersatz, betrag, kategorieKbz);
 						BL.saveBuchungszeile(this.b);
 					}
 					dispose();

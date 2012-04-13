@@ -1,25 +1,34 @@
 package bl.objects;
 
-import dal.DBEntity;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import dal.DBEntity;
+import dal.TableMeta;
+
+@TableMeta(pkFieldName = "buchungszeileID")
 public class Buchungszeile extends DBEntity {
-	private int buchungszeileID, kategorieID;
+	private int buchungszeileID;
 	private String kommentar;
 	private double betrag, steuersatz;
-	public boolean auswahl=false;
+	private Date datum;
+	private String kategorieKbz;
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
-	public Buchungszeile(int id, String kommentar, double steuersatz,
-			double betrag, int kategorieID) {
+	public Buchungszeile() {
+
+	}
+
+	public Buchungszeile(int id, Date datum, String kommentar,
+			double steuersatz, double betrag, String kategorieKbz) {
 		super();
 		this.buchungszeileID = id;
+		this.datum = datum;
 		this.kommentar = kommentar;
 		this.betrag = betrag;
 		this.steuersatz = steuersatz;
-		this.kategorieID = kategorieID;
-	}
-
-	public Object getID() {
-		return getBuchungszeileID();
+		this.kategorieKbz = kategorieKbz;
 	}
 
 	public int getBuchungszeileID() {
@@ -28,6 +37,22 @@ public class Buchungszeile extends DBEntity {
 
 	public void setBuchungszeileID(int buchungszeileID) {
 		this.buchungszeileID = buchungszeileID;
+	}
+
+	public Date getDatum() {
+		return datum;
+	}
+
+	public String getDatumString() {
+		return new StringBuilder(dateFormat.format(datum)).toString();
+	}
+
+	public void setDatum(Date datum) {
+		this.datum = datum;
+	}
+
+	public void setDatum(String datum) throws ParseException {
+		this.datum = dateFormat.parse(datum);
 	}
 
 	public String getKommentar() {
@@ -54,17 +79,18 @@ public class Buchungszeile extends DBEntity {
 		this.steuersatz = steuersatz;
 	}
 
-	public int getKategorieID() {
-		return kategorieID;
+	public String getKategorieKbz() {
+		return kategorieKbz;
 	}
 
-	public void setKategorieID(int kategorieID) {
-		this.kategorieID = kategorieID;
+	public void setKategorieKbz(String kategorieKbz) {
+		this.kategorieKbz = kategorieKbz;
 	}
 
 	public String toString() {
-		return "Buchungszeile-ID: " + buchungszeileID + "\nKommentar: "
-				+ kommentar + "\nSteuersatz: " + steuersatz + "\nBetrag: "
-				+ betrag + "\nKategorie-ID: " + kategorieID;
+		return "Buchungszeile-ID: " + buchungszeileID + "\nDatum: "
+				+ getDatumString() + "\nKommentar: " + kommentar
+				+ "\nSteuersatz: " + steuersatz + "\nBetrag: " + betrag
+				+ "\nKategorie-ID: " + kategorieKbz;
 	}
 }

@@ -13,11 +13,14 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+
+import dal.DALException;
 
 import bl.BL;
 import bl.objects.Kontakt;
@@ -137,15 +140,25 @@ public class KontaktPanel extends JPanel implements ActionListener {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
-				BL.deleteKontakt(Integer.valueOf(String.valueOf(tModel.getValueAt(b
-						- i, 0))));
+				try {
+					BL.deleteKontakt(Integer.valueOf(String.valueOf(tModel
+							.getValueAt(b - i, 0))));
+				} catch (DALException e1) {
+					JOptionPane.showMessageDialog(this, e1.getMessage());
+				}
 			}
 			tModel.refresh();
 		} else if (e.getSource() == edit) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Kontakt k = BL.getKontakt(Integer.valueOf(String.valueOf(tModel.getValueAt(a, 0))));
-			new EditKontaktDialog(owner, k);
-			tModel.refresh();
+			Kontakt k;
+			try {
+				k = BL.getKontakt(Integer.valueOf(String.valueOf(tModel
+						.getValueAt(a, 0))));
+				new EditKontaktDialog(owner, k);
+				tModel.refresh();
+			} catch (DALException e1) {
+				JOptionPane.showMessageDialog(this, e1.getMessage());
+			}
 		}
 	}
 }

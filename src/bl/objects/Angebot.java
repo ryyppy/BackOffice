@@ -8,7 +8,11 @@ import dal.DBEntity;
 public class Angebot extends DBEntity {
 	private int angebotID, kundenID, projektID;
 	private double summe, dauer, chance;
-	private Date date;
+	private Date datum;
+
+	public Angebot() {
+
+	}
 
 	public Angebot(int id, double summe, double dauer, Date date,
 			double chance, int kundenID, int projektID) {
@@ -16,7 +20,7 @@ public class Angebot extends DBEntity {
 		this.angebotID = id;
 		this.summe = summe;
 		this.dauer = dauer;
-		this.date = date;
+		this.datum = date;
 		this.chance = chance;
 		this.kundenID = kundenID;
 		this.projektID = projektID;
@@ -60,16 +64,16 @@ public class Angebot extends DBEntity {
 	}
 
 	public Date getDate() {
-		return date;
+		return datum;
 	}
 
 	public String getDatumString() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-		return new StringBuilder(dateFormat.format(date)).toString();
+		return new StringBuilder(dateFormat.format(datum)).toString();
 	}
 
 	public void setDate(Date date) {
-		this.date = date;
+		this.datum = date;
 	}
 
 	public int getKundenID() {

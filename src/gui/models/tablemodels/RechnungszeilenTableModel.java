@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import dal.DALException;
+
 import bl.BL;
 import bl.objects.Angebot;
 import bl.objects.Ausgangsrechnung;
@@ -63,7 +65,11 @@ public class RechnungszeilenTableModel extends AbstractTableModel {
 	}
 
 	public void refresh() {
-		rechnungszeilen = BL.getRechnungszeilenListe(rechnungID);
+		try {
+			rechnungszeilen = BL.getRechnungszeilenListe(rechnungID);
+		} catch (DALException e) {
+			System.out.println(e.getMessage());
+		}
 		super.fireTableDataChanged();
 	}
 }

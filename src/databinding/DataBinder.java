@@ -42,7 +42,8 @@ public class DataBinder {
 		String ret = "";
 		// Convert
 		try {
-			ret = String.valueOf(f.getSelectedItem());
+			DBEntity d = (DBEntity) f.getSelectedItem();
+			ret = String.valueOf(d.getID());
 		} catch (Exception e) {
 			errorCtrl.setError(f.getName(), "Fehlende Auswahl",
 					Error.NUMBERFORMAT_FAILURE);

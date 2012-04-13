@@ -5,6 +5,10 @@ import java.util.Date;
 public class Ausgangsrechnung extends Rechnung {
 	private int kundenID;
 
+	public Ausgangsrechnung() {
+		super();
+	}
+
 	public Ausgangsrechnung(int rechnungID, String status, Date datum,
 			int kundenID) {
 		super(rechnungID, status, datum);

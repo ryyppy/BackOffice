@@ -6,6 +6,8 @@ import javax.swing.table.AbstractTableModel;
 
 import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
 
+import dal.DALException;
+
 import bl.BL;
 import bl.objects.Angebot;
 import bl.objects.Ausgangsrechnung;
@@ -58,7 +60,11 @@ public class AusgangsrechnungTableModel extends AbstractTableModel {
 	}
 
 	public void refresh() {
-		ausgangsrechnungen = BL.getAusgangsrechnungenListe();
+		try {
+			ausgangsrechnungen = BL.getAusgangsrechnungenListe();
+		} catch (DALException e) {
+			System.out.println(e.getMessage());
+		}
 		super.fireTableDataChanged();
 	}
 }

@@ -1,11 +1,17 @@
 package bl.objects;
 
 import dal.DBEntity;
+import dal.TableMeta;
 
+@TableMeta(pkFieldName = "rechnungszeileID")
 public class Rechnungszeile extends DBEntity {
 	private int rechnungszeileID, rechnungID, angebotsID;
 	private String kommentar;
 	private double steuersatz, betrag;
+
+	public Rechnungszeile() {
+
+	}
 
 	public Rechnungszeile(int id, String kommentar, double steuersatz,
 			double betrag, int rechnungID, int angebotsID) {
@@ -16,10 +22,6 @@ public class Rechnungszeile extends DBEntity {
 		this.steuersatz = steuersatz;
 		this.kommentar = kommentar;
 		this.betrag = betrag;
-	}
-
-	public Object getID() {
-		return getRechnungszeileID();
 	}
 
 	public int getRechnungszeileID() {

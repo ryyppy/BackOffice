@@ -4,34 +4,34 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.swing.JOptionPane;
-
 import dal.DBEntity;
+import dal.TableMeta;
 
+@TableMeta(pkFieldName = "kundeID")
 public class Kunde extends DBEntity {
-	private int kundenID;
+	private int kundeID;
 	private String vorname, nachname;
 	private Date geburtsdatum;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
+	public Kunde() {
+
+	}
+
 	public Kunde(int id, String vorname, String nachname, Date geburtsdatum) {
 		super();
-		this.kundenID = id;
+		this.kundeID = id;
 		this.vorname = vorname;
 		this.nachname = nachname;
 		this.geburtsdatum = geburtsdatum;
 	}
 
-	public Object getID() {
-		return getKundenID();
-	}
-
 	public int getKundenID() {
-		return kundenID;
+		return kundeID;
 	}
 
 	public void setKundenID(int kundenID) {
-		this.kundenID = kundenID;
+		this.kundeID = kundenID;
 	}
 
 	public String getVorname() {
@@ -67,7 +67,7 @@ public class Kunde extends DBEntity {
 	}
 
 	public String toString() {
-		return "Kunden-ID: " + kundenID + "\nName: " + vorname + " " + nachname
+		return "Kunden-ID: " + kundeID + "\nName: " + vorname + " " + nachname
 				+ "\nGeburtsdatum: " + getGeburtsdatumString();
 	}
 
