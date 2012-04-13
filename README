@@ -3,3 +3,22 @@ BackOffice v1.0
 Team:
 Patrick Stapfer
 Armin Mehryar
+
+Project-Contents:
+- bl:
+Businesslayer: Contains all modelclasses for data-encapsulation in this application (POJOS)
+
+- dal:
+DataAccessLayer: Contains all database-related classes and the interface for the db-model-classes (DBEntity)
+
+- databinding:
+Databinding framework for validating GUI-input-data
+
+- gui:
+All classes related to the graphical user interface
+
+- logging:
+Loggingmodule, supports a central LoggerManager with multiple logging-adapters (similar to python logging)
+
+- tests:
+Contains all sorts of tests, most of them are unit-tests
