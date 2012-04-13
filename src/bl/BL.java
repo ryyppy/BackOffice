@@ -3,10 +3,6 @@ package bl;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
-
-import org.postgresql.util.PSQLDriverVersion;
-
 import bl.objects.Angebot;
 import bl.objects.Ausgangsrechnung;
 import bl.objects.Buchungszeile;
@@ -20,7 +16,6 @@ import bl.objects.Rechnungszeile;
 import bl.objects.Rechung_Buchungszeile;
 import dal.DALException;
 import dal.MysqlAdapter;
-import dal.PostgreSQLAdapter;
 
 public class BL {
 	private static ArrayList<Projekt> projektliste = new ArrayList<Projekt>();
