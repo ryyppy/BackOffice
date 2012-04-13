@@ -363,24 +363,31 @@ public class BL {
 	public static ArrayList<Eingangsrechnung> getEingangsrechnungenListe()
 			throws DALException {
 		return eingangsrechnungenliste;
-//		mysql.connect();
-//		ArrayList<Eingangsrechnung> ret =(ArrayList<Eingangsrechnung>) mysql.getEntityList(Eingangsrechnung.class);
-//		JOptionPane.showMessageDialog(null, ret.size());
-//		mysql.disconnect();
-//		return ret;
+//		 mysql.connect();
+//		 ArrayList<Eingangsrechnung> ret =(ArrayList<Eingangsrechnung>)
+//		 mysql.getEntityList(Eingangsrechnung.class);
+//		 JOptionPane.showMessageDialog(null, ret.size());
+//		 mysql.disconnect();
+//		 return ret;
 	}
 
 	public static void saveEingangsrechnung(Eingangsrechnung e)
 			throws DALException, InvalidObjectException {
-		String exception = "";
-		// ... Kontakt-ID überprüfen
-		if (!exception.isEmpty()) {
-			throw new InvalidObjectException(exception);
-		}
+		// String exception = "";
+		// // ... Kontakt-ID überprüfen
+		// if (!exception.isEmpty()) {
+		// throw new InvalidObjectException(exception);
+		// }
+		//
+		// e.setRechnungID(rechnungID++);
+		// eingangsrechnungenliste.add(e);
+		mysql.connect();
+		Rechnung r = new Rechnung(e.getStatus(), e.getDatum());
+		Object key = mysql.addEntity(r);
+		e.setRechnungID(Integer.valueOf(String.valueOf(key)));
+		mysql.addEntity(e);
+		mysql.disconnect();
 
-		e.setRechnungID(rechnungID++);
-		eingangsrechnungenliste.add(e);
-		
 	}
 
 	public static void updateEingangsrechnung(Eingangsrechnung e)

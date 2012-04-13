@@ -8,7 +8,7 @@ import dal.DBEntity;
 import dal.TableMeta;
 
 @TableMeta(pkFieldName = "rechnungID")
-public abstract class Rechnung extends DBEntity {
+public class Rechnung extends DBEntity {
 	private Integer rechnungID;
 	private String status;
 	private Date datum;
@@ -49,7 +49,8 @@ public abstract class Rechnung extends DBEntity {
 	}
 
 	public String getDatumString() {
-		return new StringBuilder(new SimpleDateFormat("dd.MM.yyyy").format(datum)).toString();
+		return new StringBuilder(
+				new SimpleDateFormat("dd.MM.yyyy").format(datum)).toString();
 	}
 
 	public void setDatum(Date datum) {

@@ -71,6 +71,7 @@ DROP TABLE ausgangsrechnung CASCADE;
 CREATE TABLE ausgangsrechnung (
 	kundeID 		integer,
 	rechnungID		integer,
+	PRIMARY KEY (rechnungID),
 	FOREIGN KEY (rechnungID) REFERENCES rechnung(rechnungID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -84,6 +85,7 @@ DROP TABLE eingangsrechnung CASCADE;
 CREATE TABLE eingangsrechnung(
 	kontaktID 		integer,
 	rechnungID		integer,
+	PRIMARY KEY (rechnungID),
 	FOREIGN KEY (rechnungID) REFERENCES rechnung(rechnungID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 

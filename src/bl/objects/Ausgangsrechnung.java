@@ -2,8 +2,12 @@ package bl.objects;
 
 import java.util.Date;
 
+import dal.TableMeta;
+
+@TableMeta(pkFieldName = "rechnungID")
 public class Ausgangsrechnung extends Rechnung {
 	private Integer kundenID;
+	private Integer rechnungID;
 
 	public Ausgangsrechnung() {
 		super();
@@ -18,6 +22,7 @@ public class Ausgangsrechnung extends Rechnung {
 			int kundenID) {
 		super(rechnungID, status, datum);
 		this.kundenID = kundenID;
+		this.rechnungID = rechnungID;
 	}
 
 	public int getKundenID() {
@@ -26,6 +31,15 @@ public class Ausgangsrechnung extends Rechnung {
 
 	public void setKundenID(int kundenID) {
 		this.kundenID = kundenID;
+	}
+
+	public int getRechnungID() {
+		return rechnungID;
+	}
+
+	public void setRechnungID(int rechnungID) {
+		this.rechnungID = rechnungID;
+		super.setRechnungID(rechnungID);
 	}
 
 	public String toString() {
