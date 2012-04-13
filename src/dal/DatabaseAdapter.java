@@ -138,6 +138,8 @@ public abstract class DatabaseAdapter {
         return connected;
     }
 
+    protected abstract String createWhereClausel(WhereChain whereChain, Class<? extends DBEntity> entityClass) throws DALException;
+
     /**
      * Retrieves a capsulated data-object with all fields and the given id (foreign-keys only with ID - no eager loading or something)
      * and returns it.
@@ -194,14 +196,28 @@ public abstract class DatabaseAdapter {
     public abstract boolean deleteEntity(Object id, Class<? extends DBEntity> entityClass) throws DALException;
 
     /**
+     * Get a list of all DBEntities from the database.
      * Tableinformation will be retrieved by the DBEntity-Class-Definition by reflection. Be sure the DBEntity has a proper
      * pkField defined (see tableMeta-Annotation). The db-table has to be named as the reflected class!
-     * Be sure to call connect() and beginTransaction() first, before you use this method, or it will fail with an connection-error.
-     * After deleting a dataset you may call commit() to make your changes persistant!
+     * Be sure to call connect() first, before you use this method, or it will fail with an connection-error.
      * @param entityClass -  Class-definition of the datasets which should be retrieved as a list
      * @param <T> - Entity-Class, which should be returned in a list (a DBEntity-model-class)
      * @return List of the wished data-classes with the aided class-type
      * @throws DALException - If an database-error occurs
      */
     public abstract <T extends DBEntity> List<T> getEntityList(Class<T> entityClass) throws DALException;
+
+    /**
+     * Get a list of all DBEntities from the database which fulfill the where-dependencies.
+     * Tableinformation will be retrieved by the DBEntity-Class-Definition by reflection. Be sure the DBEntity has a proper
+     * pkField defined (see tableMeta-Annotation). The db-table has to be named as the reflected class! Also be sure that
+     * the where-dependency-field exist in the given class-definition or an exception will be thrown.
+     * Be sure to call connect() first, before you use this method, or it will fail with an connection-error.
+     * @param where - Map of where-clausels which should have following format: Key= fieldname Value=expected value (for instance: Key: "angebotID" Value="1")
+     * @param entityClass
+     * @param <T>
+     * @return
+     * @throws DALException - If field-definitions are not properly defined in the given class or if a database-error occurs
+     */
+    public abstract <T extends DBEntity> List<T> getEntitiesBy(WhereChain where, Class<T> entityClass) throws DALException;
 }

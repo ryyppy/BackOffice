@@ -1,6 +1,8 @@
 package dal;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -125,5 +127,35 @@ public abstract class DBEntity {
             return tableMeta;
 
         throw new DALException(String.format("DBEntity '%s' has no TableMeta - Annotation defined! Cannot retrieve PK-Field...", entityClass.getSimpleName()));
+    }
+
+    public static List<Field> getAllDeclaredFields(Class<? extends DBEntity> entityClass){
+        List<Field> fields = new ArrayList<Field>();
+        List<String> fieldNames = new ArrayList<String>();
+
+        Class<?> superClazz = entityClass.getSuperclass();
+
+        for(Field f : entityClass.getDeclaredFields()){
+            fields.add(f);
+            fieldNames.add(f.getName());
+        }
+
+        if(!superClazz.getClass().equals(Object.class)){
+            for(Field f : superClazz.getDeclaredFields()){
+                if(!fieldNames.contains(f.getName()))
+                    fields.add(f);
+            }
+        }
+
+        return fields;
+    }
+
+    public static Class<? extends DBEntity> getDBSuperclass(Class<? extends DBEntity> entityClass){
+        Class<?> superClazz = entityClass.getSuperclass();
+
+        if(!superClazz.getClass().equals(Object.class))
+            return (Class<? extends DBEntity>)superClazz;
+
+        return null;
     }
 }
