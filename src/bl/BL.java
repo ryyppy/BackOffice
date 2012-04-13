@@ -362,13 +362,16 @@ public class BL {
 
 	public static ArrayList<Eingangsrechnung> getEingangsrechnungenListe()
 			throws DALException {
-		return eingangsrechnungenliste;
+		//return eingangsrechnungenliste;
+		
 //		 mysql.connect();
 //		 ArrayList<Eingangsrechnung> ret =(ArrayList<Eingangsrechnung>)
 //		 mysql.getEntityList(Eingangsrechnung.class);
 //		 JOptionPane.showMessageDialog(null, ret.size());
 //		 mysql.disconnect();
 //		 return ret;
+		
+		return null;
 	}
 
 	public static void saveEingangsrechnung(Eingangsrechnung e)
