@@ -163,7 +163,7 @@ public class EditBuchungszeileDialog extends JDialog implements ActionListener {
 						this.b.setKategorieKbz(kategorieKbz);
 						BL.updateBuchungszeile(this.b);
 					} else {
-						this.b = new Buchungszeile(-1, datum, kommentar,
+						this.b = new Buchungszeile(datum, kommentar,
 								steuersatz, betrag, kategorieKbz);
 						BL.saveBuchungszeile(this.b);
 					}

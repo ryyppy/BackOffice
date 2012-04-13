@@ -5,7 +5,8 @@ import dal.TableMeta;
 
 @TableMeta(pkFieldName = "kbz")
 public class Kategorie extends DBEntity {
-	private String kbz, beschreibung;
+	private String kbz;
+	private String beschreibung;
 
 	public Kategorie() {
 

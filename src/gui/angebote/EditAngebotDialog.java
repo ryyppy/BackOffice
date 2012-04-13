@@ -179,7 +179,7 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 						a.setProjektID(projektID);
 						BL.updateAngebot(a);
 					} else {
-						a = new Angebot(-1, summe, dauer, new Date(), chance,
+						a = new Angebot(summe, dauer, new Date(), chance,
 								kundenID, projektID);
 						BL.saveAngebot(a);
 					}

@@ -9,15 +9,25 @@ import dal.TableMeta;
 
 @TableMeta(pkFieldName = "buchungszeileID")
 public class Buchungszeile extends DBEntity {
-	private int buchungszeileID;
-	private String kommentar;
-	private double betrag, steuersatz;
+	private Integer buchungszeileID;
 	private Date datum;
+	private String kommentar;
+	private Double betrag;
+	private Double steuersatz;
 	private String kategorieKbz;
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
 	public Buchungszeile() {
 
+	}
+
+	public Buchungszeile(Date datum, String kommentar, double steuersatz,
+			double betrag, String kategorieKbz) {
+		super();
+		this.datum = datum;
+		this.kommentar = kommentar;
+		this.betrag = betrag;
+		this.steuersatz = steuersatz;
+		this.kategorieKbz = kategorieKbz;
 	}
 
 	public Buchungszeile(int id, Date datum, String kommentar,
@@ -44,7 +54,8 @@ public class Buchungszeile extends DBEntity {
 	}
 
 	public String getDatumString() {
-		return new StringBuilder(dateFormat.format(datum)).toString();
+		return new StringBuilder(
+				new SimpleDateFormat("dd.MM.yyyy").format(datum)).toString();
 	}
 
 	public void setDatum(Date datum) {
@@ -52,7 +63,7 @@ public class Buchungszeile extends DBEntity {
 	}
 
 	public void setDatum(String datum) throws ParseException {
-		this.datum = dateFormat.parse(datum);
+		this.datum = new SimpleDateFormat("dd.MM.yyyy").parse(datum);
 	}
 
 	public String getKommentar() {

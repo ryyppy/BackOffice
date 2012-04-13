@@ -4,25 +4,40 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import dal.DBEntity;
+import dal.TableMeta;
 
+@TableMeta(pkFieldName = "angebotID")
 public class Angebot extends DBEntity {
-	private int angebotID, kundenID, projektID;
-	private double summe, dauer, chance;
+	private Integer angebotID;
+	private Double summe;
+	private Double dauer;
+	private Double chance;
 	private Date datum;
+	private Integer kundeID;
+	private Integer projektID;
 
 	public Angebot() {
 
 	}
 
+	public Angebot(double summe, double dauer, Date date, double chance,
+			int kundenID, int projektID) {
+		this.summe = summe;
+		this.dauer = dauer;
+		this.datum = date;
+		this.chance = chance;
+		this.kundeID = kundenID;
+		this.projektID = projektID;
+	}
+
 	public Angebot(int id, double summe, double dauer, Date date,
 			double chance, int kundenID, int projektID) {
-		super();
 		this.angebotID = id;
 		this.summe = summe;
 		this.dauer = dauer;
 		this.datum = date;
 		this.chance = chance;
-		this.kundenID = kundenID;
+		this.kundeID = kundenID;
 		this.projektID = projektID;
 	}
 
@@ -77,11 +92,11 @@ public class Angebot extends DBEntity {
 	}
 
 	public int getKundenID() {
-		return kundenID;
+		return kundeID;
 	}
 
 	public void setKundenID(int kundenID) {
-		this.kundenID = kundenID;
+		this.kundeID = kundenID;
 	}
 
 	public int getProjektID() {
@@ -95,7 +110,7 @@ public class Angebot extends DBEntity {
 	public String toString() {
 		return "Angebot-ID: " + angebotID + "\nSumme: " + summe + "\nDauer: "
 				+ dauer + "\nDatum: " + getDatumString() + "\nChance: "
-				+ chance + "\nKunden-ID: " + kundenID + "\nProjektID: "
+				+ chance + "\nKunden-ID: " + kundeID + "\nProjektID: "
 				+ projektID;
 	}
 }

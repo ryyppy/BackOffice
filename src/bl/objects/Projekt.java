@@ -5,10 +5,16 @@ import dal.TableMeta;
 
 @TableMeta(pkFieldName = "projektID")
 public class Projekt extends DBEntity {
-	private int projektID;
-	private String name, beschreibung;
+	private Integer projektID;
+	private String name;
+	private String beschreibung;
 
 	public Projekt() {
+	}
+
+	public Projekt(String name, String beschreibung) {
+		this.name = name;
+		this.beschreibung = beschreibung;
 	}
 
 	public Projekt(int id, String name, String beschreibung) {

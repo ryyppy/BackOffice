@@ -117,7 +117,7 @@ public class EditProjektDialog extends JDialog implements ActionListener {
 						p.setBeschreibung(beschreibung);
 						BL.updateProjekt(p);
 					} else {
-						p = new Projekt(-1, name, beschreibung);
+						p = new Projekt(name, beschreibung);
 						BL.saveProjekt(p);
 					}
 					dispose();

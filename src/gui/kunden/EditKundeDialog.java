@@ -121,7 +121,7 @@ public class EditKundeDialog extends JDialog implements ActionListener {
 						k.setGeburtsdatum(geburtsdatum);
 						BL.updateKunde(k);
 					} else {
-						 k = new Kunde(-1, vorname, nachname, geburtsdatum);
+						 k = new Kunde(vorname, nachname, geburtsdatum);
 						BL.saveKunde(k);
 					}
 					dispose();

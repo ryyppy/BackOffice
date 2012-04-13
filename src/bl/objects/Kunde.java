@@ -9,17 +9,22 @@ import dal.TableMeta;
 
 @TableMeta(pkFieldName = "kundeID")
 public class Kunde extends DBEntity {
-	private int kundeID;
-	private String vorname, nachname;
+	private Integer kundeID;
+	private String vorname;
+	private String nachname;
 	private Date geburtsdatum;
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
 	public Kunde() {
 
 	}
 
+	public Kunde(String vorname, String nachname, Date geburtsdatum) {
+		this.vorname = vorname;
+		this.nachname = nachname;
+		this.geburtsdatum = geburtsdatum;
+	}
+
 	public Kunde(int id, String vorname, String nachname, Date geburtsdatum) {
-		super();
 		this.kundeID = id;
 		this.vorname = vorname;
 		this.nachname = nachname;
@@ -55,7 +60,7 @@ public class Kunde extends DBEntity {
 	}
 
 	public String getGeburtsdatumString() {
-		return new StringBuilder(dateFormat.format(geburtsdatum)).toString();
+		return new StringBuilder(new SimpleDateFormat("dd.MM.yyyy").format(geburtsdatum)).toString();
 	}
 
 	public void setGeburtsdatum(Date geburtsdatum) {
@@ -63,7 +68,7 @@ public class Kunde extends DBEntity {
 	}
 
 	public void setGeburtsdatum(String geburtsdatum) throws ParseException {
-		this.geburtsdatum = dateFormat.parse(geburtsdatum);
+		this.geburtsdatum = new SimpleDateFormat("dd.MM.yyyy").parse(geburtsdatum);
 	}
 
 	public String toString() {

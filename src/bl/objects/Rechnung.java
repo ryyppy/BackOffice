@@ -9,13 +9,17 @@ import dal.TableMeta;
 
 @TableMeta(pkFieldName = "rechnungID")
 public abstract class Rechnung extends DBEntity {
-	private int rechnungID;
+	private Integer rechnungID;
 	private String status;
 	private Date datum;
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
 	public Rechnung() {
 
+	}
+
+	public Rechnung(String status, Date datum) {
+		this.status = status;
+		this.datum = datum;
 	}
 
 	public Rechnung(int rechnungID, String status, Date datum) {
@@ -45,7 +49,7 @@ public abstract class Rechnung extends DBEntity {
 	}
 
 	public String getDatumString() {
-		return new StringBuilder(dateFormat.format(datum)).toString();
+		return new StringBuilder(new SimpleDateFormat("dd.MM.yyyy").format(datum)).toString();
 	}
 
 	public void setDatum(Date datum) {
@@ -53,7 +57,7 @@ public abstract class Rechnung extends DBEntity {
 	}
 
 	public void setDatum(String datum) throws ParseException {
-		this.datum = dateFormat.parse(datum);
+		this.datum = new SimpleDateFormat("dd.MM.yyyy").parse(datum);
 	}
 
 	@Override

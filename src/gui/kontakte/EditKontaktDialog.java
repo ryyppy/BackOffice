@@ -123,7 +123,7 @@ public class EditKontaktDialog extends JDialog implements ActionListener {
 						k.setTelefon(telefon);
 						BL.updateKontakt(k);
 					} else {
-						k = new Kontakt(-1, firma, name, telefon);
+						k = new Kontakt(firma, name, telefon);
 						BL.saveKontakt(k);
 					}
 					dispose();
@@ -135,7 +135,9 @@ public class EditKontaktDialog extends JDialog implements ActionListener {
 			} catch (InvalidObjectException ioe) {
 				JOptionPane.showMessageDialog(this, ioe.getMessage());
 			} catch (DALException de) {
+				de.printStackTrace();
 				JOptionPane.showMessageDialog(this, de.getMessage());
+				System.out.println( de.getMessage());
 			}
 		} else if (e.getSource() == cancel) {
 			dispose();

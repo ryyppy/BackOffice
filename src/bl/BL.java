@@ -3,6 +3,10 @@ package bl;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
+import org.postgresql.util.PSQLDriverVersion;
+
 import bl.objects.Angebot;
 import bl.objects.Ausgangsrechnung;
 import bl.objects.Buchungszeile;
@@ -15,6 +19,8 @@ import bl.objects.Rechnung;
 import bl.objects.Rechnungszeile;
 import bl.objects.Rechung_Buchungszeile;
 import dal.DALException;
+import dal.MysqlAdapter;
+import dal.PostgreSQLAdapter;
 
 public class BL {
 	private static ArrayList<Projekt> projektliste = new ArrayList<Projekt>();
@@ -36,6 +42,9 @@ public class BL {
 	private static int kategorieID = 0;
 	private static ArrayList<Rechung_Buchungszeile> rechnungen_buchungszeilen = new ArrayList<Rechung_Buchungszeile>();
 
+	private static MysqlAdapter mysql = new MysqlAdapter("root", "dbsy",
+			"localhost/swe");
+
 	public BL() {
 		projektliste = new ArrayList<Projekt>();
 		kundenliste = new ArrayList<Kunde>();
@@ -49,150 +58,223 @@ public class BL {
 	}
 
 	public static ArrayList<Kontakt> getKontaktListe() throws DALException {
-		return kontakteliste;
+		mysql.connect();
+		ArrayList<Kontakt> ret = (ArrayList<Kontakt>) mysql
+				.getEntityList(Kontakt.class);
+		mysql.disconnect();
+		return ret;
+		// return kontakteliste;
 	}
 
 	public static Kontakt getKontakt(int kontaktID) throws DALException {
-		for (int i = 0; i < kontakteliste.size(); i++) {
-			if (kontakteliste.get(i).getKontaktID() == kontaktID) {
-				return kontakteliste.get(i);
-			}
-		}
-		throw new DALException("Kunden-ID nicht vorhanden");
+		// for (int i = 0; i < kontakteliste.size(); i++) {
+		// if (kontakteliste.get(i).getKontaktID() == kontaktID) {
+		// return kontakteliste.get(i);
+		// }
+		// }
+		// throw new DALException("Kunden-ID nicht vorhanden");
+		mysql.connect();
+		Kontakt k = mysql.getEntityByID(kontaktID, Kontakt.class);
+		mysql.disconnect();
+		return k;
 	}
 
 	public static void deleteKontakt(int kontaktID) throws DALException {
-		Kontakt k = getKontakt(kontaktID);
-		if (k != null) {
-			kontakteliste.remove(k);
-		}
+		// Kontakt k = getKontakt(kontaktID);
+		// if (k != null) {
+		// kontakteliste.remove(k);
+		// }
+		mysql.connect();
+		mysql.deleteEntity(kontaktID, Kontakt.class);
+		mysql.disconnect();
 	}
 
 	public static void saveKontakt(Kontakt k) throws DALException,
 			InvalidObjectException {
-		String exception = "";
-		// ...
-		if (!exception.isEmpty()) {
-			throw new InvalidObjectException(exception);
-		}
-
-		k.setKontaktID(kontaktID++);
-		kontakteliste.add(k);
+		// String exception = "";
+		// // ...
+		// if (!exception.isEmpty()) {
+		// throw new InvalidObjectException(exception);
+		// }
+		//
+		// k.setKontaktID(kontaktID++);
+		// kontakteliste.add(k);
+		mysql.connect();
+		mysql.addEntity(k);
+		mysql.disconnect();
 	}
 
 	public static void updateKontakt(Kontakt k) throws DALException,
 			InvalidObjectException {
-		String exception = "";
-		// ... überprüfen
-		if (!exception.isEmpty()) {
-			throw new InvalidObjectException(exception);
-		}
-
-		for (Kontakt kontakt : kontakteliste) {
-			if (kontakt.getID() == k.getID()) {
-				kontakt = k;
-			}
-		}
+		// String exception = "";
+		// // ... überprüfen
+		// if (!exception.isEmpty()) {
+		// throw new InvalidObjectException(exception);
+		// }
+		//
+		// for (Kontakt kontakt : kontakteliste) {
+		// if (kontakt.getID() == k.getID()) {
+		// kontakt = k;
+		// }
+		// }
+		mysql.connect();
+		mysql.updateEntity(k);
+		mysql.disconnect();
 	}
 
 	public static ArrayList<Kunde> getKundenListe() throws DALException {
-		return kundenliste;
+		// return kundenliste;
+		mysql.connect();
+		ArrayList<Kunde> ret = (ArrayList<Kunde>) mysql
+				.getEntityList(Kunde.class);
+		mysql.disconnect();
+		return ret;
 	}
 
 	public static Kunde getKunde(int kundenID) throws DALException {
-		for (int i = 0; i < kundenliste.size(); i++) {
-			if (kundenliste.get(i).getKundenID() == kundenID) {
-				return kundenliste.get(i);
-			}
-		}
-		throw new DALException("Kunden-ID nicht vorhanden");
+		// for (int i = 0; i < kundenliste.size(); i++) {
+		// if (kundenliste.get(i).getKundenID() == kundenID) {
+		// return kundenliste.get(i);
+		// }
+		// }
+		// throw new DALException("Kunden-ID nicht vorhanden");
+		mysql.connect();
+		Kunde k = mysql.getEntityByID(kundenID, Kunde.class);
+		mysql.disconnect();
+		return k;
 	}
 
 	public static void deleteKunde(int kundenID) throws DALException {
-		Kunde k = getKunde(kundenID);
-		if (k != null) {
-			kundenliste.remove(k);
-		}
+		// Kunde k = getKunde(kundenID);
+		// if (k != null) {
+		// kundenliste.remove(k);
+		// }
+		mysql.connect();
+		mysql.deleteEntity(kundenID, Kunde.class);
+		mysql.disconnect();
 	}
 
 	public static void saveKunde(Kunde k) throws DALException,
 			InvalidObjectException {
-		String exception = "";
-		// ...
-		if (!exception.isEmpty()) {
-			throw new InvalidObjectException(exception);
-		}
-
-		k.setKundenID(kundenID++);
-		kundenliste.add(k);
+		// String exception = "";
+		// // ...
+		// if (!exception.isEmpty()) {
+		// throw new InvalidObjectException(exception);
+		// }
+		//
+		// k.setKundenID(kundenID++);
+		// kundenliste.add(k);
+		mysql.connect();
+		mysql.addEntity(k);
+		mysql.disconnect();
 	}
 
 	public static void updateKunde(Kunde k) throws DALException,
 			InvalidObjectException {
-		String exception = "";
-		// ... überprüfen
-		if (!exception.isEmpty()) {
-			throw new InvalidObjectException(exception);
-		}
-
-		for (Kunde kunde : kundenliste) {
-			if (kunde.getKundenID() == k.getKundenID()) {
-				kunde = k;
-			}
-		}
+		// String exception = "";
+		// // ... überprüfen
+		// if (!exception.isEmpty()) {
+		// throw new InvalidObjectException(exception);
+		// }
+		//
+		// for (Kunde kunde : kundenliste) {
+		// if (kunde.getKundenID() == k.getKundenID()) {
+		// kunde = k;
+		// }
+		// }
+		mysql.connect();
+		mysql.updateEntity(k);
+		mysql.disconnect();
 	}
 
 	public static ArrayList<Projekt> getProjektListe() throws DALException {
-		return projektliste;
+		// return projektliste;
+		mysql.connect();
+		ArrayList<Projekt> ret = (ArrayList<Projekt>) mysql
+				.getEntityList(Projekt.class);
+		mysql.disconnect();
+		return ret;
 	}
 
 	public static Projekt getProjekt(int projektID) throws DALException {
-		for (int i = 0; i < projektliste.size(); i++) {
-			if (projektliste.get(i).getProjektID() == projektID) {
-				return projektliste.get(i);
-			}
-		}
-		throw new DALException("Projekt-ID nicht vorhanden");
+		// for (int i = 0; i < projektliste.size(); i++) {
+		// if (projektliste.get(i).getProjektID() == projektID) {
+		// return projektliste.get(i);
+		// }
+		// }
+		// throw new DALException("Projekt-ID nicht vorhanden");
+		mysql.connect();
+		Projekt p = mysql.getEntityByID(projektID, Projekt.class);
+		mysql.disconnect();
+		return p;
 	}
 
 	public static void deleteProjekt(int projektID) throws DALException {
-		Projekt p = getProjekt(projektID);
-		if (p != null) {
-			projektliste.remove(p);
-		}
+		// Projekt p = getProjekt(projektID);
+		// if (p != null) {
+		// projektliste.remove(p);
+		// }
+		mysql.connect();
+		mysql.deleteEntity(projektID, Projekt.class);
+		mysql.disconnect();
 	}
 
 	public static void saveProjekt(Projekt p) throws DALException,
 			InvalidObjectException {
-		String exception = "";
-		// ...
-		if (!exception.isEmpty()) {
-			throw new InvalidObjectException(exception);
-		}
-
-		p.setProjektID(projektID++);
-		projektliste.add(p);
+		// String exception = "";
+		// // ...
+		// if (!exception.isEmpty()) {
+		// throw new InvalidObjectException(exception);
+		// }
+		//
+		// p.setProjektID(projektID++);
+		// projektliste.add(p);
+		mysql.connect();
+		mysql.addEntity(p);
+		mysql.disconnect();
 	}
 
 	public static void updateProjekt(Projekt p) throws DALException,
 			InvalidObjectException {
-		String exception = "";
-		// ... überprüfen
-		if (!exception.isEmpty()) {
-			throw new InvalidObjectException(exception);
-		}
-
-		for (Projekt projekt : projektliste) {
-			if (projekt.getProjektID() == p.getProjektID()) {
-				projekt = p;
-			}
-		}
+		// String exception = "";
+		// // ... überprüfen
+		// if (!exception.isEmpty()) {
+		// throw new InvalidObjectException(exception);
+		// }
+		//
+		// for (Projekt projekt : projektliste) {
+		// if (projekt.getProjektID() == p.getProjektID()) {
+		// projekt = p;
+		// }
+		// }
+		mysql.connect();
+		mysql.updateEntity(p);
+		mysql.disconnect();
 	}
 
 	public static ArrayList<Angebot> getAngebotsListe() throws DALException {
-		return angebotsliste;
+		// return angebotsliste;
+		mysql.connect();
+		ArrayList<Angebot> ret = (ArrayList<Angebot>) mysql
+				.getEntityList(Angebot.class);
+		mysql.disconnect();
+		return ret;
 	}
 
+	/**
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * NICHT VERGESSEN
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * **/
 	public static ArrayList<Angebot> getAngebotsListe(int kundenID)
 			throws DALException {
 		ArrayList<Angebot> ret = new ArrayList<Angebot>();
@@ -205,46 +287,59 @@ public class BL {
 	}
 
 	public static Angebot getAngebot(int angebotID) throws DALException {
-		for (int i = 0; i < angebotsliste.size(); i++) {
-			if (angebotsliste.get(i).getAngebotID() == angebotID) {
-				return angebotsliste.get(i);
-			}
-		}
-		throw new DALException("Angebot-ID nicht vorhanden");
+		// for (int i = 0; i < angebotsliste.size(); i++) {
+		// if (angebotsliste.get(i).getAngebotID() == angebotID) {
+		// return angebotsliste.get(i);
+		// }
+		// }
+		// throw new DALException("Angebot-ID nicht vorhanden");
+		mysql.connect();
+		Angebot a = mysql.getEntityByID(angebotID, Angebot.class);
+		mysql.disconnect();
+		return a;
 	}
 
 	public static void deleteAngebot(int angebotID) throws DALException {
-		Angebot a = getAngebot(angebotID);
-		if (a != null) {
-			projektliste.remove(a);
-		}
+		// Angebot a = getAngebot(angebotID);
+		// if (a != null) {
+		// projektliste.remove(a);
+		// }
+		mysql.connect();
+		mysql.deleteEntity(angebotID, Angebot.class);
+		mysql.disconnect();
 	}
 
 	public static void saveAngebot(Angebot a) throws DALException,
 			InvalidObjectException {
-		String exception = "";
-		// ... Kunden bzw Projekt-ID überprüfen
-		if (!exception.isEmpty()) {
-			throw new InvalidObjectException(exception);
-		}
-
-		a.setAngebotID(angebotID++);
-		angebotsliste.add(a);
+		// String exception = "";
+		// // ... Kunden bzw Projekt-ID überprüfen
+		// if (!exception.isEmpty()) {
+		// throw new InvalidObjectException(exception);
+		// }
+		//
+		// a.setAngebotID(angebotID++);
+		// angebotsliste.add(a);
+		mysql.connect();
+		mysql.addEntity(a);
+		mysql.disconnect();
 	}
 
 	public static void updateAngebot(Angebot a) throws DALException,
 			InvalidObjectException {
-		String exception = "";
-		// ... Kunden-ID und Projekt-ID überprüfen
-		if (!exception.isEmpty()) {
-			throw new InvalidObjectException(exception);
-		}
-
-		for (Angebot angebot : angebotsliste) {
-			if (angebot.getAngebotID() == a.getAngebotID()) {
-				angebot = a;
-			}
-		}
+		// String exception = "";
+		// // ... Kunden-ID und Projekt-ID überprüfen
+		// if (!exception.isEmpty()) {
+		// throw new InvalidObjectException(exception);
+		// }
+		//
+		// for (Angebot angebot : angebotsliste) {
+		// if (angebot.getAngebotID() == a.getAngebotID()) {
+		// angebot = a;
+		// }
+		// }
+		mysql.connect();
+		mysql.updateEntity(a);
+		mysql.disconnect();
 	}
 
 	public static Eingangsrechnung getEingangsrechnung(int rechnungID)
@@ -268,6 +363,11 @@ public class BL {
 	public static ArrayList<Eingangsrechnung> getEingangsrechnungenListe()
 			throws DALException {
 		return eingangsrechnungenliste;
+//		mysql.connect();
+//		ArrayList<Eingangsrechnung> ret =(ArrayList<Eingangsrechnung>) mysql.getEntityList(Eingangsrechnung.class);
+//		JOptionPane.showMessageDialog(null, ret.size());
+//		mysql.disconnect();
+//		return ret;
 	}
 
 	public static void saveEingangsrechnung(Eingangsrechnung e)
@@ -280,6 +380,7 @@ public class BL {
 
 		e.setRechnungID(rechnungID++);
 		eingangsrechnungenliste.add(e);
+		
 	}
 
 	public static void updateEingangsrechnung(Eingangsrechnung e)

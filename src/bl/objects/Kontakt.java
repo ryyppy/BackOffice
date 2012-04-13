@@ -5,14 +5,20 @@ import dal.TableMeta;
 
 @TableMeta(pkFieldName = "kontaktID")
 public class Kontakt extends DBEntity {
-	private int kontaktID;
+	private Integer kontaktID;
 	private String firma, name, telefon;
 
-	public Kontakt(){
-		
+	public Kontakt() {
+
 	}
+
+	public Kontakt(String firma, String name, String telefon) {
+		this.firma = firma;
+		this.name = name;
+		this.telefon = telefon;
+	}
+
 	public Kontakt(int id, String firma, String name, String telefon) {
-		super();
 		this.kontaktID = id;
 		this.firma = firma;
 		this.name = name;

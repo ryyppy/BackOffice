@@ -152,7 +152,7 @@ public class EditEingangsrechnungDialog extends JDialog implements
 		if (e.getSource() == add) {
 			try {
 				DataBinder b = new DataBinder();
-				String status = b.bindFrom_String(this.status, null);
+				String status = b.bindFrom_String2(this.status, null);
 				Date datum = b.bindFrom_Date(this.datum, new StandardRule());
 				int kontaktID = b.bindFrom_int(kontakt, null);
 
@@ -163,7 +163,7 @@ public class EditEingangsrechnungDialog extends JDialog implements
 						er.setKontaktID(kontaktID);
 						BL.updateEingangsrechnung(er);
 					} else {
-						er = new Eingangsrechnung(-1, status, datum, kontaktID);
+						er = new Eingangsrechnung(status, datum, kontaktID);
 						BL.saveEingangsrechnung(er);
 					}
 					dispose();
@@ -178,6 +178,7 @@ public class EditEingangsrechnungDialog extends JDialog implements
 			} catch (InvalidObjectException ioe) {
 				JOptionPane.showMessageDialog(this, ioe.getMessage());
 			} catch (DALException de) {
+				de.printStackTrace();
 				JOptionPane.showMessageDialog(this, de.getMessage());
 			}
 		} else if (e.getSource() == cancel) {

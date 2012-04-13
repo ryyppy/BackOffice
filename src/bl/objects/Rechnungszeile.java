@@ -5,12 +5,25 @@ import dal.TableMeta;
 
 @TableMeta(pkFieldName = "rechnungszeileID")
 public class Rechnungszeile extends DBEntity {
-	private int rechnungszeileID, rechnungID, angebotsID;
+	private Integer rechnungszeileID;
 	private String kommentar;
-	private double steuersatz, betrag;
+	private Double steuersatz;
+	private Double betrag;
+	private Integer rechnungID;
+	private Integer angebotID;
 
 	public Rechnungszeile() {
 
+	}
+
+	public Rechnungszeile(String kommentar, double steuersatz, double betrag,
+			int rechnungID, int angebotsID) {
+		super();
+		this.rechnungID = rechnungID;
+		this.angebotID = angebotsID;
+		this.steuersatz = steuersatz;
+		this.kommentar = kommentar;
+		this.betrag = betrag;
 	}
 
 	public Rechnungszeile(int id, String kommentar, double steuersatz,
@@ -18,7 +31,7 @@ public class Rechnungszeile extends DBEntity {
 		super();
 		this.rechnungszeileID = id;
 		this.rechnungID = rechnungID;
-		this.angebotsID = angebotsID;
+		this.angebotID = angebotsID;
 		this.steuersatz = steuersatz;
 		this.kommentar = kommentar;
 		this.betrag = betrag;
@@ -41,11 +54,11 @@ public class Rechnungszeile extends DBEntity {
 	}
 
 	public int getAngebotsID() {
-		return angebotsID;
+		return angebotID;
 	}
 
 	public void setAngebotsID(int angebotsID) {
-		this.angebotsID = angebotsID;
+		this.angebotID = angebotsID;
 	}
 
 	public String getKommentar() {
@@ -76,6 +89,6 @@ public class Rechnungszeile extends DBEntity {
 		return "Rechnungszeile-ID: " + rechnungszeileID + "\nRechnung-ID: "
 				+ rechnungID + "\nKommentar: " + kommentar + "\nSteuersatz: "
 				+ steuersatz + "\nBetrag: " + betrag + "\nAngebot-ID: "
-				+ angebotsID;
+				+ angebotID;
 	}
 }

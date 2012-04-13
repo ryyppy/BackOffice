@@ -60,6 +60,28 @@ public class DataBinder {
 
 		return ret;
 	}
+	public String bindFrom_String2(JComboBox f, Rule r) {
+		setComponentBorder(f, Color.GREEN);
+		String ret = "";
+		// Convert
+		try {
+			ret = String.valueOf(f.getSelectedItem());
+		} catch (Exception e) {
+			errorCtrl.setError(f.getName(), "Fehlende Auswahl",
+					Error.NUMBERFORMAT_FAILURE);
+			setComponentBorder(f, Color.RED);
+			return ret;
+		}
+
+		// Execute Rule
+		if (r != null) {
+			if (!r.eval(ret, errorCtrl, f.getName())) {
+				setComponentBorder(f, Color.RED);
+			}
+		}
+
+		return ret;
+	}
 
 	public int bindFrom_int(JTextField f, Rule r) {
 		setComponentBorder(f, Color.GREEN);

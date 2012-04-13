@@ -3,10 +3,15 @@ package bl.objects;
 import java.util.Date;
 
 public class Ausgangsrechnung extends Rechnung {
-	private int kundenID;
+	private Integer kundenID;
 
 	public Ausgangsrechnung() {
 		super();
+	}
+
+	public Ausgangsrechnung(String status, Date datum, int kundenID) {
+		super(status, datum);
+		this.kundenID = kundenID;
 	}
 
 	public Ausgangsrechnung(int rechnungID, String status, Date datum,

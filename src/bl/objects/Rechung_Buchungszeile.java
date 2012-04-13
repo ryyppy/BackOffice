@@ -3,7 +3,7 @@ package bl.objects;
 import dal.DBEntity;
 
 public class Rechung_Buchungszeile extends DBEntity {
-	private int rechnungsID, buchungszeileID;
+	private Integer rechnungsID, buchungszeileID;
 
 	public Rechung_Buchungszeile(int rechnungsID, int buchungszeileID) {
 		this.rechnungsID = rechnungsID;
