@@ -6,7 +6,7 @@ package dal;
  * Date: 25.03.12
  * Time: 22:11
  */
-public class DALException extends RuntimeException{
+public class DALException extends Exception{
     public DALException(String msg, Exception e){
         super(msg, e);
     }

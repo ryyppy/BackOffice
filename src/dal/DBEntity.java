@@ -31,9 +31,10 @@ public abstract class DBEntity {
      *         return getAngebotID();
      *     }
      * }
+     * @throws DALException - If there is no tableMeta-Annotation found
      * @return Value of the primary-key-field
      */
-    public Object getID(){
+    public Object getID() throws DALException{
         Class<? extends DBEntity> entityClass = this.getClass();
         TableMeta tableMeta = DBEntity.getTableMeta(entityClass);
         String pkFieldName = tableMeta.pkFieldName();
@@ -43,7 +44,7 @@ public abstract class DBEntity {
             if(fieldname.equals(pkFieldName)){
                 try{
                     f.setAccessible(true);
-                    f.get(this);
+                    return f.get(this);
                 }catch(IllegalAccessException iae){
                     iae.printStackTrace();
                 }
@@ -72,8 +73,9 @@ public abstract class DBEntity {
      *     }
      * }
      * @param id
+     * @throws DALException - If there is no tableMeta-Annotation found
      */
-    public void setID(Object id){
+    public void setID(Object id) throws DALException{
         Class<? extends DBEntity> entityClass = this.getClass();
         TableMeta tableMeta = DBEntity.getTableMeta(entityClass);
         String pkFieldName = tableMeta.pkFieldName();
@@ -93,6 +95,7 @@ public abstract class DBEntity {
     /**
      * Returns the Reflection-Field of a DBEntity-class-definition, which represents the Primary-Key in its database
      * @param entityClass - DBEntity-Class for retrieving the PK field
+     * @throws DALException - If there is no tableMeta-Annotation found
      * @return Field-Definition of the PK-Field or NULL if it could not be retrieved
      */
     public static Field getPKField(Class<? extends DBEntity> entityClass) throws DALException{
@@ -115,7 +118,7 @@ public abstract class DBEntity {
      *
      * @return tableMeta-Annotation of the given entityClass
      */
-    public static TableMeta getTableMeta(Class<? extends DBEntity> entityClass){
+    public static TableMeta getTableMeta(Class<? extends DBEntity> entityClass) throws DALException{
         TableMeta tableMeta =  entityClass.getAnnotation(TableMeta.class);
 
         if(tableMeta != null && tableMeta instanceof TableMeta)
