@@ -6,7 +6,7 @@ import dal.TableMeta;
 
 @TableMeta(pkFieldName = "rechnungID")
 public class Ausgangsrechnung extends Rechnung {
-	private Integer kundenID;
+	private Integer kundeID;
 	private Integer rechnungID;
 
 	public Ausgangsrechnung() {
@@ -15,22 +15,22 @@ public class Ausgangsrechnung extends Rechnung {
 
 	public Ausgangsrechnung(String status, Date datum, int kundenID) {
 		super(status, datum);
-		this.kundenID = kundenID;
+		this.kundeID = kundenID;
 	}
 
 	public Ausgangsrechnung(int rechnungID, String status, Date datum,
 			int kundenID) {
 		super(rechnungID, status, datum);
-		this.kundenID = kundenID;
+		this.kundeID = kundenID;
 		this.rechnungID = rechnungID;
 	}
 
 	public int getKundenID() {
-		return kundenID;
+		return kundeID;
 	}
 
 	public void setKundenID(int kundenID) {
-		this.kundenID = kundenID;
+		this.kundeID = kundenID;
 	}
 
 	public int getRechnungID() {
@@ -44,6 +44,6 @@ public class Ausgangsrechnung extends Rechnung {
 
 	public String toString() {
 		return "Ausgangsrechnung:\n" + super.toString() + "\nKunden-ID: "
-				+ kundenID;
+				+ kundeID;
 	}
 }
