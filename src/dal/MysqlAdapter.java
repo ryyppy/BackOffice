@@ -480,8 +480,8 @@ public class MysqlAdapter extends DatabaseAdapter {
     private String createJoinClause(Class<? extends DBEntity> entityClass) throws DALException{
         Class<? extends DBEntity> superClazz = DBEntity.getDBSuperclass(entityClass);
 
-        //If there is no superclass, there is no join needed
-        if(superClazz == null)
+        //If there is no superClass, or the superclass is just the DBEntity, there is no join needed
+        if(superClazz == null || superClazz.equals(DBEntity.class))
             return "";
 
         String pkSuper = DBEntity.getPKField(superClazz).getName();
