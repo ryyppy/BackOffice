@@ -1,6 +1,7 @@
 package gui.rechnungen;
 
 import gui.models.tablemodels.EingangsrechnungTableModel;
+import gui.models.tablemodels.MyTableCellRenderer;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -20,11 +21,10 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import dal.DALException;
-
 import bl.BL;
 import bl.objects.Eingangsrechnung;
 import bl.objects.Kontakt;
+import dal.DALException;
 
 public class EingangsrechnungenPanel extends JPanel implements ActionListener {
 	private JButton add, edit, delete, kontaktInfo, showRechnungszeilen;
@@ -102,6 +102,11 @@ public class EingangsrechnungenPanel extends JPanel implements ActionListener {
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.setFillsViewportHeight(true);
 
+		for (String columnname : tModel.getColumnNames()) {
+			table.getColumn(columnname).setCellRenderer(
+					new MyTableCellRenderer());
+		}
+
 		tSorter = new TableRowSorter<TableModel>(table.getModel());
 		tSorter.toggleSortOrder(0);
 		tSorter.setSortsOnUpdates(true);
@@ -120,8 +125,8 @@ public class EingangsrechnungenPanel extends JPanel implements ActionListener {
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
 				try {
-					BL.deleteEingangsrechnung(Integer.valueOf(String.valueOf (tModel
-							.getValueAt(b, 0))));
+					BL.deleteEingangsrechnung(Integer.valueOf(String
+							.valueOf(tModel.getValueAt(b, 0))));
 				} catch (DALException e1) {
 					JOptionPane.showMessageDialog(this, e1.getMessage());
 				}

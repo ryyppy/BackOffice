@@ -1,7 +1,7 @@
 package gui.kunden;
 
 import gui.models.tablemodels.KundenTableModel;
-import gui.rechnungen.EditAusgangsrechnungDialog;
+import gui.models.tablemodels.MyTableCellRenderer;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -21,10 +21,9 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import dal.DALException;
-
 import bl.BL;
 import bl.objects.Kunde;
+import dal.DALException;
 
 public class KundenPanel extends JPanel implements ActionListener {
 	private JButton add, edit, delete, angebote;
@@ -121,6 +120,11 @@ public class KundenPanel extends JPanel implements ActionListener {
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.setFillsViewportHeight(true);
+
+		for (String columnname : tModel.getColumnNames()) {
+			table.getColumn(columnname).setCellRenderer(
+					new MyTableCellRenderer());
+		}
 
 		tSorter = new TableRowSorter<TableModel>(table.getModel());
 		tSorter.toggleSortOrder(0);

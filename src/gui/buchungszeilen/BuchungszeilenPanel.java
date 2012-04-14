@@ -1,6 +1,7 @@
 package gui.buchungszeilen;
 
 import gui.models.tablemodels.BuchungszeilenTableModel;
+import gui.models.tablemodels.MyTableCellRenderer;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -20,11 +21,10 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import dal.DALException;
-
 import bl.BL;
 import bl.objects.Buchungszeile;
 import bl.objects.Kategorie;
+import dal.DALException;
 
 public class BuchungszeilenPanel extends JPanel implements ActionListener {
 	private JButton add, edit, delete, addKategorie, kategorieInfo,
@@ -105,6 +105,11 @@ public class BuchungszeilenPanel extends JPanel implements ActionListener {
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.setFillsViewportHeight(true);
+
+		for (String columnname : tModel.getColumnNames()) {
+			table.getColumn(columnname).setCellRenderer(
+					new MyTableCellRenderer());
+		}
 
 		tSorter = new TableRowSorter<TableModel>(table.getModel());
 		tSorter.toggleSortOrder(0);

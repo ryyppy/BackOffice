@@ -1,5 +1,6 @@
 package gui.projekte;
 
+import gui.models.tablemodels.MyTableCellRenderer;
 import gui.models.tablemodels.ProjektTableModel;
 
 import java.awt.BorderLayout;
@@ -20,10 +21,9 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import dal.DALException;
-
 import bl.BL;
 import bl.objects.Projekt;
+import dal.DALException;
 
 public class ProjektePanel extends JPanel implements ActionListener {
 	private JButton add, edit, delete, angebote;
@@ -98,6 +98,11 @@ public class ProjektePanel extends JPanel implements ActionListener {
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.setFillsViewportHeight(true);
+
+		for (String columnname : tModel.getColumnNames()) {
+			table.getColumn(columnname).setCellRenderer(
+					new MyTableCellRenderer());
+		}
 
 		tSorter = new TableRowSorter<TableModel>(table.getModel());
 		tSorter.toggleSortOrder(0);

@@ -1,5 +1,6 @@
 package gui.rechnungen;
 
+import gui.models.tablemodels.MyTableCellRenderer;
 import gui.models.tablemodels.RechnungszeilenTableModel;
 
 import java.awt.BorderLayout;
@@ -15,14 +16,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import dal.DALException;
-
 import bl.BL;
 import bl.objects.Angebot;
+import dal.DALException;
 
 public class RechnungszeilenPanel extends JPanel implements ActionListener {
 	private JButton add, edit, delete, angebotInfo;
@@ -88,6 +87,11 @@ public class RechnungszeilenPanel extends JPanel implements ActionListener {
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.setFillsViewportHeight(true);
 
+		for (String columnname : tModel.getColumnNames()) {
+			table.getColumn(columnname).setCellRenderer(
+					new MyTableCellRenderer());
+		}
+
 		tSorter = new TableRowSorter<TableModel>(table.getModel());
 		tSorter.toggleSortOrder(0);
 		tSorter.setSortsOnUpdates(true);
@@ -109,8 +113,7 @@ public class RechnungszeilenPanel extends JPanel implements ActionListener {
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
 				try {
-					BL.deleteRechnungszeile((Integer) (tModel.getValueAt(b,
-							0)));
+					BL.deleteRechnungszeile((Integer) (tModel.getValueAt(b, 0)));
 				} catch (DALException e1) {
 					JOptionPane.showMessageDialog(this, e1.getMessage());
 				}

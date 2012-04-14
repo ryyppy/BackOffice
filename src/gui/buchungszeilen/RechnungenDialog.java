@@ -1,5 +1,6 @@
 package gui.buchungszeilen;
 
+import gui.models.tablemodels.MyTableCellRenderer;
 import gui.models.tablemodels.RechnungAuswahlTableModel;
 
 import java.awt.BorderLayout;
@@ -19,9 +20,8 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import dal.DALException;
-
 import bl.objects.Buchungszeile;
+import dal.DALException;
 
 public class RechnungenDialog extends JDialog implements ActionListener {
 	private JButton save, cancel;
@@ -72,6 +72,11 @@ public class RechnungenDialog extends JDialog implements ActionListener {
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.setFillsViewportHeight(true);
+
+		for (String columnname : tModel.getColumnNames()) {
+			table.getColumn(columnname).setCellRenderer(
+					new MyTableCellRenderer());
+		}
 
 		tSorter = new TableRowSorter<TableModel>(table.getModel());
 		tSorter.toggleSortOrder(0);

@@ -120,7 +120,7 @@ public class RechnungAuswahlTableModel extends AbstractTableModel {
 		return false;
 	}
 
-	public Object[] getColumnNames() {
+	public String[] getColumnNames() {
 		return columnNames;
 	}
 
