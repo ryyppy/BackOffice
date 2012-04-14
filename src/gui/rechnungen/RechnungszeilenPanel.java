@@ -109,16 +109,23 @@ public class RechnungszeilenPanel extends JPanel implements ActionListener {
 			// refresh bug
 			tModel.refresh();
 		} else if (e.getSource() == delete) {
-			int[] a = table.getSelectedRows();
-			for (int i = 0; i < a.length; i++) {
-				int b = table.convertRowIndexToModel(a[i]);
-				try {
-					BL.deleteRechnungszeile((Integer) (tModel.getValueAt(b, 0)));
-				} catch (DALException e1) {
-					JOptionPane.showMessageDialog(this, e1.getMessage());
+			int option = JOptionPane.showConfirmDialog(this,
+					"Sollen die ausgewählten Elemente gelöscht werden?",
+					"Löschauftrag", JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE);
+			if (option == JOptionPane.YES_OPTION) {
+				int[] a = table.getSelectedRows();
+				for (int i = 0; i < a.length; i++) {
+					int b = table.convertRowIndexToModel(a[i]);
+					try {
+						BL.deleteRechnungszeile((Integer) (tModel.getValueAt(b,
+								0)));
+					} catch (DALException e1) {
+						JOptionPane.showMessageDialog(this, e1.getMessage());
+					}
 				}
+				tModel.refresh();
 			}
-			tModel.refresh();
 		} else if (e.getSource() == edit) {
 
 		} else if (e.getSource() == angebotInfo) {
