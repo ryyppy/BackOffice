@@ -13,6 +13,7 @@ import bl.objects.Kunde;
 public class KontaktTableModel extends AbstractTableModel {
 	private ArrayList<Kontakt> kontake;
 	private String[] columnNames = { "Kontakt-ID", "Firma", "Name", "Telefon" };
+	private String filter = "";
 
 	public KontaktTableModel() {
 		this.refresh();
@@ -70,10 +71,18 @@ public class KontaktTableModel extends AbstractTableModel {
 
 	public void refresh() {
 		try {
-			kontake = BL.getKontaktListe();
+			if (filter.isEmpty()) {
+				kontake = BL.getKontaktListe();
+			} else {
+				kontake = BL.getKontaktListe(filter);
+			}
 		} catch (DALException e) {
 			System.out.println(e.getMessage());
 		}
 		super.fireTableDataChanged();
+	}
+
+	public void setFilter(String filter) {
+		this.filter = filter;
 	}
 }
