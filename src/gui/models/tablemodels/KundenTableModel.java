@@ -4,10 +4,9 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import dal.DALException;
-
 import bl.BL;
 import bl.objects.Kunde;
+import dal.DALException;
 
 public class KundenTableModel extends AbstractTableModel {
 	private ArrayList<Kunde> kunden;
@@ -35,7 +34,7 @@ public class KundenTableModel extends AbstractTableModel {
 		Kunde k = kunden.get(row);
 		switch (col) {
 		case 0:
-			return k.getKundenID();
+			return k.getKundeID();
 		case 1:
 			return k.getVorname();
 		case 2:
@@ -50,18 +49,6 @@ public class KundenTableModel extends AbstractTableModel {
 	@Override
 	public String getColumnName(int column) {
 		return columnNames[column];
-		// switch (column) {
-		// case 0:
-		// return "Kunden-ID";
-		// case 1:
-		// return "Vorname";
-		// case 2:
-		// return "Nachname";
-		// case 3:
-		// return "Geburtsdatum";
-		// default:
-		// return "";
-		// }
 	}
 
 	public String[] getColumnNames() {

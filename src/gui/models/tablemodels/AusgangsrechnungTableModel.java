@@ -4,13 +4,9 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
-
-import dal.DALException;
-
 import bl.BL;
-import bl.objects.Angebot;
 import bl.objects.Ausgangsrechnung;
+import dal.DALException;
 
 public class AusgangsrechnungTableModel extends AbstractTableModel {
 	private ArrayList<Ausgangsrechnung> ausgangsrechnungen;
@@ -44,7 +40,7 @@ public class AusgangsrechnungTableModel extends AbstractTableModel {
 		case 2:
 			return a.getDatumString();
 		case 3:
-			return a.getKundenID();
+			return a.getKundeID();
 		default:
 			return "";
 		}
