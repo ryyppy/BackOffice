@@ -134,20 +134,13 @@ public abstract class DatabaseAdapter {
         }
     }
 
+    /**
+     * Gives information wether the DatabaseAdapter has an active connection established or not
+     * @return True, if an connection exists, otherwise false
+     */
     public boolean isConnected(){
         return connected;
     }
-
-    /**
-     *
-     * @param whereChain
-     * @param entityClass
-     * @return
-     * @throws DALException
-     */
-    protected abstract String createWhereClausel(WhereChain whereChain, Class<? extends DBEntity> entityClass) throws DALException;
-
-    protected abstract String createJoinClause(Class<? extends DBEntity> entityClass) throws DALException;
 
     /**
      * Retrieves a capsulated data-object with all fields and the given id (foreign-keys only with ID - no eager loading or something)
@@ -222,10 +215,10 @@ public abstract class DatabaseAdapter {
      * pkField defined (see tableMeta-Annotation). The db-table has to be named as the reflected class! Also be sure that
      * the where-dependency-field exist in the given class-definition or an exception will be thrown.
      * Be sure to call connect() first, before you use this method, or it will fail with an connection-error.
-     * @param where - Map of where-clausels which should have following format: Key= fieldname Value=expected value (for instance: Key: "angebotID" Value="1")
-     * @param entityClass
-     * @param <T>
-     * @return
+     * @param where - WhereChain-Object (see definition) or null, for no WHERE-Clausle (would retrieve the whole table-data)
+     * @param entityClass - Class-definition of the datasets which should be retrieved as a list
+     * @param <T> - Entity-Class, which should be returned in a list (a DBEntity-model-class)
+     * @return List of the wished data-classes with the aided class-type according to the WhereChain
      * @throws DALException - If field-definitions are not properly defined in the given class or if a database-error occurs
      */
     public abstract <T extends DBEntity> List<T> getEntitiesBy(WhereChain where, Class<T> entityClass) throws DALException;

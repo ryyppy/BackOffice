@@ -27,83 +27,7 @@ public class MysqlAdapter extends DatabaseAdapter {
 		super("com.mysql.jdbc.Driver", dbUser, dbPassword, "jdbc:mysql://" + dbUrl);
 	}
 
-    @Override
-    protected String createWhereClausel(WhereChain whereChain, Class<? extends DBEntity> entityClass) throws DALException{
-        if(whereChain == null)
-            return "";
 
-        List<WhereCondition> conditions = whereChain.getConditions();
-
-        Class<? extends DBEntity> entitySuper = DBEntity.getDBSuperclass(entityClass);
-
-        String table = entityClass.getSimpleName();
-        String superTable = entitySuper.getSimpleName();
-
-        StringBuilder whereBuilder = new StringBuilder("WHERE ");
-
-        for(int i = 0; i < conditions.size(); i++){
-            WhereCondition condition = conditions.get(i);
-            String field = condition.getFieldname();
-            Object value = condition.getValue();
-
-            String referenceTable = null;
-            Field f = null;
-            try{
-                f = entityClass.getDeclaredField(field);
-                referenceTable = table;
-            }catch(NoSuchFieldException e){
-                try{
-                    f = entitySuper.getDeclaredField(field);
-                    referenceTable = superTable;
-                }catch(NoSuchFieldException nsfe){
-                    throw new DALException(String.format("Field '%s' not found in DBEntity-definition '%s' - Check if there are typos!", field, table), nsfe);
-                }
-            }
-
-            //TODO: Das ist nicht sauber, wenn man nicht auf Datentypen ueberprueft... Workaround fuer FILTER-WhereChains finden!
-            /*
-            if(value != null){
-                Class<?> shouldClazz = f.getType();
-                Class<?> actualClazz = value.getClass();
-
-                if(!shouldClazz.equals(actualClazz))
-                    throw new DALException(String.format("Field '%s' is a '%s' but given value is a '%s' - Wrong types!", field, shouldClazz.getName(), actualClazz.getName()));
-
-            }
-            */
-
-            //Ensure that the first element will not have a leading chainer
-            if(i > 0){
-                //Add the chainer-phrase
-                WhereChain.Chainer chainer = condition.getChainer();
-
-                if(chainer == null)
-                    chainer = WhereChain.Chainer.AND;
-
-                whereBuilder.append(" ").append(chainer).append(" ");
-            }
-            //Table.fieldname >= 'value'
-            whereBuilder.append(String.format("%s.%s %s '%s'", referenceTable, field, condition.getOperator(), value));
-
-        }
-        return whereBuilder.toString();
-    }
-
-    @Override
-    protected String createJoinClause(Class<? extends DBEntity> entityClass) throws DALException{
-        Class<? extends DBEntity> superClazz = DBEntity.getDBSuperclass(entityClass);
-
-        //If there is no superClass, or the superclass is just the DBEntity, there is no join needed
-        if(superClazz == null || superClazz.equals(DBEntity.class))
-            return "";
-
-        String pkSuper = DBEntity.getPKField(superClazz).getName();
-        String pkSub = DBEntity.getPKField(entityClass).getName();
-
-        String tableSuper = superClazz.getSimpleName();
-        String tableSub = entityClass.getSimpleName();
-        return String.format("JOIN %s ON %s.%s = %s.%s", tableSuper, tableSuper, pkSuper, tableSub, pkSub);
-    }
 
     @Override
     public <T extends DBEntity> T getEntityByID(Object id, Class<T> entityClass) throws DALException{
@@ -113,7 +37,7 @@ public class MysqlAdapter extends DatabaseAdapter {
 
         List<T> result = getEntitiesBy(where, entityClass);
 
-        if(result.isEmpty())
+        if(result == null || result.isEmpty())
             return null;
 
         return result.get(0);
@@ -329,43 +253,111 @@ public class MysqlAdapter extends DatabaseAdapter {
         if(!isConnected())
             throw new DALException("Connection not established! Use method connect() before requesting data from the database!");
 
+        //Builder for the Statement Elements
+        StringBuilder builder = null;
+
+        //SQL-Statement-Elements
+        String fieldClausel = null;
+        String joinClausel = "";
+        String whereClausel = "";
+
+        //Classes
+        Class<? extends DBEntity> entitySuper = DBEntity.getDBSuperclass(entityClass);
+
+        //PKFields of the classes
+        Field entityPk = DBEntity.getPKField(entityClass);
+        Field superPk = null;
+
+        //Fielddeclarations
         List<Field> fields = DBEntity.getAllDeclaredFields(entityClass);
-        Field pkField = DBEntity.getPKField(entityClass);
-        String table = entityClass.getSimpleName();
 
-        //Check fields
-        if(fields.size() <= 0)
-            throw new DALException(String.format("No fields in DBEntity '%s' declared (so no mapping possible)", table));
+        //Tablenames
+        String entityTable = entityClass.getSimpleName();
+        String superTable = null;
 
-        StringBuilder builder = new StringBuilder();
+        //Value-List for the PreparedStatement
+        List<Object> preparedValues = new ArrayList<Object>();
 
+        //Set some information about the superclass and also the join-clausel
+        if(entitySuper != null && !entitySuper.equals(DBEntity.class)){
+            superTable = entitySuper.getSimpleName();
+            superPk = DBEntity.getPKField(entitySuper);
+            joinClausel = String.format("JOIN %s ON %s.%s = %s.%s", superTable, superTable, superPk.getName(), entityTable, entityPk.getName());
+        }
+
+        //Creating the fieldClausel
+        builder = new StringBuilder();
         for(int i = 0; i < fields.size(); i++){
             String f = fields.get(i).getName();
             if(i > 0)
                 builder.append(",");
 
-            if(f.equals(pkField.getName())){
-                builder.append(table + ".").append(f);
+            if(f.equals(entityPk.getName())){
+                builder.append(entityTable + ".").append(f);
             }
             else{
                 builder.append(f);
             }
 
         }
+        fieldClausel = builder.toString();
+
+        //CREATING WHERE-CLAUSEL
+        if(where != null){
+            List<WhereCondition> conditions = where.getConditions();
+
+            builder = new StringBuilder("WHERE ");
+
+            for(int i = 0; i < conditions.size(); i++){
+                WhereCondition condition = conditions.get(i);
+                String field = condition.getFieldname();
+                Object value = condition.getValue();
+
+                String referenceTable = null;
+                Field f = null;
+                try{
+                    f = entityClass.getDeclaredField(field);
+                    referenceTable = entityTable;
+                }catch(NoSuchFieldException e){
+                    try{
+                        f = entitySuper.getDeclaredField(field);
+                        referenceTable = superTable;
+                    }catch(NoSuchFieldException nsfe){
+                        throw new DALException(String.format("Field '%s' not found in DBEntity-definition '%s' - Check if there are typos!", field, entityTable), nsfe);
+                    }
+                }
+
+                //Ensure that the first element will not have a leading chainer
+                if(i > 0){
+                    //Add the chainerword (AND / OR)
+                    WhereChain.Chainer chainer = condition.getChainer();
+                    builder.append(" ").append(chainer).append(" ");
+                }
+                //Table.fieldname >= ?
+                builder.append(String.format("%s.%s %s ?", referenceTable, field, condition.getOperator()));
+
+                //Add the value for parameter-setting in the PreparedStatement
+                preparedValues.add(value);
+            }
+            whereClausel = builder.toString();
+        }
 
         ResultSet rs = null;
-        Statement st = null;
+        PreparedStatement ps = null;
 
-        //TODO: alle Felder immer mit FQ-Name ansprechen (tablename.fieldname)
-        //TODO: createJoinClausel() hierher auslagern , Methode generell loeschen und mit ?-Params arbeiten
-        //TODO: createWhereClausel() hierher auslagern, Methode generell loeschen und mit ?-Params arbeiten
-        //SELECT * FROM angebot WHERE angebotID = 1 AND chance = 200;
-        String sql = String.format("SELECT %s FROM %s %s %s", builder.toString(), table, createJoinClause(entityClass),createWhereClausel(where, entityClass));
+        //SELECT Rechnung.datum,... JOIN Rechnung ON Rechnung.rechnungID = Eingangsrechnung.rechnungID WHERE angebotID = ? AND chance = ?;
+        String sql = String.format("SELECT %s FROM %s %s %s", fieldClausel, entityTable, joinClausel,whereClausel);
+        System.err.println(sql);
         try{
-            st = con.createStatement();
-            rs = st.executeQuery(sql);
 
-            //Instantiate a new Object of the given DBEntity
+            ps = con.prepareStatement(sql);
+
+            for(int i = 0; i < preparedValues.size(); i++){
+                ps.setObject(i + 1, preparedValues.get(i));
+            }
+
+            rs = ps.executeQuery();
+
             List<T> ret = new ArrayList<T>();
             T instance;
             try{
@@ -390,13 +382,11 @@ public class MysqlAdapter extends DatabaseAdapter {
                 if(rs != null && !rs.isClosed())
                     rs.close();
 
-                if(st != null)
-                    st.close();
+                if(ps != null)
+                    ps.close();
             }catch(SQLException sqle){
                 throw new DALException("Statement- or ResultSet-Object could not be closed...", sqle);
             }
         }
     }
-
-
 }
