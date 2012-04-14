@@ -51,7 +51,8 @@ public class EditAusgangsrechnungDialog extends JDialog implements
 	}
 
 	public EditAusgangsrechnungDialog(JFrame owner, Ausgangsrechnung ar) {
-		super(owner, "Ausgangsrechnung bearbeiten", true);
+		super(owner, "Ausgangsrechnung " + ar.getRechnungID() + " bearbeiten",
+				true);
 		this.ar = ar;
 		initDialog();
 	}
@@ -134,11 +135,11 @@ public class EditAusgangsrechnungDialog extends JDialog implements
 
 		if (ar != null) {
 			status.setSelectedItem(ar.getStatus());
-			try {
-				kunden.setSelectedItem(BL.getKunde(ar.getKundenID()));
-			} catch (DALException e) {
-				JOptionPane.showMessageDialog(this, e.getMessage());
-				System.exit(0);
+			for (int i = 0; i < kunden.getItemCount(); i++) {
+				if (kunden.getItemAt(i).getKundeID() == ar.getKundeID()) {
+					kunden.setSelectedIndex(i);
+					break;
+				}
 			}
 			datum.setText(ar.getDatumString());
 		} else {
@@ -163,7 +164,7 @@ public class EditAusgangsrechnungDialog extends JDialog implements
 					if (ar != null) {
 						ar.setStatus(status);
 						ar.setDatum(datum);
-						ar.setKundenID(kundenID);
+						ar.setKundeID(kundenID);
 						BL.updateAusgangsrechnung(ar);
 					} else {
 						ar = new Ausgangsrechnung(status, datum, kundenID);

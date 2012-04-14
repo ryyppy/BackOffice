@@ -4,10 +4,9 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import dal.DALException;
-
 import bl.BL;
 import bl.objects.Angebot;
+import dal.DALException;
 
 public class AngebotTableModel extends AbstractTableModel {
 	private ArrayList<Angebot> angebote;
@@ -45,7 +44,7 @@ public class AngebotTableModel extends AbstractTableModel {
 		case 4:
 			return a.getChance();
 		case 5:
-			return a.getKundenID();
+			return a.getKundeID();
 		case 6:
 			return a.getProjektID();
 		default:

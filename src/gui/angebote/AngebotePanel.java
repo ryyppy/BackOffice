@@ -1,6 +1,7 @@
 package gui.angebote;
 
 import gui.models.tablemodels.AngebotTableModel;
+import gui.models.tablemodels.MyTableCellRenderer;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -20,12 +21,11 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import dal.DALException;
-
 import bl.BL;
 import bl.objects.Angebot;
 import bl.objects.Kunde;
 import bl.objects.Projekt;
+import dal.DALException;
 
 public class AngebotePanel extends JPanel implements ActionListener {
 	private JButton add, edit, delete, kunden_info, projekt_info;
@@ -103,6 +103,11 @@ public class AngebotePanel extends JPanel implements ActionListener {
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.setFillsViewportHeight(true);
 
+		for (String columnname : tModel.getColumnNames()) {
+			table.getColumn(columnname).setCellRenderer(
+					new MyTableCellRenderer());
+		}
+
 		tSorter = new TableRowSorter<TableModel>(table.getModel());
 		tSorter.toggleSortOrder(0);
 		tSorter.setSortsOnUpdates(true);
@@ -119,17 +124,23 @@ public class AngebotePanel extends JPanel implements ActionListener {
 			new EditAngebotDialog(owner);
 			tModel.refresh();
 		} else if (e.getSource() == delete) {
-			int[] a = table.getSelectedRows();
-			for (int i = 0; i < a.length; i++) {
-				int b = table.convertRowIndexToModel(a[i]);
-				try {
-					BL.deleteAngebot(Integer.valueOf(String.valueOf(tModel
-							.getValueAt(b - i, 0))));
-				} catch (DALException e1) {
-					JOptionPane.showMessageDialog(this, e1.getMessage());
+			int option = JOptionPane.showConfirmDialog(this,
+					"Sollen die ausgewählten Elemente gelöscht werden?",
+					"Löschauftrag", JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE);
+			if (option == JOptionPane.YES_OPTION) {
+				int[] a = table.getSelectedRows();
+				for (int i = 0; i < a.length; i++) {
+					int b = table.convertRowIndexToModel(a[i]);
+					try {
+						BL.deleteAngebot(Integer.valueOf(String.valueOf(tModel
+								.getValueAt(b, 0))));
+					} catch (DALException e1) {
+						JOptionPane.showMessageDialog(this, e1.getMessage());
+					}
 				}
+				tModel.refresh();
 			}
-			tModel.refresh();
 		} else if (e.getSource() == edit) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
 			Angebot aa;

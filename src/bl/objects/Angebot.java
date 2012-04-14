@@ -91,11 +91,11 @@ public class Angebot extends DBEntity {
 		this.datum = date;
 	}
 
-	public int getKundenID() {
+	public int getKundeID() {
 		return kundeID;
 	}
 
-	public void setKundenID(int kundenID) {
+	public void setKundeID(int kundenID) {
 		this.kundeID = kundenID;
 	}
 

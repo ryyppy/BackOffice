@@ -47,7 +47,8 @@ public class EditBuchungszeileDialog extends JDialog implements ActionListener {
 	}
 
 	public EditBuchungszeileDialog(JFrame owner, Buchungszeile b) {
-		super(owner, "Buchungszeile bearbeiten", true);
+		super(owner, "Buchungszeile " + b.getBuchungszeileID() + " bearbeiten",
+				true);
 		this.b = b;
 		initDialog();
 	}
@@ -125,11 +126,11 @@ public class EditBuchungszeileDialog extends JDialog implements ActionListener {
 			textfeld[1].setText(b.getKommentar());
 			textfeld[2].setText(String.valueOf(b.getSteuersatz()));
 			textfeld[3].setText(String.valueOf(b.getBetrag()));
-			try {
-				kategorie.setSelectedItem(BL.getKategorie(b.getKategorieKbz()));
-			} catch (DALException e) {
-				JOptionPane.showMessageDialog(this, e.getMessage());
-				System.exit(0);
+			for (int i = 0; i < kategorie.getItemCount(); i++) {
+				if (kategorie.getItemAt(i).getKKbz().equals(b.getKKbz())) {
+					kategorie.setSelectedIndex(i);
+					break;
+				}
 			}
 		} else {
 			textfeld[0].setText(new StringBuilder(new SimpleDateFormat(
@@ -160,7 +161,7 @@ public class EditBuchungszeileDialog extends JDialog implements ActionListener {
 						this.b.setKommentar(kommentar);
 						this.b.setSteuersatz(steuersatz);
 						this.b.setBetrag(betrag);
-						this.b.setKategorieKbz(kategorieKbz);
+						this.b.setKKbz(kategorieKbz);
 						BL.updateBuchungszeile(this.b);
 					} else {
 						this.b = new Buchungszeile(datum, kommentar,

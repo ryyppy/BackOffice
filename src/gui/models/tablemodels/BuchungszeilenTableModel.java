@@ -44,7 +44,7 @@ public class BuchungszeilenTableModel extends AbstractTableModel {
 		case 4:
 			return b.getBetrag();
 		case 5:
-			return b.getKategorieKbz();
+			return b.getKKbz();
 		default:
 			return "";
 		}

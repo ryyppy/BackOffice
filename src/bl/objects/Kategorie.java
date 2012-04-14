@@ -3,9 +3,9 @@ package bl.objects;
 import dal.DBEntity;
 import dal.TableMeta;
 
-@TableMeta(pkFieldName = "kbz")
+@TableMeta(pkFieldName = "kkbz")
 public class Kategorie extends DBEntity {
-	private String kbz;
+	private String kkbz;
 	private String beschreibung;
 
 	public Kategorie() {
@@ -13,16 +13,16 @@ public class Kategorie extends DBEntity {
 	}
 
 	public Kategorie(String kbz, String beschreibung) {
-		this.kbz = kbz;
+		this.kkbz = kbz;
 		this.beschreibung = beschreibung;
 	}
 
-	public String getKbz() {
-		return kbz;
+	public String getKKbz() {
+		return kkbz;
 	}
 
-	public void setKbz(String kbz) {
-		this.kbz = kbz;
+	public void setKKbz(String kbz) {
+		this.kkbz = kbz;
 	}
 
 	public String getBeschreibung() {
@@ -34,6 +34,6 @@ public class Kategorie extends DBEntity {
 	}
 
 	public String toString() {
-		return "Kurzbezeichnung: " + kbz + "\nBeschreibung: " + beschreibung;
+		return "Kurzbezeichnung: " + kkbz + "\nBeschreibung: " + beschreibung;
 	}
 }

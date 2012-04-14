@@ -9,7 +9,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.InvalidObjectException;
-import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -19,26 +18,19 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-
-import dal.DALException;
-import databinding.DataBinder;
-import databinding.StandardRule;
 
 import bl.BL;
 import bl.objects.Angebot;
-import bl.objects.Ausgangsrechnung;
-import bl.objects.Projekt;
 import bl.objects.Rechnungszeile;
+import dal.DALException;
+import databinding.DataBinder;
+import databinding.StandardRule;
 
 public class EditRechnungszeileDialog extends JDialog implements ActionListener {
 	private JTextField[] textfeld;
 	private JButton add, cancel;
 	private JComboBox<Angebot> angebote;
 
-	private BL data;
-
-	private DefaultTableModel tModel;
 	private String[] columnNames = { "Rechnungs-ID", "Kommentar", "Steuersatz",
 			"Betrag", "Angebot-ID" };
 	private int rechnungID, kundenID;
@@ -46,7 +38,7 @@ public class EditRechnungszeileDialog extends JDialog implements ActionListener 
 	private Rechnungszeile r;
 
 	public EditRechnungszeileDialog(JFrame owner, int rechnungID, int kundenID) {
-		super(owner, "Rechnungszeile zur Ausgangsrechnung " + rechnungID
+		super(owner, "Rechnungszeile zur Rechnung " + rechnungID
 				+ " hinzufuegen", true);
 		this.r = null;
 		this.rechnungID = rechnungID;
@@ -56,8 +48,8 @@ public class EditRechnungszeileDialog extends JDialog implements ActionListener 
 
 	public EditRechnungszeileDialog(JFrame owner, int rechnungID, int kundenID,
 			Rechnungszeile r) {
-		super(owner, "Rechnungszeile zur Ausgangsrechnung " + rechnungID
-				+ " hinzufuegen", true);
+		super(owner, "Rechnungszeile der Rechnung " + rechnungID
+				+ " bearbeiten", true);
 		this.r = r;
 		this.rechnungID = rechnungID;
 		this.kundenID = kundenID;
@@ -138,13 +130,13 @@ public class EditRechnungszeileDialog extends JDialog implements ActionListener 
 
 		if (r != null) {
 			textfeld[1].setText(r.getKommentar());
-			textfeld[1].setText(String.valueOf(r.getSteuersatz()));
-			textfeld[2].setText(String.valueOf(r.getBetrag()));
-			try {
-				angebote.setSelectedItem(BL.getAngebot(r.getAngebotsID()));
-			} catch (DALException e) {
-				JOptionPane.showMessageDialog(this, e.getMessage());
-				System.exit(0);
+			textfeld[2].setText(String.valueOf(r.getSteuersatz()));
+			textfeld[3].setText(String.valueOf(r.getBetrag()));
+			for (int i = 0; i < angebote.getItemCount(); i++) {
+				if (angebote.getItemAt(i).getAngebotID() == r.getAngebotsID()) {
+					angebote.setSelectedIndex(i);
+					break;
+				}
 			}
 		}
 

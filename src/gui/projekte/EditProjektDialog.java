@@ -41,7 +41,7 @@ public class EditProjektDialog extends JDialog implements ActionListener {
 	}
 
 	public EditProjektDialog(JFrame owner, Projekt p) {
-		super(owner, "Projekt bearbeiten", true);
+		super(owner, "Projekt " + p.getProjektID() + " bearbeiten", true);
 		this.p = p;
 		initDialog();
 	}

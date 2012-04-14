@@ -1,5 +1,6 @@
 package gui.rechnungen;
 
+import gui.models.tablemodels.MyTableCellRenderer;
 import gui.models.tablemodels.RechnungszeilenTableModel;
 
 import java.awt.BorderLayout;
@@ -93,6 +94,11 @@ public class RechnungszeilenDialog extends JDialog implements ActionListener {
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.setFillsViewportHeight(true);
 
+		for (String columnname : tModel.getColumnNames()) {
+			table.getColumn(columnname).setCellRenderer(
+					new MyTableCellRenderer());
+		}
+
 		tSorter = new TableRowSorter<TableModel>(table.getModel());
 		tSorter.toggleSortOrder(0);
 		tSorter.setSortsOnUpdates(true);
@@ -110,17 +116,23 @@ public class RechnungszeilenDialog extends JDialog implements ActionListener {
 			tModel.refresh();
 
 		} else if (e.getSource() == delete) {
-			int[] a = table.getSelectedRows();
-			for (int i = 0; i < a.length; i++) {
-				int b = table.convertRowIndexToModel(a[i]);
-				try {
-					BL.deleteRechnungszeile((Integer) (tModel.getValueAt(b - i,
-							0)));
-				} catch (DALException e1) {
-					JOptionPane.showMessageDialog(this, e1.getMessage());
+			int option = JOptionPane.showConfirmDialog(this,
+					"Sollen die ausgewählten Elemente gelöscht werden?",
+					"Löschauftrag", JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE);
+			if (option == JOptionPane.YES_OPTION) {
+				int[] a = table.getSelectedRows();
+				for (int i = 0; i < a.length; i++) {
+					int b = table.convertRowIndexToModel(a[i]);
+					try {
+						BL.deleteRechnungszeile((Integer) (tModel.getValueAt(b
+								- i, 0)));
+					} catch (DALException e1) {
+						JOptionPane.showMessageDialog(this, e1.getMessage());
+					}
 				}
+				tModel.refresh();
 			}
-			tModel.refresh();
 		} else if (e.getSource() == edit) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
 			Rechnungszeile r;

@@ -5,21 +5,19 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import dal.DALException;
-
 import bl.BL;
 import bl.objects.Ausgangsrechnung;
-import bl.objects.Buchungszeile;
 import bl.objects.Eingangsrechnung;
 import bl.objects.Rechnung;
-import bl.objects.Rechung_Buchungszeile;
+import bl.objects.Rechnung_Buchungszeile;
+import dal.DALException;
 
 public class RechnungAuswahlTableModel extends AbstractTableModel {
 	private ArrayList<Rechnung> rechnungen;
 	private String[] columnNames = { "Rechnung-ID", "Status", "Datum",
 			"Kunde/Kontakt", "Auswahl" };
 	private int buchungszeileID;
-	private ArrayList<Rechung_Buchungszeile> rechnungen_buchungszeilen;
+	private ArrayList<Rechnung_Buchungszeile> rechnungen_buchungszeilen;
 
 	public RechnungAuswahlTableModel(int buchungszeileID) {
 		this.buchungszeileID = buchungszeileID;
@@ -48,7 +46,7 @@ public class RechnungAuswahlTableModel extends AbstractTableModel {
 			return r.getDatumString();
 		case 3:
 			if (r instanceof Ausgangsrechnung) {
-				int kundenID = ((Ausgangsrechnung) r).getKundenID();
+				int kundenID = ((Ausgangsrechnung) r).getKundeID();
 				try {
 					return BL.getKunde(kundenID).getNachname() + " (Kunde: "
 							+ kundenID + ")";
@@ -93,7 +91,7 @@ public class RechnungAuswahlTableModel extends AbstractTableModel {
 
 			// wenn checkbox deselected WAR und jz selected wird --> Hinzufuegen
 			if (((Boolean) getValueAt(rowIndex, columnIndex)) == false) {
-				Rechung_Buchungszeile rb = new Rechung_Buchungszeile(
+				Rechnung_Buchungszeile rb = new Rechnung_Buchungszeile(
 						r.getRechnungID(), buchungszeileID);
 				rechnungen_buchungszeilen.add(rb);
 			}
@@ -122,16 +120,18 @@ public class RechnungAuswahlTableModel extends AbstractTableModel {
 		return false;
 	}
 
-	public Object[] getColumnNames() {
+	public String[] getColumnNames() {
 		return columnNames;
 	}
 
 	public void refresh() {
 		try {
 			rechnungen = BL.getRechnungsListe();
-			rechnungen_buchungszeilen = BL.getRechnungsListe(buchungszeileID);
+			rechnungen_buchungszeilen = BL
+					.getRechnung_BuchungszeileListe(buchungszeileID);
 		} catch (DALException e) {
 			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		super.fireTableDataChanged();
 	}
@@ -143,9 +143,9 @@ public class RechnungAuswahlTableModel extends AbstractTableModel {
 
 	private int contains(int rechnungsID) {
 		int ret = -1;
-		for (Rechung_Buchungszeile r : rechnungen_buchungszeilen) {
+		for (Rechnung_Buchungszeile r : rechnungen_buchungszeilen) {
 			ret++;
-			if (r.getRechnungsID() == rechnungsID
+			if (r.getRechnungID() == rechnungsID
 					&& r.getBuchungszeileID() == buchungszeileID) {
 				return ret;
 			}
