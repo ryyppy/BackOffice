@@ -29,6 +29,9 @@ public class MysqlAdapter extends DatabaseAdapter {
 
     @Override
     protected String createWhereClausel(WhereChain whereChain, Class<? extends DBEntity> entityClass) throws DALException{
+        if(whereChain == null)
+            return "";
+
         List<WhereCondition> conditions = whereChain.getConditions();
 
         Class<? extends DBEntity> entitySuper = DBEntity.getDBSuperclass(entityClass);
@@ -318,79 +321,11 @@ public class MysqlAdapter extends DatabaseAdapter {
 
     @Override
     public <T extends DBEntity> List<T> getEntityList(Class<T> entityClass) throws DALException{
-        if(!isConnected())
-            throw new DALException("Connection not established! Use method connect() before requesting data from the database!");
-
-        List<Field> fields = DBEntity.getAllDeclaredFields(entityClass);
-
-        String pkName = DBEntity.getPKField(entityClass).getName();
-        String table = entityClass.getSimpleName();
-
-        if(fields.size() <= 0)
-            throw new DALException(String.format("No fields in DBEntity '%s' declared (so no mapping possible)", table));
-
-        StringBuilder builder = new StringBuilder();
-
-        for(int i = 0; i < fields.size(); i++){
-            String f = fields.get(i).getName();
-            if(i > 0)
-                builder.append(",");
-
-            if(f.equals(pkName)){
-                builder.append(table + ".").append(f);
-            }
-            else{
-                builder.append(f);
-            }
-
-        }
-
-        ResultSet rs = null;
-        Statement st = null;
-
-        String sql = String.format("SELECT %s FROM %s %s", builder.toString(), table, createJoinClause(entityClass));
-        try{
-            st = con.createStatement();
-            rs = st.executeQuery(sql);
-
-            //Instantiate a new Object of the given DBEntity
-            List<T> ret = new ArrayList<T>();
-            T instance;
-            try{
-                while(rs.next()){
-                    instance = entityClass.getConstructor().newInstance();
-                    for(int i = 0; i < fields.size(); i++){
-                        Field f = fields.get(i);
-                        f.setAccessible(true);
-                        f.set(instance, rs.getObject(i + 1));
-                    }
-                    ret.add(instance);
-                }
-            } catch(Exception nsme){
-                throw new DALException("DBEntity could not be instantiated!", nsme);
-            }
-            return ret;
-        }catch(SQLException sqle){
-            throw new DALException(String.format("Statement could not be executed: %s", sql), sqle);
-        }finally{
-            try{
-                //Close ResultSet immediately
-                if(rs != null && !rs.isClosed())
-                    rs.close();
-
-                if(st != null)
-                    st.close();
-            }catch(SQLException sqle){
-                throw new DALException("Statement- or ResultSet-Object could not be closed...", sqle);
-            }
-        }
+        return getEntitiesBy(null, entityClass);
     }
 
     @Override
     public <T extends DBEntity> List<T> getEntitiesBy(WhereChain where, Class<T> entityClass) throws DALException {
-        if(where == null)
-            throw new DALException("No Where-parameters specified! Use getEntityList() for 'WHERE-less' queries!");
-
         if(!isConnected())
             throw new DALException("Connection not established! Use method connect() before requesting data from the database!");
 
@@ -421,6 +356,9 @@ public class MysqlAdapter extends DatabaseAdapter {
         ResultSet rs = null;
         Statement st = null;
 
+        //TODO: alle Felder immer mit FQ-Name ansprechen (tablename.fieldname)
+        //TODO: createJoinClausel() hierher auslagern , Methode generell loeschen und mit ?-Params arbeiten
+        //TODO: createWhereClausel() hierher auslagern, Methode generell loeschen und mit ?-Params arbeiten
         //SELECT * FROM angebot WHERE angebotID = 1 AND chance = 200;
         String sql = String.format("SELECT %s FROM %s %s %s", builder.toString(), table, createJoinClause(entityClass),createWhereClausel(where, entityClass));
         try{
