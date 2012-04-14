@@ -122,7 +122,7 @@ public class AusgangsrechnungenPanel extends JPanel implements ActionListener {
 				int b = table.convertRowIndexToModel(a[i]);
 				try {
 					BL.deleteAusgangsrechnung(Integer.valueOf(String
-							.valueOf(tModel.getValueAt(b - i, 0))));
+							.valueOf(tModel.getValueAt(b, 0))));
 				} catch (DALException e1) {
 					JOptionPane.showMessageDialog(this, e1.getMessage());
 				}

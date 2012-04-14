@@ -140,9 +140,10 @@ public class KontaktPanel extends JPanel implements ActionListener {
 			int[] a = table.getSelectedRows();
 			for (int i = 0; i < a.length; i++) {
 				int b = table.convertRowIndexToModel(a[i]);
+				System.out.println(b);
 				try {
 					BL.deleteKontakt(Integer.valueOf(String.valueOf(tModel
-							.getValueAt(b - i, 0))));
+							.getValueAt(b, 0))));
 				} catch (DALException e1) {
 					JOptionPane.showMessageDialog(this, e1.getMessage());
 				}
