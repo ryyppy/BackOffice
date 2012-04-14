@@ -73,9 +73,12 @@ public class RechnungenDialog extends JDialog implements ActionListener {
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.setFillsViewportHeight(true);
 
+		int i = 0;
 		for (String columnname : tModel.getColumnNames()) {
-			table.getColumn(columnname).setCellRenderer(
-					new MyTableCellRenderer());
+			if (tModel.getColumnClass(i++) != Boolean.class) {
+				table.getColumn(columnname).setCellRenderer(
+						new MyTableCellRenderer());
+			}
 		}
 
 		tSorter = new TableRowSorter<TableModel>(table.getModel());
