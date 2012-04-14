@@ -20,6 +20,7 @@ import dal.DALException;
 import dal.DatabaseAdapter;
 import dal.MysqlAdapter;
 import dal.WhereChain;
+import dal.WhereChain.Chainer;
 import dal.WhereOperator;
 
 public class BL {
@@ -68,13 +69,12 @@ public class BL {
 
 	public static ArrayList<Kontakt> getKontaktListe(String filter)
 			throws DALException {
-		// String f = "%"+filter+"%";
-		// WhereChain where = new WhereChain("name", WhereOperator.,
-		// filter);
-		// where.add
+		String f = "%" + filter + "%";
+		WhereChain where = new WhereChain(Kontakt.class, WhereOperator.LIKE, f,
+				Chainer.OR);
 		mysql.connect();
-		ArrayList<Kontakt> ret = (ArrayList<Kontakt>) mysql
-				.getEntityList(Kontakt.class);
+		ArrayList<Kontakt> ret = (ArrayList<Kontakt>) mysql.getEntitiesBy(
+				where, Kontakt.class);
 		mysql.disconnect();
 		return ret;
 		// return kontakteliste;
