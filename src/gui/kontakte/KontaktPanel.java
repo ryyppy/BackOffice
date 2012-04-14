@@ -11,13 +11,18 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -26,7 +31,8 @@ import bl.objects.Kontakt;
 import dal.DALException;
 
 public class KontaktPanel extends JPanel implements ActionListener {
-	private JButton add, edit, delete, angebote;
+	private JButton add, edit, delete, angebote, search, refresh;
+	private JTextField searchField;
 	private JTable table;
 	private JScrollPane scrollpane;
 	private KontaktTableModel tModel;
@@ -57,11 +63,23 @@ public class KontaktPanel extends JPanel implements ActionListener {
 		edit = new JButton("Edit");
 		delete = new JButton("Delete");
 		angebote = new JButton("Show Angebote");
+		search = new JButton("Show Filter");
+		refresh = new JButton("Show All");
+		searchField = new JTextField();
 
 		add.addActionListener(this);
 		edit.addActionListener(this);
 		delete.addActionListener(this);
 		angebote.addActionListener(this);
+		refresh.addActionListener(this);
+		search.addActionListener(this);
+		searchField.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent evt) {
+				if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+					search.doClick();
+				}
+			}
+		});
 
 		JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		panel1.add(add);
@@ -71,6 +89,12 @@ public class KontaktPanel extends JPanel implements ActionListener {
 		JPanel panel2 = new JPanel(new GridLayout(1, 1));
 		panel2.add(angebote);
 
+		JPanel panel3 = new JPanel(new GridLayout(4, 1));
+		panel3.add(new JLabel("<html><body><b> Filter:</b></body></html>"));
+		panel3.add(searchField);
+		panel3.add(search);
+		panel3.add(refresh);
+
 		JPanel panel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 
@@ -78,6 +102,10 @@ public class KontaktPanel extends JPanel implements ActionListener {
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.1;
 		panel.add(panel1, gbc);
+
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.gridy = 2;
+		panel.add(panel3, gbc);
 
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.gridy = 1;
@@ -125,6 +153,13 @@ public class KontaktPanel extends JPanel implements ActionListener {
 			table.getColumn(columnname).setCellRenderer(
 					new MyTableCellRenderer());
 		}
+		table.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent evt) {
+				if (evt.getKeyCode() == KeyEvent.VK_F5) {
+					tModel.refresh();
+				}
+			}
+		});
 
 		tSorter = new TableRowSorter<TableModel>(table.getModel());
 		tSorter.toggleSortOrder(0);
@@ -171,6 +206,16 @@ public class KontaktPanel extends JPanel implements ActionListener {
 			} catch (DALException e1) {
 				JOptionPane.showMessageDialog(this, e1.getMessage());
 			}
+		} else if (e.getSource() == search) {
+			if (!searchField.getText().isEmpty()) {
+				tModel.setFilter(searchField.getText());
+				tModel.refresh();
+			}
+		} else if (e.getSource() == refresh) {
+			searchField.setText("");
+			tModel.setFilter("");
+			tModel.refresh();
 		}
 	}
+
 }

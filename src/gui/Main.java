@@ -22,22 +22,23 @@ public class Main {
 		} catch (UnsupportedLookAndFeelException e1) {
 			e1.printStackTrace();
 		}
-		Toolkit.getDefaultToolkit().getSystemEventQueue()
-				.push(new EventQueue() {
-					@Override
-					protected void dispatchEvent(AWTEvent event) {
-						if (event instanceof KeyEvent) {
-							KeyEvent keyEvent = (KeyEvent) event;
-							if (KeyEvent.KEY_RELEASED == keyEvent.getID()
-									&& KeyEvent.VK_ESCAPE == keyEvent
-											.getKeyCode()
-									&& keyEvent.getSource() instanceof JDialog) {
-								((JDialog) keyEvent.getSource()).dispose();
-							}
-						}
-						super.dispatchEvent(event);
-					}
-				});
+//		Toolkit.getDefaultToolkit().getSystemEventQueue()
+//				.push(new EventQueue() {
+//					@Override
+//					protected void dispatchEvent(AWTEvent event) {
+//						if (event instanceof KeyEvent) {
+//							KeyEvent keyEvent = (KeyEvent) event;
+//							if (KeyEvent.KEY_RELEASED == keyEvent.getID()
+//									&& KeyEvent.VK_ESCAPE == keyEvent
+//											.getKeyCode()
+//									&& keyEvent.getSource() instanceof JDialog) {
+//								JDialog d = ((JDialog) keyEvent.getSource());
+//									d.dispose();
+//							}
+//						}
+//						super.dispatchEvent(event);
+//					}
+//				});
 		new Haupt_Frame();
 	}
 }
