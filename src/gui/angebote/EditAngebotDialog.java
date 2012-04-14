@@ -143,12 +143,17 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 			textfeld[0].setText(String.valueOf(a.getSumme()));
 			textfeld[1].setText(String.valueOf(a.getDauer()));
 			textfeld[2].setText(String.valueOf(a.getChance()));
-			try {
-				kunden.setSelectedItem(BL.getKunde(a.getKundenID()));
-				projekte.setSelectedItem(BL.getProjekt(a.getProjektID()));
-			} catch (DALException e) {
-				JOptionPane.showMessageDialog(this, e.getMessage());
-				System.exit(0);
+			for (int i = 0; i < kunden.getItemCount(); i++) {
+				if (kunden.getItemAt(i).getKundeID() == a.getKundeID()) {
+					kunden.setSelectedIndex(i);
+					break;
+				}
+			}
+			for (int i = 0; i < projekte.getItemCount(); i++) {
+				if (projekte.getItemAt(i).getProjektID() == a.getProjektID()) {
+					projekte.setSelectedIndex(i);
+					break;
+				}
 			}
 		}
 
@@ -175,7 +180,7 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 						a.setSumme(summe);
 						a.setDauer(dauer);
 						a.setChance(chance);
-						a.setKundenID(kundenID);
+						a.setKundeID(kundenID);
 						a.setProjektID(projektID);
 						BL.updateAngebot(a);
 					} else {

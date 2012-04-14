@@ -131,11 +131,11 @@ public class EditEingangsrechnungDialog extends JDialog implements
 
 		if (er != null) {
 			status.setSelectedItem(er.getStatus());
-			try {
-				kontakt.setSelectedItem(BL.getKontakt(er.getKontaktID()));
-			} catch (DALException e) {
-				JOptionPane.showMessageDialog(this, e.getMessage());
-				System.exit(0);
+			for (int i = 0; i < kontakt.getItemCount(); i++) {
+				if (kontakt.getItemAt(i).getKontaktID() == er.getKontaktID()) {
+					kontakt.setSelectedIndex(i);
+					break;
+				}
 			}
 			datum.setText(er.getDatumString());
 		} else {
