@@ -3,6 +3,8 @@ package bl;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import bl.objects.Angebot;
 import bl.objects.Ausgangsrechnung;
 import bl.objects.Buchungszeile;
@@ -13,9 +15,12 @@ import bl.objects.Kunde;
 import bl.objects.Projekt;
 import bl.objects.Rechnung;
 import bl.objects.Rechnungszeile;
-import bl.objects.Rechung_Buchungszeile;
+import bl.objects.Rechnung_Buchungszeile;
 import dal.DALException;
+import dal.DatabaseAdapter;
 import dal.MysqlAdapter;
+import dal.WhereChain;
+import dal.WhereOperator;
 
 public class BL {
 	private static ArrayList<Projekt> projektliste = new ArrayList<Projekt>();
@@ -35,9 +40,9 @@ public class BL {
 	private static int buchungszeileID = 0;
 	private static ArrayList<Kategorie> kategorieliste = new ArrayList<Kategorie>();
 	private static int kategorieID = 0;
-	private static ArrayList<Rechung_Buchungszeile> rechnungen_buchungszeilen = new ArrayList<Rechung_Buchungszeile>();
+	private static ArrayList<Rechnung_Buchungszeile> rechnungen_buchungszeilen = new ArrayList<Rechnung_Buchungszeile>();
 
-	private static MysqlAdapter mysql = new MysqlAdapter("root", "dbsy",
+	private static DatabaseAdapter mysql = new MysqlAdapter("root", "dbsy",
 			"localhost/swe");
 
 	public BL() {
@@ -256,29 +261,23 @@ public class BL {
 		return ret;
 	}
 
-	/**
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * NICHT VERGESSEN
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * **/
-	public static ArrayList<Angebot> getAngebotsListe(int kundenID)
+	public static ArrayList<Angebot> getAngebotsListe(int kundeID)
 			throws DALException {
-		ArrayList<Angebot> ret = new ArrayList<Angebot>();
-		for (Angebot a : angebotsliste) {
-			if (a.getKundenID() == kundenID) {
-				ret.add(a);
-			}
-		}
+		// ArrayList<Angebot> ret = new ArrayList<Angebot>();
+		// for (Angebot a : angebotsliste) {
+		// if (a.getKundenID() == kundenID) {
+		// ret.add(a);
+		// }
+		// }
+		// return ret;
+		WhereChain where = new WhereChain("kundeID", WhereOperator.EQUALS,
+				kundeID);
+		mysql.connect();
+		ArrayList<Angebot> ret = (ArrayList<Angebot>) mysql.getEntitiesBy(
+				where, Angebot.class);
+		mysql.disconnect();
 		return ret;
+
 	}
 
 	public static Angebot getAngebot(int angebotID) throws DALException {
@@ -349,10 +348,13 @@ public class BL {
 
 	public static void deleteEingangsrechnung(int rechnungID)
 			throws DALException {
-		Eingangsrechnung a = getEingangsrechnung(rechnungID);
-		if (a != null) {
-			eingangsrechnungenliste.remove(a);
-		}
+		// Eingangsrechnung a = getEingangsrechnung(rechnungID);
+		// if (a != null) {
+		// eingangsrechnungenliste.remove(a);
+		// }
+		mysql.connect();
+		mysql.deleteEntity(rechnungID, Rechnung.class);
+		mysql.disconnect();
 	}
 
 	public static ArrayList<Eingangsrechnung> getEingangsrechnungenListe()
@@ -388,22 +390,34 @@ public class BL {
 
 	public static void updateEingangsrechnung(Eingangsrechnung e)
 			throws DALException, InvalidObjectException {
-		String exception = "";
-		// ... Kontakt-ID überprüfen
-		if (!exception.isEmpty()) {
-			throw new InvalidObjectException(exception);
-		}
-
-		for (Eingangsrechnung er : eingangsrechnungenliste) {
-			if (er.getRechnungID() == e.getRechnungID()) {
-				er = e;
-			}
-		}
+		// String exception = "";
+		// // ... Kontakt-ID überprüfen
+		// if (!exception.isEmpty()) {
+		// throw new InvalidObjectException(exception);
+		// }
+		//
+		// for (Eingangsrechnung er : eingangsrechnungenliste) {
+		// if (er.getRechnungID() == e.getRechnungID()) {
+		// er = e;
+		// }
+		// }
+		mysql.connect();
+		Rechnung r = new Rechnung(e.getRechnungID(), e.getStatus(),
+				e.getDatum());
+		mysql.updateEntity(r);
+		mysql.updateEntity(e);
+		mysql.disconnect();
 	}
 
 	public static ArrayList<Ausgangsrechnung> getAusgangsrechnungenListe()
 			throws DALException {
-		return ausgangsrechnungenliste;
+		// return ausgangsrechnungenliste;
+
+		mysql.connect();
+		ArrayList<Ausgangsrechnung> ret = (ArrayList<Ausgangsrechnung>) mysql
+				.getEntityList(Ausgangsrechnung.class);
+		mysql.disconnect();
+		return ret;
 	}
 
 	public static Ausgangsrechnung getAusgangsrechnung(int rechnungID)
@@ -418,235 +432,338 @@ public class BL {
 
 	public static void deleteAusgangsrechnung(int rechnungID)
 			throws DALException {
-		Ausgangsrechnung a = getAusgangsrechnung(rechnungID);
-		if (a != null) {
-			ausgangsrechnungenliste.remove(a);
-		}
+		// Ausgangsrechnung a = getAusgangsrechnung(rechnungID);
+		// if (a != null) {
+		// ausgangsrechnungenliste.remove(a);
+		// }
+		mysql.connect();
+		mysql.deleteEntity(rechnungID, Rechnung.class);
+		mysql.disconnect();
 	}
 
 	public static void saveAusgangsrechnung(Ausgangsrechnung a)
 			throws DALException, InvalidObjectException {
-		String exception = "";
-		// ... Kunden-ID überprüfen
-		if (!exception.isEmpty()) {
-			throw new InvalidObjectException(exception);
-		}
+		// String exception = "";
+		// // ... Kunden-ID überprüfen
+		// if (!exception.isEmpty()) {
+		// throw new InvalidObjectException(exception);
+		// }
+		//
+		// a.setRechnungID(rechnungID++);
+		// ausgangsrechnungenliste.add(a);
 
-		a.setRechnungID(rechnungID++);
-		ausgangsrechnungenliste.add(a);
+		mysql.connect();
+		Rechnung r = new Rechnung(a.getStatus(), a.getDatum());
+		Object key = mysql.addEntity(r);
+		a.setRechnungID(Integer.valueOf(String.valueOf(key)));
+		mysql.addEntity(a);
+		mysql.disconnect();
 	}
 
 	public static void updateAusgangsrechnung(Ausgangsrechnung a)
 			throws DALException, InvalidObjectException {
-		String exception = "";
-		// ... Kunden-ID überprüfen
-		if (!exception.isEmpty()) {
-			throw new InvalidObjectException(exception);
-		}
-
-		for (Ausgangsrechnung ar : ausgangsrechnungenliste) {
-			if (ar.getRechnungID() == a.getRechnungID()) {
-				ar = a;
-			}
-		}
+		// String exception = "";
+		// // ... Kunden-ID überprüfen
+		// if (!exception.isEmpty()) {
+		// throw new InvalidObjectException(exception);
+		// }
+		//
+		// for (Ausgangsrechnung ar : ausgangsrechnungenliste) {
+		// if (ar.getRechnungID() == a.getRechnungID()) {
+		// ar = a;
+		// }
+		// }
+		mysql.connect();
+		Rechnung r = new Rechnung(a.getRechnungID(), a.getStatus(),
+				a.getDatum());
+		mysql.addEntity(r);
+		mysql.addEntity(a);
+		mysql.disconnect();
 	}
 
 	public static ArrayList<Rechnung> getRechnungsListe() throws DALException {
+		// ArrayList<Rechnung> ar = new ArrayList<Rechnung>();
+		// ar.addAll(ausgangsrechnungenliste);
+		// ar.addAll(eingangsrechnungenliste);
+		// return ar;
+
+		mysql.connect();
+		ArrayList<Ausgangsrechnung> al = (ArrayList<Ausgangsrechnung>) mysql
+				.getEntityList(Ausgangsrechnung.class);
+		ArrayList<Eingangsrechnung> el = (ArrayList<Eingangsrechnung>) mysql
+				.getEntityList(Eingangsrechnung.class);
+
 		ArrayList<Rechnung> ar = new ArrayList<Rechnung>();
-		ar.addAll(ausgangsrechnungenliste);
-		ar.addAll(eingangsrechnungenliste);
+		ar.addAll(al);
+		ar.addAll(el);
 		return ar;
 	}
 
-	public static ArrayList<Rechung_Buchungszeile> getRechnungsListe(
-			int buchungszeileID) throws DALException {
-		ArrayList<Rechung_Buchungszeile> ret = new ArrayList<Rechung_Buchungszeile>();
-		for (Rechung_Buchungszeile rb : rechnungen_buchungszeilen) {
-			if (rb.getBuchungszeileID() == buchungszeileID) {
-				ret.add(rb);
-			}
-		}
+	public static ArrayList<Rechnungszeile> getRechnungszeilenListe()
+			throws DALException {
+		// return rechnungszeilenliste;
+		mysql.connect();
+		ArrayList<Rechnungszeile> ret = (ArrayList<Rechnungszeile>) mysql
+				.getEntityList(Rechnungszeile.class);
+		mysql.disconnect();
 		return ret;
 	}
 
-	public static void saveRechnung_Buchungszeile(Rechung_Buchungszeile rb)
-			throws DALException, InvalidObjectException {
-		String exception = "";
-		// ... rechnung & buchungszeile-ID überprüfen
-		for (Rechung_Buchungszeile rbz : rechnungen_buchungszeilen) {
-			if (rbz.getBuchungszeileID() == rb.getBuchungszeileID()
-					&& rbz.getRechnungsID() == rb.getRechnungsID()) {
-				exception += "Verknüpfung bereits vorhanden";
-				break;
-			}
-		}
-		if (!exception.isEmpty()) {
-			throw new InvalidObjectException(exception);
-		}
+	public static ArrayList<Rechnungszeile> getRechnungszeilenListe(
+			int rechnungID) throws DALException {
+		// ArrayList<Rechnungszeile> ret = new ArrayList<Rechnungszeile>();
+		// for (Rechnungszeile r : rechnungszeilenliste) {
+		// if (r.getRechnungID() == rechnungID) {
+		// ret.add(r);
+		// }
+		// }
+		// return ret;
+		WhereChain where = new WhereChain("rechnungID", WhereOperator.EQUALS,
+				rechnungID);
+		mysql.connect();
+		ArrayList<Rechnungszeile> ret = (ArrayList<Rechnungszeile>) mysql
+				.getEntitiesBy(where, Rechnungszeile.class);
+		mysql.disconnect();
+		return ret;
+	}
 
-		rechnungen_buchungszeilen.add(rb);
+	public static Rechnungszeile getRechnungszeile(int rechnungszeileID)
+			throws DALException {
+		// for (int i = 0; i < rechnungszeilenliste.size(); i++) {
+		// if (rechnungszeilenliste.get(i).getRechnungszeileID() ==
+		// rechnungszeileID) {
+		// return rechnungszeilenliste.get(i);
+		// }
+		// }
+		// throw new DALException("Rechnungszeile-ID nicht vorhanden");
+		mysql.connect();
+		Rechnungszeile ret = mysql.getEntityByID(rechnungszeileID,
+				Rechnungszeile.class);
+		mysql.disconnect();
+		return ret;
+	}
+
+	public static void deleteRechnungszeile(int rechnungszeileID)
+			throws DALException {
+		// Rechnungszeile r = getRechnungszeile(rechnungszeileID);
+		// if (r != null) {
+		// rechnungszeilenliste.remove(r);
+		// }
+		mysql.connect();
+		mysql.deleteEntity(rechnungszeileID, Rechnungszeile.class);
+		mysql.disconnect();
+	}
+
+	public static void saveRechnungszeile(Rechnungszeile r)
+			throws DALException, InvalidObjectException {
+		// String exception = "";
+		// // ... rechnung bzw angebot-ID überprüfen
+		// if (!exception.isEmpty()) {
+		// throw new InvalidObjectException(exception);
+		// }
+		//
+		// r.setRechnungszeileID(rechnungszeileID++);
+		// rechnungszeilenliste.add(r);
+		mysql.connect();
+		mysql.addEntity(r);
+		mysql.disconnect();
+	}
+
+	public static void updateRechnungszeile(Rechnungszeile r)
+			throws DALException, InvalidObjectException {
+		// String exception = "";
+		// // ... Rechnung- und Angebot-ID überprüfen
+		// if (!exception.isEmpty()) {
+		// throw new InvalidObjectException(exception);
+		// }
+		//
+		// for (Rechnungszeile rz : rechnungszeilenliste) {
+		// if (rz.getRechnungszeileID() == r.getRechnungszeileID()) {
+		// rz = r;
+		// }
+		// }
+		mysql.connect();
+		mysql.updateEntity(r);
+		mysql.disconnect();
+	}
+
+	public static ArrayList<Buchungszeile> getBuchungszeilenListe()
+			throws DALException {
+		// return buchungszeilenliste;
+		mysql.connect();
+		ArrayList<Buchungszeile> ret = (ArrayList<Buchungszeile>) mysql
+				.getEntityList(Buchungszeile.class);
+		mysql.disconnect();
+		return ret;
+	}
+
+	public static void saveBuchungszeile(Buchungszeile b) throws DALException,
+			InvalidObjectException {
+		// String exception = "";
+		// // ... kategorie-ID überprüfen
+		// if (!exception.isEmpty()) {
+		// throw new InvalidObjectException(exception);
+		// }
+		//
+		// b.setBuchungszeileID(buchungszeileID++);
+		// buchungszeilenliste.add(b);
+		mysql.connect();
+		mysql.addEntity(b);
+		mysql.disconnect();
+	}
+
+	public static Buchungszeile getBuchungszeile(int buchungszeileID)
+			throws DALException {
+		// for (int i = 0; i < buchungszeilenliste.size(); i++) {
+		// if (buchungszeilenliste.get(i).getBuchungszeileID() ==
+		// buchungszeileID) {
+		// return buchungszeilenliste.get(i);
+		// }
+		// }
+		// throw new DALException("Buchungszeile-ID nicht vorhanden");
+		mysql.connect();
+		Buchungszeile b = mysql.getEntityByID(buchungszeileID,
+				Buchungszeile.class);
+		mysql.disconnect();
+		return b;
+	}
+
+	public static void deleteBuchungszeile(int buchungszeileID)
+			throws DALException {
+		// Buchungszeile r = getBuchungszeile(buchungszeileID);
+		// if (r != null) {
+		// buchungszeilenliste.remove(r);
+		// }
+		mysql.connect();
+		mysql.deleteEntity(buchungszeileID, Buchungszeile.class);
+		mysql.disconnect();
+	}
+
+	public static void updateBuchungszeile(Buchungszeile b)
+			throws DALException, InvalidObjectException {
+		// String exception = "";
+		// // ... Kategorie-ID überprüfen
+		// if (!exception.isEmpty()) {
+		// throw new InvalidObjectException(exception);
+		// }
+		//
+		// for (Buchungszeile bz : buchungszeilenliste) {
+		// if (bz.getBuchungszeileID() == b.getBuchungszeileID()) {
+		// bz = b;
+		// }
+		// }
+		mysql.connect();
+		mysql.updateEntity(b);
+		mysql.disconnect();
+	}
+
+	public static ArrayList<Kategorie> getKategorieListe() throws DALException {
+		// // nur zum testen BEGIN
+		// if (kategorieliste.size() == 0) {
+		// kategorieliste.add(new Kategorie("Einnahme", "Einnahme"));
+		// kategorieliste.add(new Kategorie("Ausgabe", "Ausgabe"));
+		// kategorieliste.add(new Kategorie("Steuer", "Steuer"));
+		// kategorieliste.add(new Kategorie("SVA",
+		// "Sozialversicherungsanstalt-Beitrag"));
+		// }
+		// // nur zum teste END
+		// return kategorieliste;
+		mysql.connect();
+		ArrayList<Kategorie> ret = (ArrayList<Kategorie>) mysql
+				.getEntityList(Kategorie.class);
+		mysql.disconnect();
+		return ret;
+	}
+
+	public static void saveKategorie(Kategorie k) throws DALException,
+			InvalidObjectException {
+		// String exception = "";
+		// // ... überprüfen ob kategorie vorhanden
+		// if (!exception.isEmpty()) {
+		// throw new InvalidObjectException(exception);
+		// }
+		//
+		// kategorieliste.add(k);
+		mysql.connect();
+		mysql.addEntity(k);
+		mysql.disconnect();
+	}
+
+	public static Kategorie getKategorie(String kbz) throws DALException {
+		// for (int i = 0; i < kategorieliste.size(); i++) {
+		// if (kategorieliste.get(i).getID() == kbz) {
+		// return kategorieliste.get(i);
+		// }
+		// }
+		// throw new DALException("Kategorie-ID nicht vorhanden");
+		String kkbz = "'"+kbz+"'";
+		WhereChain where = new WhereChain("kkbz", WhereOperator.EQUALS,
+				kkbz);
+		mysql.connect();
+		Kategorie ret = mysql.getEntitiesBy(where, Kategorie.class).get(0);
+		mysql.disconnect();
+		return ret;
+	}
+
+	public static ArrayList<Rechnung_Buchungszeile> getRechnung_BuchungszeileListe(
+			int buchungszeileID) throws DALException {
+		// ArrayList<Rechung_Buchungszeile> ret = new
+		// ArrayList<Rechung_Buchungszeile>();
+		// for (Rechung_Buchungszeile rb : rechnungen_buchungszeilen) {
+		// if (rb.getBuchungszeileID() == buchungszeileID) {
+		// ret.add(rb);
+		// }
+		// }
+		// return ret;
+		WhereChain where = new WhereChain("buchungszeileID",
+				WhereOperator.EQUALS, buchungszeileID);
+		mysql.connect();
+		ArrayList<Rechnung_Buchungszeile> ret = (ArrayList<Rechnung_Buchungszeile>) mysql
+				.getEntitiesBy(where, Rechnung_Buchungszeile.class);
+		mysql.disconnect();
+		return ret;
+	}
+
+	public static void saveRechnung_Buchungszeile(Rechnung_Buchungszeile rb)
+			throws DALException, InvalidObjectException {
+		// String exception = "";
+		// // ... rechnung & buchungszeile-ID überprüfen
+		// for (Rechnung_Buchungszeile rbz : rechnungen_buchungszeilen) {
+		// if (rbz.getBuchungszeileID() == rb.getBuchungszeileID()
+		// && rbz.getRechnungID() == rb.getRechnungID()) {
+		// exception += "Verknüpfung bereits vorhanden";
+		// break;
+		// }
+		// }
+		// if (!exception.isEmpty()) {
+		// throw new InvalidObjectException(exception);
+		// }
+		//
+		// rechnungen_buchungszeilen.add(rb);
+		mysql.connect();
+		mysql.addEntity(rb);
+		mysql.disconnect();
 	}
 
 	public static void saveRechnung_Buchungszeile(
-			ArrayList<Rechung_Buchungszeile> rbs) throws DALException,
+			ArrayList<Rechnung_Buchungszeile> rbs) throws DALException,
 			InvalidObjectException {
-		for (Rechung_Buchungszeile rbz : rbs) {
+		for (Rechnung_Buchungszeile rbz : rbs) {
 			saveRechnung_Buchungszeile(rbz);
 		}
 	}
 
 	public static void deleteRechnung_Buchungszeile(int buchungszeileID)
 			throws DALException, InvalidObjectException {
-		for (int i = 0; i < rechnungen_buchungszeilen.size(); i++) {
-			Rechung_Buchungszeile rbz = rechnungen_buchungszeilen.get(i);
-			if (rbz.getBuchungszeileID() == buchungszeileID) {
-				rechnungen_buchungszeilen.remove(i);
-				i--;
-			}
-		}
-	}
-
-	public static ArrayList<Rechnungszeile> getRechnungszeilenListe()
-			throws DALException {
-		return rechnungszeilenliste;
-	}
-
-	public static ArrayList<Rechnungszeile> getRechnungszeilenListe(
-			int rechnungID) throws DALException {
-		ArrayList<Rechnungszeile> ret = new ArrayList<Rechnungszeile>();
-		for (Rechnungszeile r : rechnungszeilenliste) {
-			if (r.getRechnungID() == rechnungID) {
-				ret.add(r);
-			}
-		}
-		return ret;
-	}
-
-	public static Rechnungszeile getRechnungszeile(int rechnungszeileID)
-			throws DALException {
-		for (int i = 0; i < rechnungszeilenliste.size(); i++) {
-			if (rechnungszeilenliste.get(i).getRechnungszeileID() == rechnungszeileID) {
-				return rechnungszeilenliste.get(i);
-			}
-		}
-		throw new DALException("Rechnungszeile-ID nicht vorhanden");
-	}
-
-	public static void deleteRechnungszeile(int rechnungszeileID)
-			throws DALException {
-		Rechnungszeile r = getRechnungszeile(rechnungszeileID);
-		if (r != null) {
-			rechnungszeilenliste.remove(r);
-		}
-	}
-
-	public static void saveRechnungszeile(Rechnungszeile r)
-			throws DALException, InvalidObjectException {
-		String exception = "";
-		// ... rechnung bzw angebot-ID überprüfen
-		if (!exception.isEmpty()) {
-			throw new InvalidObjectException(exception);
-		}
-
-		r.setRechnungszeileID(rechnungszeileID++);
-		rechnungszeilenliste.add(r);
-	}
-
-	public static void updateRechnungszeile(Rechnungszeile r)
-			throws DALException, InvalidObjectException {
-		String exception = "";
-		// ... Rechnung- und Angebot-ID überprüfen
-		if (!exception.isEmpty()) {
-			throw new InvalidObjectException(exception);
-		}
-
-		for (Rechnungszeile rz : rechnungszeilenliste) {
-			if (rz.getRechnungszeileID() == r.getRechnungszeileID()) {
-				rz = r;
-			}
-		}
-	}
-
-	public static ArrayList<Buchungszeile> getBuchungszeilenListe()
-			throws DALException {
-		return buchungszeilenliste;
-	}
-
-	public static void saveBuchungszeile(Buchungszeile b) throws DALException,
-			InvalidObjectException {
-		String exception = "";
-		// ... kategorie-ID überprüfen
-		if (!exception.isEmpty()) {
-			throw new InvalidObjectException(exception);
-		}
-
-		b.setBuchungszeileID(buchungszeileID++);
-		buchungszeilenliste.add(b);
-	}
-
-	public static Buchungszeile getBuchungszeile(int buchungszeileID)
-			throws DALException {
-		for (int i = 0; i < buchungszeilenliste.size(); i++) {
-			if (buchungszeilenliste.get(i).getBuchungszeileID() == buchungszeileID) {
-				return buchungszeilenliste.get(i);
-			}
-		}
-		throw new DALException("Buchungszeile-ID nicht vorhanden");
-	}
-
-	public static void deleteBuchungszeile(int buchungszeileID)
-			throws DALException {
-		Buchungszeile r = getBuchungszeile(buchungszeileID);
-		if (r != null) {
-			buchungszeilenliste.remove(r);
-		}
-	}
-
-	public static void updateBuchungszeile(Buchungszeile b)
-			throws DALException, InvalidObjectException {
-		String exception = "";
-		// ... Kategorie-ID überprüfen
-		if (!exception.isEmpty()) {
-			throw new InvalidObjectException(exception);
-		}
-
-		for (Buchungszeile bz : buchungszeilenliste) {
-			if (bz.getBuchungszeileID() == b.getBuchungszeileID()) {
-				bz = b;
-			}
-		}
-	}
-
-	public static ArrayList<Kategorie> getKategorieListe() throws DALException {
-		// nur zum testen BEGIN
-		if (kategorieliste.size() == 0) {
-			kategorieliste.add(new Kategorie("Einnahme", "Einnahme"));
-			kategorieliste.add(new Kategorie("Ausgabe", "Ausgabe"));
-			kategorieliste.add(new Kategorie("Steuer", "Steuer"));
-			kategorieliste.add(new Kategorie("SVA",
-					"Sozialversicherungsanstalt-Beitrag"));
-		}
-		// nur zum teste END
-		return kategorieliste;
-	}
-
-	public static void saveKategorie(Kategorie k) throws DALException,
-			InvalidObjectException {
-		String exception = "";
-		// ... überprüfen ob kategorie vorhanden
-		if (!exception.isEmpty()) {
-			throw new InvalidObjectException(exception);
-		}
-
-		kategorieliste.add(k);
-	}
-
-	public static Kategorie getKategorie(String kbz) throws DALException {
-		for (int i = 0; i < kategorieliste.size(); i++) {
-			if (kategorieliste.get(i).getID() == kbz) {
-				return kategorieliste.get(i);
-			}
-		}
-		throw new DALException("Kategorie-ID nicht vorhanden");
+		// for (int i = 0; i < rechnungen_buchungszeilen.size(); i++) {
+		// Rechnung_Buchungszeile rbz = rechnungen_buchungszeilen.get(i);
+		// if (rbz.getBuchungszeileID() == buchungszeileID) {
+		// rechnungen_buchungszeilen.remove(i);
+		// i--;
+		// }
+		// }
+		mysql.connect();
+		mysql.deleteEntity(buchungszeileID, Rechnung_Buchungszeile.class);
+		mysql.disconnect();
 	}
 }
