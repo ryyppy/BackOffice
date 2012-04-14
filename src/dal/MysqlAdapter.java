@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -30,29 +29,41 @@ public class MysqlAdapter extends DatabaseAdapter {
 
     @Override
     protected String createWhereClausel(WhereChain whereChain, Class<? extends DBEntity> entityClass) throws DALException{
-        String table = entityClass.getSimpleName();
         List<WhereCondition> conditions = whereChain.getConditions();
 
-        StringBuilder whereBuilder = new StringBuilder();
+        Class<? extends DBEntity> entitySuper = DBEntity.getDBSuperclass(entityClass);
+
+        String table = entityClass.getSimpleName();
+        String superTable = entitySuper.getSimpleName();
+
+        StringBuilder whereBuilder = new StringBuilder("WHERE ");
 
         for(int i = 0; i < conditions.size(); i++){
             WhereCondition condition = conditions.get(i);
             String field = condition.getFieldname();
             Object value = condition.getValue();
 
+            String referenceTable = null;
+            Field f = null;
             try{
-                Field f = entityClass.getDeclaredField(field);
-
-                if(value != null){
-                    Class<?> shouldClazz = f.getType();
-                    Class<?> actualClazz = value.getClass();
-
-                    if(!shouldClazz.equals(actualClazz))
-                        throw new DALException(String.format("Field '%s' is a '%s' but given value is a '%s' - Wrong types!", field, shouldClazz.getName(), actualClazz.getName()));
-
+                f = entityClass.getDeclaredField(field);
+                referenceTable = table;
+            }catch(NoSuchFieldException e){
+                try{
+                    f = entitySuper.getDeclaredField(field);
+                    referenceTable = superTable;
+                }catch(NoSuchFieldException nsfe){
+                    throw new DALException(String.format("Field '%s' not found in DBEntity-definition '%s' - Check if there are typos!", field, table), nsfe);
                 }
-            }catch(NoSuchFieldException nsfe){
-                throw new DALException(String.format("Field '%s' not found in DBEntity-definition '%s' - Check if there are typos!", field, table), nsfe);
+            }
+
+            if(value != null){
+                Class<?> shouldClazz = f.getType();
+                Class<?> actualClazz = value.getClass();
+
+                if(!shouldClazz.equals(actualClazz))
+                    throw new DALException(String.format("Field '%s' is a '%s' but given value is a '%s' - Wrong types!", field, shouldClazz.getName(), actualClazz.getName()));
+
             }
 
             //Ensure that the first element will not have a leading chainer
@@ -65,80 +76,41 @@ public class MysqlAdapter extends DatabaseAdapter {
 
                 whereBuilder.append(" ").append(chainer).append(" ");
             }
-
-            whereBuilder.append(field).append(" ").append(condition.getOperator()).append(" ").append(value);
+            //Table.fieldname >= 'value'
+            whereBuilder.append(String.format("%s.%s %s '%s'", referenceTable, field, condition.getOperator(), value));
 
         }
         return whereBuilder.toString();
     }
 
     @Override
+    protected String createJoinClause(Class<? extends DBEntity> entityClass) throws DALException{
+        Class<? extends DBEntity> superClazz = DBEntity.getDBSuperclass(entityClass);
+
+        //If there is no superClass, or the superclass is just the DBEntity, there is no join needed
+        if(superClazz == null || superClazz.equals(DBEntity.class))
+            return "";
+
+        String pkSuper = DBEntity.getPKField(superClazz).getName();
+        String pkSub = DBEntity.getPKField(entityClass).getName();
+
+        String tableSuper = superClazz.getSimpleName();
+        String tableSub = entityClass.getSimpleName();
+        return String.format("JOIN %s ON %s.%s = %s.%s", tableSuper, tableSuper, pkSuper, tableSub, pkSub);
+    }
+
+    @Override
     public <T extends DBEntity> T getEntityByID(Object id, Class<T> entityClass) throws DALException{
-        if(!isConnected())
-            throw new DALException("Connection not established! Use method connect() before requesting data from the database!");
+        //Create a WHERE clausel out of the PKField (for instance "WHERE angebotID = 1")
+        String pkName = DBEntity.getPKField(entityClass).getName();
+        WhereChain where = new WhereChain(pkName, WhereOperator.EQUALS, id);
 
-        //Convenience variables
-        String table = entityClass.getSimpleName();
-        Field pkField = DBEntity.getPKField(entityClass);
-        List<Field> fields = Arrays.asList(entityClass.getDeclaredFields());
+        List<T> result = getEntitiesBy(where, entityClass);
 
-        //Check if PK-field was found
-        if(pkField == null)
-            throw new DALException(String.format("No id-Field alias '%s' with classtype '%s' found in class '%s'", table.toLowerCase()+"ID",id.getClass(), table));
+        if(result.isEmpty())
+            return null;
 
-        //Check if key has the same type as PK-field
-        if(!pkField.getType().equals(id.getClass()))
-            throw new DALException(String.format("Given key has not the same type as the primary-key-field of classtype '%s'", table));
-
-        Iterator<Field> iter = fields.iterator();
-
-        StringBuilder builder = new StringBuilder(iter.next().getName());
-        while(iter.hasNext()){
-            builder.append(",").append(iter.next().getName());
-        }
-
-        String sql = String.format("SELECT %s FROM %s WHERE %s = ?", builder.toString(), table, table+"ID");
-        ResultSet rs = null;
-        PreparedStatement ps = null;
-
-        try{
-            ps = con.prepareStatement(sql);
-
-            //Prepare statement with the given ID
-            ps.setObject(1, id);
-            rs = ps.executeQuery();
-
-            //Instantiate a new Object of the given DBEntity
-            T ret;
-            try{
-                ret = entityClass.getConstructor().newInstance();
-
-                while(rs.next()){
-                    for(int i = 0; i < fields.size(); i++){
-                        Field f = fields.get(i);
-                        f.setAccessible(true);
-                        f.set(ret, rs.getObject(i + 1));
-                    }
-                }
-            } catch(Exception nsme){
-                throw new DALException("DBEntity could not be instantiated!", nsme);
-            }
-            return ret;
-        }catch(SQLException sqle){
-            throw new DALException(String.format("Following Statement could not be executed: '%s'", sql), sqle);
-        }finally{
-            try{
-                //Close ResultSet immediately
-                if(rs != null && !rs.isClosed())
-                    rs.close();
-
-                if(ps != null)
-                    ps.close();
-
-            }catch(SQLException sqle){
-                throw new DALException("Statement- or ResultSet-Object could not be closed...", sqle);
-            }
-        }
+        return result.get(0);
     }
 
     @Override
@@ -350,7 +322,6 @@ public class MysqlAdapter extends DatabaseAdapter {
 
         String pkName = DBEntity.getPKField(entityClass).getName();
         String table = entityClass.getSimpleName();
-        Class<? extends DBEntity> superClazz = DBEntity.getDBSuperclass(entityClass);
 
         if(fields.size() <= 0)
             throw new DALException(String.format("No fields in DBEntity '%s' declared (so no mapping possible)", table));
@@ -420,26 +391,35 @@ public class MysqlAdapter extends DatabaseAdapter {
         if(!isConnected())
             throw new DALException("Connection not established! Use method connect() before requesting data from the database!");
 
-        List<Field> fields = Arrays.asList(entityClass.getDeclaredFields());
-
+        List<Field> fields = DBEntity.getAllDeclaredFields(entityClass);
+        Field pkField = DBEntity.getPKField(entityClass);
         String table = entityClass.getSimpleName();
 
         //Check fields
         if(fields.size() <= 0)
             throw new DALException(String.format("No fields in DBEntity '%s' declared (so no mapping possible)", table));
 
-        Iterator<Field> iter = fields.iterator();
+        StringBuilder builder = new StringBuilder();
 
-        StringBuilder builder = new StringBuilder(iter.next().getName());
-        while(iter.hasNext()){
-            builder.append(",").append(iter.next().getName());
+        for(int i = 0; i < fields.size(); i++){
+            String f = fields.get(i).getName();
+            if(i > 0)
+                builder.append(",");
+
+            if(f.equals(pkField.getName())){
+                builder.append(table + ".").append(f);
+            }
+            else{
+                builder.append(f);
+            }
+
         }
 
         ResultSet rs = null;
         Statement st = null;
 
         //SELECT * FROM angebot WHERE angebotID = 1 AND chance = 200;
-        String sql = String.format("SELECT %s FROM %s WHERE %s", builder.toString(), table, createWhereClausel(where, entityClass));
+        String sql = String.format("SELECT %s FROM %s %s %s", builder.toString(), table, createJoinClause(entityClass),createWhereClausel(where, entityClass));
         try{
             st = con.createStatement();
             rs = st.executeQuery(sql);
@@ -477,21 +457,5 @@ public class MysqlAdapter extends DatabaseAdapter {
         }
     }
 
-    private String createJoinClause(Class<? extends DBEntity> entityClass) throws DALException{
-        Class<? extends DBEntity> superClazz = DBEntity.getDBSuperclass(entityClass);
 
-        //If there is no superClass, or the superclass is just the DBEntity, there is no join needed
-        if(superClazz == null || superClazz.equals(DBEntity.class))
-            return "";
-
-        String pkSuper = DBEntity.getPKField(superClazz).getName();
-        String pkSub = DBEntity.getPKField(entityClass).getName();
-
-        String tableSuper = superClazz.getSimpleName();
-        String tableSub = entityClass.getSimpleName();
-        return String.format("JOIN %s ON %s.%s = %s.%s", tableSuper, tableSuper, pkSuper, tableSub, pkSub);
-        //JOIN rechnung r ON er.rechnungID = r.rechnungID ;
-
-
-    }
 }

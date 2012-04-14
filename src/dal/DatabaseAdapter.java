@@ -138,7 +138,16 @@ public abstract class DatabaseAdapter {
         return connected;
     }
 
+    /**
+     *
+     * @param whereChain
+     * @param entityClass
+     * @return
+     * @throws DALException
+     */
     protected abstract String createWhereClausel(WhereChain whereChain, Class<? extends DBEntity> entityClass) throws DALException;
+
+    protected abstract String createJoinClause(Class<? extends DBEntity> entityClass) throws DALException;
 
     /**
      * Retrieves a capsulated data-object with all fields and the given id (foreign-keys only with ID - no eager loading or something)

@@ -24,6 +24,11 @@ public class MockAdapter extends DatabaseAdapter{
     }
 
     @Override
+    protected String createJoinClause(Class<? extends DBEntity> entityClass) throws DALException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public <T extends DBEntity> T getEntityByID(Object id, Class<T> entityClass) throws DALException {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
