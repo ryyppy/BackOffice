@@ -1,6 +1,11 @@
 package gui;
 
+import java.awt.AWTEvent;
+import java.awt.EventQueue;
+import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 
+import javax.swing.JDialog;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -17,6 +22,23 @@ public class Main {
 		} catch (UnsupportedLookAndFeelException e1) {
 			e1.printStackTrace();
 		}
+//		Toolkit.getDefaultToolkit().getSystemEventQueue()
+//				.push(new EventQueue() {
+//					@Override
+//					protected void dispatchEvent(AWTEvent event) {
+//						if (event instanceof KeyEvent) {
+//							KeyEvent keyEvent = (KeyEvent) event;
+//							if (KeyEvent.KEY_RELEASED == keyEvent.getID()
+//									&& KeyEvent.VK_ESCAPE == keyEvent
+//											.getKeyCode()
+//									&& keyEvent.getSource() instanceof JDialog) {
+//								JDialog d = ((JDialog) keyEvent.getSource());
+//									d.dispose();
+//							}
+//						}
+//						super.dispatchEvent(event);
+//					}
+//				});
 		new Haupt_Frame();
 	}
 }

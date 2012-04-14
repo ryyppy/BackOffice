@@ -1,13 +1,16 @@
 package gui.kontakte;
 
+import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
+import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.InvalidObjectException;
-import java.text.ParseException;
-import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -19,13 +22,12 @@ import javax.swing.JTextField;
 
 import bl.BL;
 import bl.objects.Kontakt;
-import bl.objects.Kunde;
 import dal.DALException;
-import databinding.BirthdayRule;
 import databinding.DataBinder;
 import databinding.StandardRule;
 
-public class EditKontaktDialog extends JDialog implements ActionListener {
+public class EditKontaktDialog extends JDialog implements ActionListener,
+		KeyListener {
 	private JTextField[] textfeld;
 	private JButton save, cancel;
 
@@ -84,6 +86,7 @@ public class EditKontaktDialog extends JDialog implements ActionListener {
 
 		for (int i = 0; i < textfeld.length; i++) {
 			textfeld[i] = new JTextField(20);
+			textfeld[i].addKeyListener(this);
 			textfeld[i].setName(columnNames[i]);
 			JLabel l = new JLabel(columnNames[i]);
 
@@ -105,6 +108,7 @@ public class EditKontaktDialog extends JDialog implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+
 		if (e.getSource() == save) {
 
 			try {
@@ -126,6 +130,7 @@ public class EditKontaktDialog extends JDialog implements ActionListener {
 						k = new Kontakt(firma, name, telefon);
 						BL.saveKontakt(k);
 					}
+					JOptionPane.showMessageDialog(this, "Eintrag wurde erfolgreich hinzugefügt");
 					dispose();
 				} else {
 					JOptionPane.showMessageDialog(this, b.getErrors());
@@ -142,5 +147,22 @@ public class EditKontaktDialog extends JDialog implements ActionListener {
 		} else if (e.getSource() == cancel) {
 			dispose();
 		}
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			save.doClick();
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
 	}
 }
