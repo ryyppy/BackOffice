@@ -72,7 +72,8 @@ CREATE TABLE ausgangsrechnung (
 	kundeID 		integer,
 	rechnungID		integer,
 	PRIMARY KEY (rechnungID),
-	FOREIGN KEY (rechnungID) REFERENCES rechnung(rechnungID) ON DELETE CASCADE ON UPDATE CASCADE
+	FOREIGN KEY (rechnungID) REFERENCES rechnung(rechnungID) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (kundeID) REFERENCES kunde(kundeID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 INSERT INTO rechnung (rechnungID, status, datum) VALUES (1, 'offen', current_timestamp);
@@ -86,7 +87,8 @@ CREATE TABLE eingangsrechnung(
 	kontaktID 		integer,
 	rechnungID		integer,
 	PRIMARY KEY (rechnungID),
-	FOREIGN KEY (rechnungID) REFERENCES rechnung(rechnungID) ON DELETE CASCADE ON UPDATE CASCADE
+	FOREIGN KEY (rechnungID) REFERENCES rechnung(rechnungID) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (kontaktID) REFERENCES kontakt(kontaktID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 INSERT INTO rechnung (rechnungID, status, datum) VALUES (3, 'offen', current_timestamp);
@@ -114,9 +116,9 @@ INSERT INTO rechnungszeile (rechnungID, kommentar, steuersatz, betrag, angebotID
 
 DROP TABLE kategorie CASCADE;
 CREATE TABLE kategorie(
-	kbz 				varchar(20),
+	kkbz 				varchar(20),
 	beschreibung		varchar(100),
-	PRIMARY KEY (kbz)
+	PRIMARY KEY (kkbz)
 );
 
 INSERT INTO kategorie VALUES ('Einnahme', 'Einnahme');
@@ -132,13 +134,13 @@ CREATE TABLE buchungszeile(
 	kommentar			varchar(100),
 	steuersatz			double,
 	betrag				double,
-	kbz					varchar(20),
+	kkbz					varchar(20),
 	PRIMARY KEY (buchungszeileID),
-	FOREIGN KEY (kbz) REFERENCES kategorie(kbz) ON DELETE CASCADE ON UPDATE CASCADE
+	FOREIGN KEY (kkbz) REFERENCES kategorie(kkbz) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-INSERT INTO buchungszeile (datum,kommentar, steuersatz, betrag, kbz) VALUES (current_timestamp,'meine buchungszeile', 20, 100, 'Steuer');
-INSERT INTO buchungszeile (datum,kommentar, steuersatz, betrag, kbz) VALUES (current_timestamp,'meine zweite buchungszeile', 10, 50, 'Einnahme');
+INSERT INTO buchungszeile (datum,kommentar, steuersatz, betrag, kkbz) VALUES (current_timestamp,'meine buchungszeile', 20, 100, 'Steuer');
+INSERT INTO buchungszeile (datum,kommentar, steuersatz, betrag, kkbz) VALUES (current_timestamp,'meine zweite buchungszeile', 10, 50, 'Einnahme');
 
 
 DROP TABLE rechnung_buchungszeile CASCADE;

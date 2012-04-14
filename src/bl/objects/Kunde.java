@@ -31,11 +31,11 @@ public class Kunde extends DBEntity {
 		this.geburtsdatum = geburtsdatum;
 	}
 
-	public int getKundenID() {
+	public int getKundeID() {
 		return kundeID;
 	}
 
-	public void setKundenID(int kundenID) {
+	public void setKundeID(int kundenID) {
 		this.kundeID = kundenID;
 	}
 

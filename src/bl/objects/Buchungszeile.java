@@ -12,9 +12,9 @@ public class Buchungszeile extends DBEntity {
 	private Integer buchungszeileID;
 	private Date datum;
 	private String kommentar;
-	private Double betrag;
 	private Double steuersatz;
-	private String kategorieKbz;
+	private Double betrag;
+	private String kkbz;
 
 	public Buchungszeile() {
 
@@ -27,7 +27,7 @@ public class Buchungszeile extends DBEntity {
 		this.kommentar = kommentar;
 		this.betrag = betrag;
 		this.steuersatz = steuersatz;
-		this.kategorieKbz = kategorieKbz;
+		this.kkbz = kategorieKbz;
 	}
 
 	public Buchungszeile(int id, Date datum, String kommentar,
@@ -38,7 +38,7 @@ public class Buchungszeile extends DBEntity {
 		this.kommentar = kommentar;
 		this.betrag = betrag;
 		this.steuersatz = steuersatz;
-		this.kategorieKbz = kategorieKbz;
+		this.kkbz = kategorieKbz;
 	}
 
 	public int getBuchungszeileID() {
@@ -93,18 +93,18 @@ public class Buchungszeile extends DBEntity {
 		this.steuersatz = steuersatz;
 	}
 
-	public String getKategorieKbz() {
-		return kategorieKbz;
+	public String getKKbz() {
+		return kkbz;
 	}
 
-	public void setKategorieKbz(String kategorieKbz) {
-		this.kategorieKbz = kategorieKbz;
+	public void setKKbz(String kategorieKbz) {
+		this.kkbz = kategorieKbz;
 	}
 
 	public String toString() {
 		return "Buchungszeile-ID: " + buchungszeileID + "\nDatum: "
 				+ getDatumString() + "\nKommentar: " + kommentar
 				+ "\nSteuersatz: " + steuersatz + "\nBetrag: " + betrag
-				+ "\nKategorie-ID: " + kategorieKbz;
+				+ "\nKategorie-ID: " + kkbz;
 	}
 }
