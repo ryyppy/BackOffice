@@ -33,7 +33,8 @@ public class RechnungenDialog extends JDialog implements ActionListener {
 	private Buchungszeile b;
 
 	public RechnungenDialog(JFrame owner, Buchungszeile b) {
-		super(owner, "Rechnungen auswählen", true);
+		super(owner, "Rechnungen für Buchungszeile " + b.getBuchungszeileID()
+				+ " auswählen", true);
 		setSize(500, 300);
 		setLocationRelativeTo(owner);
 		setLayout(new BorderLayout());
