@@ -66,6 +66,20 @@ public class BL {
 		// return kontakteliste;
 	}
 
+	public static ArrayList<Kontakt> getKontaktListe(String filter)
+			throws DALException {
+		// String f = "%"+filter+"%";
+		// WhereChain where = new WhereChain("name", WhereOperator.,
+		// filter);
+		// where.add
+		mysql.connect();
+		ArrayList<Kontakt> ret = (ArrayList<Kontakt>) mysql
+				.getEntityList(Kontakt.class);
+		mysql.disconnect();
+		return ret;
+		// return kontakteliste;
+	}
+
 	public static Kontakt getKontakt(int kontaktID) throws DALException {
 		// for (int i = 0; i < kontakteliste.size(); i++) {
 		// if (kontakteliste.get(i).getKontaktID() == kontaktID) {
@@ -338,12 +352,17 @@ public class BL {
 
 	public static Eingangsrechnung getEingangsrechnung(int rechnungID)
 			throws DALException {
-		for (int i = 0; i < eingangsrechnungenliste.size(); i++) {
-			if (eingangsrechnungenliste.get(i).getRechnungID() == rechnungID) {
-				return eingangsrechnungenliste.get(i);
-			}
-		}
-		throw new DALException("Rechnung-ID nicht vorhanden");
+		// for (int i = 0; i < eingangsrechnungenliste.size(); i++) {
+		// if (eingangsrechnungenliste.get(i).getRechnungID() == rechnungID) {
+		// return eingangsrechnungenliste.get(i);
+		// }
+		// }
+		// throw new DALException("Rechnung-ID nicht vorhanden");
+		mysql.connect();
+		Eingangsrechnung ret = mysql.getEntityByID(rechnungID,
+				Eingangsrechnung.class);
+		mysql.disconnect();
+		return ret;
 	}
 
 	public static void deleteEingangsrechnung(int rechnungID)
@@ -380,10 +399,17 @@ public class BL {
 		// e.setRechnungID(rechnungID++);
 		// eingangsrechnungenliste.add(e);
 		mysql.connect();
-		Rechnung r = new Rechnung(e.getStatus(), e.getDatum());
-		Object key = mysql.addEntity(r);
-		e.setRechnungID(Integer.valueOf(String.valueOf(key)));
-		mysql.addEntity(e);
+		mysql.beginTransaction();
+		try {
+			Rechnung r = new Rechnung(e.getStatus(), e.getDatum());
+			Object key = mysql.addEntity(r);
+			e.setRechnungID(Integer.valueOf(String.valueOf(key)));
+			mysql.addEntity(e);
+			mysql.commit();
+		} catch (DALException d) {
+			mysql.rollback();
+			throw d;
+		}
 		mysql.disconnect();
 
 	}
@@ -422,12 +448,17 @@ public class BL {
 
 	public static Ausgangsrechnung getAusgangsrechnung(int rechnungID)
 			throws DALException {
-		for (int i = 0; i < ausgangsrechnungenliste.size(); i++) {
-			if (ausgangsrechnungenliste.get(i).getRechnungID() == rechnungID) {
-				return ausgangsrechnungenliste.get(i);
-			}
-		}
-		throw new DALException("Rechnung-ID nicht vorhanden");
+		// for (int i = 0; i < ausgangsrechnungenliste.size(); i++) {
+		// if (ausgangsrechnungenliste.get(i).getRechnungID() == rechnungID) {
+		// return ausgangsrechnungenliste.get(i);
+		// }
+		// }
+		// throw new DALException("Rechnung-ID nicht vorhanden");
+		mysql.connect();
+		Ausgangsrechnung ret = mysql.getEntityByID(rechnungID,
+				Ausgangsrechnung.class);
+		mysql.disconnect();
+		return ret;
 	}
 
 	public static void deleteAusgangsrechnung(int rechnungID)
@@ -453,10 +484,17 @@ public class BL {
 		// ausgangsrechnungenliste.add(a);
 
 		mysql.connect();
-		Rechnung r = new Rechnung(a.getStatus(), a.getDatum());
-		Object key = mysql.addEntity(r);
-		a.setRechnungID(Integer.valueOf(String.valueOf(key)));
-		mysql.addEntity(a);
+		mysql.beginTransaction();
+		try {
+			Rechnung r = new Rechnung(a.getStatus(), a.getDatum());
+			Object key = mysql.addEntity(r);
+			a.setRechnungID(Integer.valueOf(String.valueOf(key)));
+			mysql.addEntity(a);
+			mysql.commit();
+		} catch (DALException d) {
+			mysql.rollback();
+			throw d;
+		}
 		mysql.disconnect();
 	}
 
@@ -696,11 +734,16 @@ public class BL {
 		// }
 		// }
 		// throw new DALException("Kategorie-ID nicht vorhanden");
-		String kkbz = "'"+kbz+"'";
-		WhereChain where = new WhereChain("kkbz", WhereOperator.EQUALS,
-				kkbz);
+
+		// String kkbz = "'" + kbz + "'";
+		// WhereChain where = new WhereChain("kkbz", WhereOperator.EQUALS,
+		// kkbz);
+		// mysql.connect();
+		// Kategorie ret = mysql.getEntitiesBy(where, Kategorie.class).get(0);
+		// mysql.disconnect();
+
 		mysql.connect();
-		Kategorie ret = mysql.getEntitiesBy(where, Kategorie.class).get(0);
+		Kategorie ret = mysql.getEntityByID(kbz, Kategorie.class);
 		mysql.disconnect();
 		return ret;
 	}
