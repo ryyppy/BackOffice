@@ -41,7 +41,7 @@ public class EditKontaktDialog extends JDialog implements ActionListener {
 	}
 
 	public EditKontaktDialog(JFrame owner, Kontakt k) {
-		super(owner, "Kontakt bearbeiten", true);
+		super(owner, "Kontakt " + k.getKontaktID() + " bearbeiten", true);
 		this.k = k;
 		initDialog();
 
@@ -137,7 +137,7 @@ public class EditKontaktDialog extends JDialog implements ActionListener {
 			} catch (DALException de) {
 				de.printStackTrace();
 				JOptionPane.showMessageDialog(this, de.getMessage());
-				System.out.println( de.getMessage());
+				System.out.println(de.getMessage());
 			}
 		} else if (e.getSource() == cancel) {
 			dispose();

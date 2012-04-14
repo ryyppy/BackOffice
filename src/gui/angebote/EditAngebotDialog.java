@@ -48,7 +48,7 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 	}
 
 	public EditAngebotDialog(JFrame owner, Angebot a) {
-		super(owner, "Angebot bearbeiten", true);
+		super(owner, "Angebot " + a.getAngebotID() + " bearbeiten", true);
 		this.a = a;
 		initDialog();
 	}

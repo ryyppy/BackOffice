@@ -47,7 +47,8 @@ public class EditBuchungszeileDialog extends JDialog implements ActionListener {
 	}
 
 	public EditBuchungszeileDialog(JFrame owner, Buchungszeile b) {
-		super(owner, "Buchungszeile bearbeiten", true);
+		super(owner, "Buchungszeile " + b.getBuchungszeileID() + " bearbeiten",
+				true);
 		this.b = b;
 		initDialog();
 	}

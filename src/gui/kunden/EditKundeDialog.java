@@ -40,7 +40,7 @@ public class EditKundeDialog extends JDialog implements ActionListener {
 	}
 
 	public EditKundeDialog(JFrame owner, Kunde k) {
-		super(owner, "Kunde bearbeiten", true);
+		super(owner, "Kunde " + k.getKundeID() + " bearbeiten", true);
 		this.k = k;
 		initDialog();
 	}
@@ -121,7 +121,7 @@ public class EditKundeDialog extends JDialog implements ActionListener {
 						k.setGeburtsdatum(geburtsdatum);
 						BL.updateKunde(k);
 					} else {
-						 k = new Kunde(vorname, nachname, geburtsdatum);
+						k = new Kunde(vorname, nachname, geburtsdatum);
 						BL.saveKunde(k);
 					}
 					dispose();

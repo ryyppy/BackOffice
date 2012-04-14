@@ -49,7 +49,8 @@ public class EditEingangsrechnungDialog extends JDialog implements
 	}
 
 	public EditEingangsrechnungDialog(JFrame owner, Eingangsrechnung er) {
-		super(owner, "Eingangsrechnung bearbeiten", true);
+		super(owner, "Eingangsrechnung " + er.getRechnungID() + " bearbeiten",
+				true);
 		this.er = er;
 		initDialog();
 
