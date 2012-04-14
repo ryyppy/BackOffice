@@ -57,6 +57,8 @@ public class MysqlAdapter extends DatabaseAdapter {
                 }
             }
 
+            //TODO: Das ist nicht sauber, wenn man nicht auf Datentypen ueberprueft... Workaround fuer FILTER-WhereChains finden!
+            /*
             if(value != null){
                 Class<?> shouldClazz = f.getType();
                 Class<?> actualClazz = value.getClass();
@@ -65,6 +67,7 @@ public class MysqlAdapter extends DatabaseAdapter {
                     throw new DALException(String.format("Field '%s' is a '%s' but given value is a '%s' - Wrong types!", field, shouldClazz.getName(), actualClazz.getName()));
 
             }
+            */
 
             //Ensure that the first element will not have a leading chainer
             if(i > 0){

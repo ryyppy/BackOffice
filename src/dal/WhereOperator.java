@@ -36,6 +36,11 @@ public enum WhereOperator {
         public String toString(){
             return "<=";
         }
+    },
+    LIKE{
+        public String toString(){
+            return "LIKE";
+        }
     }
 
 
