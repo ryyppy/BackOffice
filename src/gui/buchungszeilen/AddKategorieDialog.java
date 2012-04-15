@@ -100,6 +100,8 @@ public class AddKategorieDialog extends JDialog implements ActionListener {
 				if (!b.hasErrors()) {
 					Kategorie k = new Kategorie(kbz, beschreibung);
 					BL.saveKategorie(k);
+					JOptionPane.showMessageDialog(this,
+							"Eintrag wurde erfolgreich hinzugefügt");
 					dispose();
 				} else {
 					JOptionPane.showMessageDialog(this, b.getErrors());

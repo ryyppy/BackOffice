@@ -183,10 +183,14 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 						a.setKundeID(kundenID);
 						a.setProjektID(projektID);
 						BL.updateAngebot(a);
+						JOptionPane.showMessageDialog(this,
+								"Eintrag wurde erfolgreich bearbeitet");
 					} else {
 						a = new Angebot(summe, dauer, new Date(), chance,
 								kundenID, projektID);
 						BL.saveAngebot(a);
+						JOptionPane.showMessageDialog(this,
+								"Eintrag wurde erfolgreich hinzugefügt");
 					}
 					dispose();
 				} else {

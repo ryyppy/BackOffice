@@ -116,9 +116,13 @@ public class EditProjektDialog extends JDialog implements ActionListener {
 						p.setName(name);
 						p.setBeschreibung(beschreibung);
 						BL.updateProjekt(p);
+						JOptionPane.showMessageDialog(this,
+								"Eintrag wurde erfolgreich bearbeitet");
 					} else {
 						p = new Projekt(name, beschreibung);
 						BL.saveProjekt(p);
+						JOptionPane.showMessageDialog(this,
+								"Eintrag wurde erfolgreich hinzugefügt");
 					}
 					dispose();
 				} else {

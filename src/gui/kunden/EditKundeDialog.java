@@ -120,9 +120,13 @@ public class EditKundeDialog extends JDialog implements ActionListener {
 						k.setNachname(nachname);
 						k.setGeburtsdatum(geburtsdatum);
 						BL.updateKunde(k);
+						JOptionPane.showMessageDialog(this,
+								"Eintrag wurde erfolgreich bearbeitet");
 					} else {
 						k = new Kunde(vorname, nachname, geburtsdatum);
 						BL.saveKunde(k);
+						JOptionPane.showMessageDialog(this,
+								"Eintrag wurde erfolgreich hinzugefügt");
 					}
 					dispose();
 				} else {

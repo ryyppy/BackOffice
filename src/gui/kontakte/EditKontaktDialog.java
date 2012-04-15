@@ -126,11 +126,13 @@ public class EditKontaktDialog extends JDialog implements ActionListener,
 						k.setName(name);
 						k.setTelefon(telefon);
 						BL.updateKontakt(k);
+						JOptionPane.showMessageDialog(this, "Eintrag wurde erfolgreich bearbeitet");
 					} else {
 						k = new Kontakt(firma, name, telefon);
 						BL.saveKontakt(k);
+						JOptionPane.showMessageDialog(this,
+								"Eintrag wurde erfolgreich hinzugefügt");
 					}
-					JOptionPane.showMessageDialog(this, "Eintrag wurde erfolgreich hinzugefügt");
 					dispose();
 				} else {
 					JOptionPane.showMessageDialog(this, b.getErrors());

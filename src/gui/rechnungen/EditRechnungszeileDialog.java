@@ -167,10 +167,14 @@ public class EditRechnungszeileDialog extends JDialog implements ActionListener 
 						r.setAngebotsID(angebotsID);
 						r.setRechnungID(rechnungID);
 						BL.updateRechnungszeile(r);
+						JOptionPane.showMessageDialog(this,
+								"Eintrag wurde erfolgreich bearbeitet");
 					} else {
-						r = new Rechnungszeile(kommentar, steuersatz,
-								betrag, rechnungID, angebotsID);
+						r = new Rechnungszeile(kommentar, steuersatz, betrag,
+								rechnungID, angebotsID);
 						BL.saveRechnungszeile(r);
+						JOptionPane.showMessageDialog(this,
+								"Eintrag wurde erfolgreich hinzugefügt");
 					}
 					dispose();
 				} else {

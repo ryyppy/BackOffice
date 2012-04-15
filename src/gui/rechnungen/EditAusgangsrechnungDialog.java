@@ -166,9 +166,13 @@ public class EditAusgangsrechnungDialog extends JDialog implements
 						ar.setDatum(datum);
 						ar.setKundeID(kundenID);
 						BL.updateAusgangsrechnung(ar);
+						JOptionPane.showMessageDialog(this,
+								"Eintrag wurde erfolgreich bearbeitet");
 					} else {
 						ar = new Ausgangsrechnung(status, datum, kundenID);
 						BL.saveAusgangsrechnung(ar);
+						JOptionPane.showMessageDialog(this,
+								"Eintrag wurde erfolgreich hinzugefügt");
 					}
 					dispose();
 				} else {
