@@ -576,9 +576,10 @@ public class BL {
 		mysql.connect();
 		Rechnung r = new Rechnung(a.getRechnungID(), a.getStatus(),
 				a.getDatum());
-		mysql.addEntity(r);
-		mysql.addEntity(a);
+		mysql.updateEntity(r);
+		mysql.updateEntity(a);
 		mysql.disconnect();
+		
 	}
 
 	public static ArrayList<Rechnung> getRechnungListe() throws DALException {
