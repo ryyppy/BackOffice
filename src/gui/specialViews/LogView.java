@@ -15,7 +15,7 @@ public class LogView extends JDialog {
 	private JTextArea t;
 
 	public LogView(JFrame owner, String text) {
-		super(owner, "Log", true);
+		super(owner, "Log", false);
 		setSize(500, 300);
 		setLocationRelativeTo(owner);
 		setLayout(new BorderLayout());

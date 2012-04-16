@@ -122,36 +122,30 @@ public class EingangsrechnungenPanel extends EntityViewPanel {
 			fc.setAcceptAllFileFilterUsed(false);
 			fc.setFileFilter(new XMLFilter());
 
-			int returnVal = fc.showSaveDialog(this);
+			int returnVal = fc.showOpenDialog(this);
 
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 
 				File file = fc.getSelectedFile();
-				if (!file.exists()) {
-					file = new File(file.getPath() + ".xml");
-					try {
-						file.createNewFile();
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-				}
 
 				XMLFile f = null;
 
 				try {
-					f = new XMLFile(file);
-					f.importRechnungen();
-					new LogView(getOwner(), f.getLog());
-					tModel.refresh();
+					if (file.exists()) {
+						f = new XMLFile(file);
+						f.importRechnungen();
+						new LogView(getOwner(), f.getLog());
+						tModel.refresh();
+					}else{
+						JOptionPane.showMessageDialog(this, "Datei konnte nicht gefunden werden");
+					}
 				} catch (ParserConfigurationException e1) {
 					e1.printStackTrace();
 				} catch (SAXException e1) {
 					e1.printStackTrace();
 				} catch (IOException e1) {
 					e1.printStackTrace();
-				} finally {
-					f.close();
-				}
+				} 
 
 			}
 		}
