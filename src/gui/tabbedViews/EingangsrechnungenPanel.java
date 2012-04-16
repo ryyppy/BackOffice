@@ -15,12 +15,12 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import com.itextpdf.text.DocumentException;
-
 import bl.BL;
-import bl.objects.Ausgangsrechnung;
 import bl.objects.Eingangsrechnung;
 import bl.objects.Kontakt;
+
+import com.itextpdf.text.DocumentException;
+
 import dal.DALException;
 import extras.PDFFile;
 import extras.PDFFilter;
@@ -46,9 +46,10 @@ public class EingangsrechnungenPanel extends EntityViewPanel {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == kontaktInfo) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
+			int kIndex = table.getColumn("KontaktID").getModelIndex();
 			Kontakt k;
 			try {
-				k = BL.getKontakt((Integer) tModel.getValueAt(a, 3));
+				k = BL.getKontakt((Integer) tModel.getValueAt(a, kIndex));
 				JOptionPane.showMessageDialog(this, k.toString());
 			} catch (DALException e1) {
 				JOptionPane.showMessageDialog(this, e1.getMessage());
