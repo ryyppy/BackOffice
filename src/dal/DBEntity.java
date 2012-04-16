@@ -1,8 +1,6 @@
 package dal;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,6 +9,8 @@ import java.util.List;
  * Time: 18:04
  */
 public abstract class DBEntity {
+
+
 
     public DBEntity(){
 
@@ -37,13 +37,12 @@ public abstract class DBEntity {
      * @return Value of the primary-key-field
      */
     public Object getID() throws DALException{
-        Class<? extends DBEntity> entityClass = this.getClass();
-        TableMeta tableMeta = DBEntity.getTableMeta(entityClass);
-        String pkFieldName = tableMeta.pkFieldName();
+        DBEntityInfo eci = DBEntityInfo.get(this.getClass());
+        String pkName = eci.getEntityPk().getName();
 
-        for(Field f : entityClass.getDeclaredFields()){
+        for(Field f : eci.getMergedFields()){
             String fieldname = f.getName();
-            if(fieldname.equals(pkFieldName)){
+            if(fieldname.equals(pkName)){
                 try{
                     f.setAccessible(true);
                     return f.get(this);
@@ -78,13 +77,12 @@ public abstract class DBEntity {
      * @throws DALException - If there is no tableMeta-Annotation found
      */
     public void setID(Object id) throws DALException{
-        Class<? extends DBEntity> entityClass = this.getClass();
-        TableMeta tableMeta = DBEntity.getTableMeta(entityClass);
-        String pkFieldName = tableMeta.pkFieldName();
+        DBEntityInfo eci = DBEntityInfo.get(this.getClass());
+        String pkName = eci.getEntityPk().getName();
 
-        for(Field f : entityClass.getDeclaredFields()){
+        for(Field f : eci.getMergedFields()){
             String fieldname = f.getName();
-            if(fieldname.equals(pkFieldName)){
+            if(fieldname.equals(pkName)){
                 try{
                     f.setAccessible(true);
                     f.set(this, id);
@@ -93,69 +91,5 @@ public abstract class DBEntity {
                 }
             }
         }
-    }
-    /**
-     * Returns the Reflection-Field of a DBEntity-class-definition, which represents the Primary-Key in its database
-     * @param entityClass - DBEntity-Class for retrieving the PK field
-     * @throws DALException - If there is no tableMeta-Annotation found
-     * @return Field-Definition of the PK-Field or NULL if it could not be retrieved
-     */
-    public static Field getPKField(Class<? extends DBEntity> entityClass) throws DALException{
-        TableMeta tableMeta = DBEntity.getTableMeta(entityClass);
-        String pkFieldName = tableMeta.pkFieldName();
-
-        for(Field f : entityClass.getDeclaredFields()){
-            String fieldname = f.getName();
-            if(fieldname.equals(pkFieldName))
-                return f;
-        }
-
-        throw new DALException(String.format("DBEntity '%s' has no PK-Field named '%s' (Check TableMeta-Annotation for typos)!", entityClass.getSimpleName(), pkFieldName));
-    }
-
-    /**
-     * Returns the defined tableMeta-Annotation of the given class
-     * @param entityClass - DBEntity - class definition, from which the annotation should be retrieved
-     * @throws DALException - If there is no tableMeta-Annotation found
-     *
-     * @return tableMeta-Annotation of the given entityClass
-     */
-    public static TableMeta getTableMeta(Class<? extends DBEntity> entityClass) throws DALException{
-        TableMeta tableMeta =  entityClass.getAnnotation(TableMeta.class);
-
-        if(tableMeta != null && tableMeta instanceof TableMeta)
-            return tableMeta;
-
-        throw new DALException(String.format("DBEntity '%s' has no TableMeta - Annotation defined! Cannot retrieve PK-Field...", entityClass.getSimpleName()));
-    }
-
-    public static List<Field> getAllDeclaredFields(Class<? extends DBEntity> entityClass){
-        List<Field> fields = new ArrayList<Field>();
-        List<String> fieldNames = new ArrayList<String>();
-
-        Class<?> superClazz = entityClass.getSuperclass();
-
-        for(Field f : entityClass.getDeclaredFields()){
-            fields.add(f);
-            fieldNames.add(f.getName());
-        }
-
-        if(!superClazz.getClass().equals(Object.class)){
-            for(Field f : superClazz.getDeclaredFields()){
-                if(!fieldNames.contains(f.getName()))
-                    fields.add(f);
-            }
-        }
-
-        return fields;
-    }
-
-    public static Class<? extends DBEntity> getDBSuperclass(Class<? extends DBEntity> entityClass){
-        Class<?> superClazz = entityClass.getSuperclass();
-
-        if(!superClazz.getClass().equals(Object.class))
-            return (Class<? extends DBEntity>)superClazz;
-
-        return null;
     }
 }

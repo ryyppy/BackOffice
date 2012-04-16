@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Patrick Stapfer
- * Date: 13.04.12
- * Time: 16:52
+ * WhereChain is a abstraction of a WHERE-Clausel in a SQL-Statement, which is sent by a DatabaseAdapter
+ * to the database.
+ * A WhereChain starts with an basic condition like "angebotID = 1" and can be extended do several conditions
+ * in a chain-manner, like "angebotID = '1' AND summe = '200' OR datum = '2011-04-13'
  */
 public class WhereChain {
     private List<WhereCondition> conditions = new ArrayList<WhereCondition>();
@@ -23,7 +23,6 @@ public class WhereChain {
         init(fieldname, operator, value);
     }
 
-
     /**
      * Initializes the new WhereChain like in the given init(...) ethod
      * @param entityClass - Class, which fields should be retrieved for the WHERE-Conditions
@@ -31,7 +30,7 @@ public class WhereChain {
      * @param value - Value which should be used for each condition
      * @param chainword - Chainword, which links the WHERE-Clausels together (for instance OR / AND,...)
      */
-    public WhereChain(Class<? extends DBEntity> entityClass, WhereOperator operator, Object value, Chainer chainword){
+    public WhereChain(Class<? extends DBEntity> entityClass, WhereOperator operator, Object value, Chainer chainword) throws DALException{
         init(entityClass, operator, value, chainword);
     }
 
@@ -63,8 +62,9 @@ public class WhereChain {
      * @param value - Value which should be used for each condition
      * @param chainword - Chainword, which links the WHERE-Clausels together (for instance OR / AND,...)
      */
-    public void init(Class<? extends DBEntity> entityClass, WhereOperator operator, Object value, Chainer chainword){
-        for(Field f : DBEntity.getAllDeclaredFields(entityClass)){
+    public void init(Class<? extends DBEntity> entityClass, WhereOperator operator, Object value, Chainer chainword) throws DALException{
+        DBEntityInfo eci = DBEntityInfo.get(entityClass);
+        for(Field f : eci.getMergedFields()){
             addCondition(chainword, f.getName(), operator, value);
         }
     }
