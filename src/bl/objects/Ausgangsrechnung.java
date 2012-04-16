@@ -6,8 +6,8 @@ import dal.TableMeta;
 
 @TableMeta(pkFieldName = "rechnungID")
 public class Ausgangsrechnung extends Rechnung {
-	private Integer kundeID;
 	private Integer rechnungID;
+	private Integer kundeID;
 
 	public Ausgangsrechnung() {
 		super();

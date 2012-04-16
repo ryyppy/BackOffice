@@ -136,11 +136,24 @@ public class BL {
 		mysql.disconnect();
 	}
 
-	public static ArrayList<Kunde> getKundenListe() throws DALException {
+	public static ArrayList<Kunde> getKundeListe() throws DALException {
 		// return kundenliste;
 		mysql.connect();
 		ArrayList<Kunde> ret = (ArrayList<Kunde>) mysql
 				.getEntityList(Kunde.class);
+		mysql.disconnect();
+		return ret;
+	}
+
+	public static ArrayList<Kunde> getKundeListe(String filter)
+			throws DALException {
+		// return kundenliste;
+		String f = "%" + filter + "%";
+		WhereChain where = new WhereChain(Kunde.class, WhereOperator.LIKE, f,
+				Chainer.OR);
+		mysql.connect();
+		ArrayList<Kunde> ret = (ArrayList<Kunde>) mysql.getEntitiesBy(where,
+				Kunde.class);
 		mysql.disconnect();
 		return ret;
 	}
@@ -210,6 +223,19 @@ public class BL {
 		return ret;
 	}
 
+	public static ArrayList<Projekt> getProjektListe(String filter)
+			throws DALException {
+		// return projektliste;
+		String f = "%" + filter + "%";
+		WhereChain where = new WhereChain(Projekt.class, WhereOperator.LIKE, f,
+				Chainer.OR);
+		mysql.connect();
+		ArrayList<Projekt> ret = (ArrayList<Projekt>) mysql.getEntitiesBy(
+				where, Projekt.class);
+		mysql.disconnect();
+		return ret;
+	}
+
 	public static Projekt getProjekt(int projektID) throws DALException {
 		// for (int i = 0; i < projektliste.size(); i++) {
 		// if (projektliste.get(i).getProjektID() == projektID) {
@@ -266,7 +292,7 @@ public class BL {
 		mysql.disconnect();
 	}
 
-	public static ArrayList<Angebot> getAngebotsListe() throws DALException {
+	public static ArrayList<Angebot> getAngebotListe() throws DALException {
 		// return angebotsliste;
 		mysql.connect();
 		ArrayList<Angebot> ret = (ArrayList<Angebot>) mysql
@@ -275,7 +301,20 @@ public class BL {
 		return ret;
 	}
 
-	public static ArrayList<Angebot> getAngebotsListe(int kundeID)
+	public static ArrayList<Angebot> getAngebotListe(String filter)
+			throws DALException {
+		// return angebotsliste;
+		String f = "%" + filter + "%";
+		WhereChain where = new WhereChain(Angebot.class, WhereOperator.LIKE, f,
+				Chainer.OR);
+		mysql.connect();
+		ArrayList<Angebot> ret = (ArrayList<Angebot>) mysql.getEntitiesBy(
+				where, Angebot.class);
+		mysql.disconnect();
+		return ret;
+	}
+
+	public static ArrayList<Angebot> getAngebotListe(int kundeID)
 			throws DALException {
 		// ArrayList<Angebot> ret = new ArrayList<Angebot>();
 		// for (Angebot a : angebotsliste) {
@@ -376,16 +415,27 @@ public class BL {
 		mysql.disconnect();
 	}
 
-	public static ArrayList<Eingangsrechnung> getEingangsrechnungenListe()
+	public static ArrayList<Eingangsrechnung> getEingangsrechnungListe()
 			throws DALException {
 		// return eingangsrechnungenliste;
-
 		mysql.connect();
 		ArrayList<Eingangsrechnung> ret = (ArrayList<Eingangsrechnung>) mysql
 				.getEntityList(Eingangsrechnung.class);
 		mysql.disconnect();
 		return ret;
+	}
 
+	public static ArrayList<Eingangsrechnung> getEingangsrechnungListe(
+			String filter) throws DALException {
+		// return eingangsrechnungenliste;
+		String f = "%" + filter + "%";
+		WhereChain where = new WhereChain(Eingangsrechnung.class,
+				WhereOperator.LIKE, f, Chainer.OR);
+		mysql.connect();
+		ArrayList<Eingangsrechnung> ret = (ArrayList<Eingangsrechnung>) mysql
+				.getEntitiesBy(where, Eingangsrechnung.class);
+		mysql.disconnect();
+		return ret;
 	}
 
 	public static void saveEingangsrechnung(Eingangsrechnung e)
@@ -435,13 +485,25 @@ public class BL {
 		mysql.disconnect();
 	}
 
-	public static ArrayList<Ausgangsrechnung> getAusgangsrechnungenListe()
+	public static ArrayList<Ausgangsrechnung> getAusgangsrechnungListe()
 			throws DALException {
 		// return ausgangsrechnungenliste;
-
 		mysql.connect();
 		ArrayList<Ausgangsrechnung> ret = (ArrayList<Ausgangsrechnung>) mysql
 				.getEntityList(Ausgangsrechnung.class);
+		mysql.disconnect();
+		return ret;
+	}
+
+	public static ArrayList<Ausgangsrechnung> getAusgangsrechnungListe(
+			String filter) throws DALException {
+		// return ausgangsrechnungenliste;
+		String f = "%" + filter + "%";
+		WhereChain where = new WhereChain(Ausgangsrechnung.class,
+				WhereOperator.LIKE, f, Chainer.OR);
+		mysql.connect();
+		ArrayList<Ausgangsrechnung> ret = (ArrayList<Ausgangsrechnung>) mysql
+				.getEntitiesBy(where, Ausgangsrechnung.class);
 		mysql.disconnect();
 		return ret;
 	}
@@ -519,7 +581,7 @@ public class BL {
 		mysql.disconnect();
 	}
 
-	public static ArrayList<Rechnung> getRechnungsListe() throws DALException {
+	public static ArrayList<Rechnung> getRechnungListe() throws DALException {
 		// ArrayList<Rechnung> ar = new ArrayList<Rechnung>();
 		// ar.addAll(ausgangsrechnungenliste);
 		// ar.addAll(eingangsrechnungenliste);
@@ -537,7 +599,7 @@ public class BL {
 		return ar;
 	}
 
-	public static ArrayList<Rechnungszeile> getRechnungszeilenListe()
+	public static ArrayList<Rechnungszeile> getRechnungszeileListe()
 			throws DALException {
 		// return rechnungszeilenliste;
 		mysql.connect();
@@ -547,7 +609,7 @@ public class BL {
 		return ret;
 	}
 
-	public static ArrayList<Rechnungszeile> getRechnungszeilenListe(
+	public static ArrayList<Rechnungszeile> getRechnungszeileListe(
 			int rechnungID) throws DALException {
 		// ArrayList<Rechnungszeile> ret = new ArrayList<Rechnungszeile>();
 		// for (Rechnungszeile r : rechnungszeilenliste) {
@@ -625,12 +687,25 @@ public class BL {
 		mysql.disconnect();
 	}
 
-	public static ArrayList<Buchungszeile> getBuchungszeilenListe()
+	public static ArrayList<Buchungszeile> getBuchungszeileListe()
 			throws DALException {
 		// return buchungszeilenliste;
 		mysql.connect();
 		ArrayList<Buchungszeile> ret = (ArrayList<Buchungszeile>) mysql
 				.getEntityList(Buchungszeile.class);
+		mysql.disconnect();
+		return ret;
+	}
+
+	public static ArrayList<Buchungszeile> getBuchungszeileListe(String filter)
+			throws DALException {
+		// return buchungszeilenliste;
+		String f = "%" + filter + "%";
+		WhereChain where = new WhereChain(Buchungszeile.class,
+				WhereOperator.LIKE, f, Chainer.OR);
+		mysql.connect();
+		ArrayList<Buchungszeile> ret = (ArrayList<Buchungszeile>) mysql
+				.getEntitiesBy(where, Buchungszeile.class);
 		mysql.disconnect();
 		return ret;
 	}

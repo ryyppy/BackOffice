@@ -1,12 +1,12 @@
 package gui;
 
-import gui.angebote.AngebotePanel;
-import gui.buchungszeilen.BuchungszeilenPanel;
-import gui.kontakte.KontaktPanel;
-import gui.kunden.KundenPanel;
-import gui.projekte.ProjektePanel;
-import gui.rechnungen.AusgangsrechnungenPanel;
-import gui.rechnungen.EingangsrechnungenPanel;
+import gui.tabbedViews.AngebotePanel;
+import gui.tabbedViews.AusgangsrechnungenPanel;
+import gui.tabbedViews.BuchungszeilenPanel;
+import gui.tabbedViews.EingangsrechnungenPanel;
+import gui.tabbedViews.KontaktPanel;
+import gui.tabbedViews.KundenPanel;
+import gui.tabbedViews.ProjektePanel;
 
 import java.awt.BorderLayout;
 

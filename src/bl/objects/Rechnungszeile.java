@@ -53,11 +53,11 @@ public class Rechnungszeile extends DBEntity {
 		this.rechnungID = rechnungID;
 	}
 
-	public int getAngebotsID() {
+	public int getAngebotID() {
 		return angebotID;
 	}
 
-	public void setAngebotsID(int angebotsID) {
+	public void setAngebotID(int angebotsID) {
 		this.angebotID = angebotsID;
 	}
 

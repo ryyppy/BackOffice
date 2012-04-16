@@ -78,7 +78,7 @@ public class Angebot extends DBEntity {
 		this.chance = chance;
 	}
 
-	public Date getDate() {
+	public Date getDatum() {
 		return datum;
 	}
 
@@ -87,7 +87,7 @@ public class Angebot extends DBEntity {
 		return new StringBuilder(dateFormat.format(datum)).toString();
 	}
 
-	public void setDate(Date date) {
+	public void setDatum(Date date) {
 		this.datum = date;
 	}
 
