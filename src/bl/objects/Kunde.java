@@ -24,18 +24,18 @@ public class Kunde extends DBEntity {
 		this.geburtsdatum = geburtsdatum;
 	}
 
-	public Kunde(int id, String vorname, String nachname, Date geburtsdatum) {
+	public Kunde(Integer id, String vorname, String nachname, Date geburtsdatum) {
 		this.kundeID = id;
 		this.vorname = vorname;
 		this.nachname = nachname;
 		this.geburtsdatum = geburtsdatum;
 	}
 
-	public int getKundeID() {
+	public Integer getKundeID() {
 		return kundeID;
 	}
 
-	public void setKundeID(int kundenID) {
+	public void setKundeID(Integer kundenID) {
 		this.kundeID = kundenID;
 	}
 
@@ -56,6 +56,9 @@ public class Kunde extends DBEntity {
 	}
 
 	public Date getGeburtsdatum() {
+		if (geburtsdatum == null) {
+			return null;
+		}
 		return geburtsdatum;
 	}
 
@@ -77,7 +80,14 @@ public class Kunde extends DBEntity {
 				.parse(geburtsdatum);
 	}
 
+	@Override
 	public String toString() {
+		return "Kunde [kundeID=" + kundeID + ", vorname=" + vorname
+				+ ", nachname=" + nachname + ", geburtsdatum=" + getGeburtsdatumString()
+				+ "]";
+	}
+
+	public String getValues() {
 		return "Kunden-ID: " + kundeID + "\nName: " + vorname + " " + nachname
 				+ "\nGeburtsdatum: " + getGeburtsdatumString();
 	}

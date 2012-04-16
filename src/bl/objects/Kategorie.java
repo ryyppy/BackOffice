@@ -33,7 +33,13 @@ public class Kategorie extends DBEntity {
 		this.beschreibung = beschreibung;
 	}
 
+	@Override
 	public String toString() {
+		return "Kategorie [kKbz=" + kKbz + ", beschreibung=" + beschreibung
+				+ "]";
+	}
+
+	public String getValues() {
 		return "Kurzbezeichnung: " + kKbz + "\nBeschreibung: " + beschreibung;
 	}
 }

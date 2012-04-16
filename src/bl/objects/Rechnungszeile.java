@@ -16,8 +16,8 @@ public class Rechnungszeile extends DBEntity {
 
 	}
 
-	public Rechnungszeile(String kommentar, double steuersatz, double betrag,
-			int rechnungID, Integer angebotsID) {
+	public Rechnungszeile(String kommentar, Double steuersatz, Double betrag,
+			Integer rechnungID, Integer angebotsID) {
 		super();
 		this.rechnungID = rechnungID;
 		this.angebotID = angebotsID;
@@ -26,8 +26,8 @@ public class Rechnungszeile extends DBEntity {
 		this.betrag = betrag;
 	}
 
-	public Rechnungszeile(int id, String kommentar, double steuersatz,
-			double betrag, int rechnungID, int angebotsID) {
+	public Rechnungszeile(Integer id, String kommentar, Double steuersatz,
+			Double betrag, Integer rechnungID, Integer angebotsID) {
 		super();
 		this.rechnungszeileID = id;
 		this.rechnungID = rechnungID;
@@ -37,19 +37,19 @@ public class Rechnungszeile extends DBEntity {
 		this.betrag = betrag;
 	}
 
-	public int getRechnungszeileID() {
+	public Integer getRechnungszeileID() {
 		return rechnungszeileID;
 	}
 
-	public void setRechnungszeileID(int rechnungszeileID) {
+	public void setRechnungszeileID(Integer rechnungszeileID) {
 		this.rechnungszeileID = rechnungszeileID;
 	}
 
-	public int getRechnungID() {
+	public Integer getRechnungID() {
 		return rechnungID;
 	}
 
-	public void setRechnungID(int rechnungID) {
+	public void setRechnungID(Integer rechnungID) {
 		this.rechnungID = rechnungID;
 	}
 
@@ -69,26 +69,35 @@ public class Rechnungszeile extends DBEntity {
 		this.kommentar = kommentar;
 	}
 
-	public double getBetrag() {
+	public Double getBetrag() {
 		return betrag;
 	}
 
-	public void setBetrag(double betrag) {
+	public void setBetrag(Double betrag) {
 		this.betrag = betrag;
 	}
 
-	public double getSteuersatz() {
+	public Double getSteuersatz() {
 		return steuersatz;
 	}
 
-	public void setSteuersatz(double steuersatz) {
+	public void setSteuersatz(Double steuersatz) {
 		this.steuersatz = steuersatz;
 	}
 
+	@Override
 	public String toString() {
+		return "Rechnungszeile [rechnungszeileID=" + rechnungszeileID
+				+ ", kommentar=" + kommentar + ", steuersatz=" + steuersatz
+				+ ", betrag=" + betrag + ", rechnungID=" + rechnungID
+				+ ", angebotID=" + angebotID + "]";
+	}
+
+	public String getValues() {
 		return "Rechnungszeile-ID: " + rechnungszeileID + "\nRechnung-ID: "
 				+ rechnungID + "\nKommentar: " + kommentar + "\nSteuersatz: "
 				+ steuersatz + "\nBetrag: " + betrag + "\nAngebot-ID: "
 				+ angebotID;
 	}
+
 }

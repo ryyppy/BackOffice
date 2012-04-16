@@ -20,8 +20,8 @@ public class Buchungszeile extends DBEntity {
 
 	}
 
-	public Buchungszeile(Date datum, String kommentar, double steuersatz,
-			double betrag, String kategorieKbz) {
+	public Buchungszeile(Date datum, String kommentar, Double steuersatz,
+			Double betrag, String kategorieKbz) {
 		super();
 		this.datum = datum;
 		this.kommentar = kommentar;
@@ -30,8 +30,8 @@ public class Buchungszeile extends DBEntity {
 		this.kKbz = kategorieKbz;
 	}
 
-	public Buchungszeile(int id, Date datum, String kommentar,
-			double steuersatz, double betrag, String kategorieKbz) {
+	public Buchungszeile(Integer id, Date datum, String kommentar,
+			Double steuersatz, Double betrag, String kategorieKbz) {
 		super();
 		this.buchungszeileID = id;
 		this.datum = datum;
@@ -41,15 +41,18 @@ public class Buchungszeile extends DBEntity {
 		this.kKbz = kategorieKbz;
 	}
 
-	public int getBuchungszeileID() {
+	public Integer getBuchungszeileID() {
 		return buchungszeileID;
 	}
 
-	public void setBuchungszeileID(int buchungszeileID) {
+	public void setBuchungszeileID(Integer buchungszeileID) {
 		this.buchungszeileID = buchungszeileID;
 	}
 
 	public Date getDatum() {
+		if (datum == null) {
+			return null;
+		}
 		return datum;
 	}
 
@@ -77,19 +80,19 @@ public class Buchungszeile extends DBEntity {
 		this.kommentar = kommentar;
 	}
 
-	public double getBetrag() {
+	public Double getBetrag() {
 		return betrag;
 	}
 
-	public void setBetrag(double betrag) {
+	public void setBetrag(Double betrag) {
 		this.betrag = betrag;
 	}
 
-	public double getSteuersatz() {
+	public Double getSteuersatz() {
 		return steuersatz;
 	}
 
-	public void setSteuersatz(double steuersatz) {
+	public void setSteuersatz(Double steuersatz) {
 		this.steuersatz = steuersatz;
 	}
 
@@ -101,7 +104,15 @@ public class Buchungszeile extends DBEntity {
 		this.kKbz = kategorieKbz;
 	}
 
+	@Override
 	public String toString() {
+		return "Buchungszeile [buchungszeileID=" + buchungszeileID + ", datum="
+				+ getDatumString() + ", kommentar=" + kommentar
+				+ ", steuersatz=" + steuersatz + ", betrag=" + betrag
+				+ ", kKbz=" + kKbz + "]";
+	}
+
+	public String getValues() {
 		return "Buchungszeile-ID: " + buchungszeileID + "\nDatum: "
 				+ getDatumString() + "\nKommentar: " + kommentar
 				+ "\nSteuersatz: " + steuersatz + "\nBetrag: " + betrag

@@ -20,8 +20,8 @@ public class Angebot extends DBEntity {
 
 	}
 
-	public Angebot(double summe, double dauer, Date date, double chance,
-			int kundenID, int projektID) {
+	public Angebot(Double summe, Double dauer, Date date, Double chance,
+			Integer kundenID, Integer projektID) {
 		this.summe = summe;
 		this.dauer = dauer;
 		this.datum = date;
@@ -30,8 +30,8 @@ public class Angebot extends DBEntity {
 		this.projektID = projektID;
 	}
 
-	public Angebot(int id, double summe, double dauer, Date date,
-			double chance, int kundenID, int projektID) {
+	public Angebot(Integer id, Double summe, Double dauer, Date date,
+			Double chance, Integer kundenID, Integer projektID) {
 		this.angebotID = id;
 		this.summe = summe;
 		this.dauer = dauer;
@@ -46,35 +46,35 @@ public class Angebot extends DBEntity {
 		return getAngebotID();
 	}
 
-	public int getAngebotID() {
+	public Integer getAngebotID() {
 		return angebotID;
 	}
 
-	public void setAngebotID(int angebotID) {
+	public void setAngebotID(Integer angebotID) {
 		this.angebotID = angebotID;
 	}
 
-	public double getSumme() {
+	public Double getSumme() {
 		return summe;
 	}
 
-	public void setSumme(double summe) {
+	public void setSumme(Double summe) {
 		this.summe = summe;
 	}
 
-	public double getDauer() {
+	public Double getDauer() {
 		return dauer;
 	}
 
-	public void setDauer(double dauer) {
+	public void setDauer(Double dauer) {
 		this.dauer = dauer;
 	}
 
-	public double getChance() {
+	public Double getChance() {
 		return chance;
 	}
 
-	public void setChance(double chance) {
+	public void setChance(Double chance) {
 		this.chance = chance;
 	}
 
@@ -91,23 +91,31 @@ public class Angebot extends DBEntity {
 		this.datum = date;
 	}
 
-	public int getKundeID() {
+	public Integer getKundeID() {
 		return kundeID;
 	}
 
-	public void setKundeID(int kundenID) {
+	public void setKundeID(Integer kundenID) {
 		this.kundeID = kundenID;
 	}
 
-	public int getProjektID() {
+	public Integer getProjektID() {
 		return projektID;
 	}
 
-	public void setProjektID(int projektID) {
+	public void setProjektID(Integer projektID) {
 		this.projektID = projektID;
 	}
 
+	@Override
 	public String toString() {
+		return "Angebot [angebotID=" + angebotID + ", summe=" + summe
+				+ ", dauer=" + dauer + ", chance=" + chance + ", datum="
+				+ datum + ", kundeID=" + kundeID + ", projektID=" + projektID
+				+ "]";
+	}
+
+	public String getValues() {
 		return "Angebot-ID: " + angebotID + "\nSumme: " + summe + "\nDauer: "
 				+ dauer + "\nDatum: " + getDatumString() + "\nChance: "
 				+ chance + "\nKunden-ID: " + kundeID + "\nProjektID: "

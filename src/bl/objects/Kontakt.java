@@ -18,18 +18,18 @@ public class Kontakt extends DBEntity {
 		this.telefon = telefon;
 	}
 
-	public Kontakt(int id, String firma, String name, String telefon) {
+	public Kontakt(Integer id, String firma, String name, String telefon) {
 		this.kontaktID = id;
 		this.firma = firma;
 		this.name = name;
 		this.telefon = telefon;
 	}
 
-	public int getKontaktID() {
+	public Integer getKontaktID() {
 		return kontaktID;
 	}
 
-	public void setKontaktID(int kontaktID) {
+	public void setKontaktID(Integer kontaktID) {
 		this.kontaktID = kontaktID;
 	}
 
@@ -58,7 +58,13 @@ public class Kontakt extends DBEntity {
 
 	}
 
+	@Override
 	public String toString() {
+		return "Kontakt [kontaktID=" + kontaktID + ", firma=" + firma
+				+ ", name=" + name + ", telefon=" + telefon + "]";
+	}
+
+	public String getValues() {
 		return "Kontakt-ID: " + kontaktID + "\nFirma: " + firma + "\nName: "
 				+ name + "\nTelefon: " + telefon;
 	}

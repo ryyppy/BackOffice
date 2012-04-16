@@ -17,17 +17,17 @@ public class Projekt extends DBEntity {
 		this.beschreibung = beschreibung;
 	}
 
-	public Projekt(int id, String name, String beschreibung) {
+	public Projekt(Integer id, String name, String beschreibung) {
 		this.projektID = id;
 		this.name = name;
 		this.beschreibung = beschreibung;
 	}
 
-	public int getProjektID() {
+	public Integer getProjektID() {
 		return projektID;
 	}
 
-	public void setProjektID(int projektID) {
+	public void setProjektID(Integer projektID) {
 		this.projektID = projektID;
 	}
 
@@ -50,7 +50,13 @@ public class Projekt extends DBEntity {
 		this.beschreibung = beschreibung;
 	}
 
+	@Override
 	public String toString() {
+		return "Projekt [projektID=" + projektID + ", name=" + name
+				+ ", beschreibung=" + beschreibung + "]";
+	}
+
+	public String getValues() {
 		return "Projekt-ID: " + projektID + "\nName: " + name
 				+ "\nBeschreibung: " + beschreibung;
 	}

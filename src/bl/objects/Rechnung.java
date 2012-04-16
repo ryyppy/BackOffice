@@ -22,17 +22,17 @@ public class Rechnung extends DBEntity {
 		this.datum = datum;
 	}
 
-	public Rechnung(int rechnungID, String status, Date datum) {
+	public Rechnung(Integer rechnungID, String status, Date datum) {
 		this.rechnungID = rechnungID;
 		this.status = status;
 		this.datum = datum;
 	}
 
-	public int getRechnungID() {
+	public Integer getRechnungID() {
 		return rechnungID;
 	}
 
-	public void setRechnungID(int rechnungID) {
+	public void setRechnungID(Integer rechnungID) {
 		this.rechnungID = rechnungID;
 	}
 
@@ -45,6 +45,9 @@ public class Rechnung extends DBEntity {
 	}
 
 	public Date getDatum() {
+		if (datum == null) {
+			return null;
+		}
 		return datum;
 	}
 
@@ -66,6 +69,11 @@ public class Rechnung extends DBEntity {
 
 	@Override
 	public String toString() {
+		return "Rechnung [rechnungID=" + rechnungID + ", status=" + status
+				+ ", datum=" + getDatumString() + "]";
+	}
+
+	public String getValues() {
 		return "Rechnung-ID: " + rechnungID + "\nStatus: " + status
 				+ "\nDatum: " + getDatumString();
 	}

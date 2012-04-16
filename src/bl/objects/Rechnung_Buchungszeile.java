@@ -11,7 +11,7 @@ public class Rechnung_Buchungszeile extends DBEntity {
 	public Rechnung_Buchungszeile(){
 		
 	}
-	public Rechnung_Buchungszeile(int rechnungsID, int buchungszeileID) {
+	public Rechnung_Buchungszeile(Integer rechnungsID, Integer buchungszeileID) {
 		this.rechnungID = rechnungsID;
 		this.buchungszeileID = buchungszeileID;
 	}
@@ -21,19 +21,19 @@ public class Rechnung_Buchungszeile extends DBEntity {
 		return buchungszeileID;
 	}
 
-	public int getRechnungID() {
+	public Integer getRechnungID() {
 		return rechnungID;
 	}
 
-	public void setRechnungID(int rechnungsID) {
+	public void setRechnungID(Integer rechnungsID) {
 		this.rechnungID = rechnungsID;
 	}
 
-	public int getBuchungszeileID() {
+	public Integer getBuchungszeileID() {
 		return buchungszeileID;
 	}
 
-	public void setBuchungszeileID(int buchungszeileID) {
+	public void setBuchungszeileID(Integer buchungszeileID) {
 		this.buchungszeileID = buchungszeileID;
 	}
 

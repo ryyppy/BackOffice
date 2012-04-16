@@ -13,36 +13,43 @@ public class Ausgangsrechnung extends Rechnung {
 		super();
 	}
 
-	public Ausgangsrechnung(String status, Date datum, int kundenID) {
+	public Ausgangsrechnung(String status, Date datum, Integer kundenID) {
 		super(status, datum);
 		this.kundeID = kundenID;
 	}
 
-	public Ausgangsrechnung(int rechnungID, String status, Date datum,
-			int kundenID) {
+	public Ausgangsrechnung(Integer rechnungID, String status, Date datum,
+			Integer kundenID) {
 		super(rechnungID, status, datum);
 		this.kundeID = kundenID;
 		this.rechnungID = rechnungID;
 	}
 
-	public int getKundeID() {
+	public Integer getKundeID() {
 		return kundeID;
 	}
 
-	public void setKundeID(int kundenID) {
+	public void setKundeID(Integer kundenID) {
 		this.kundeID = kundenID;
 	}
 
-	public int getRechnungID() {
+	public Integer getRechnungID() {
 		return rechnungID;
 	}
 
-	public void setRechnungID(int rechnungID) {
+	public void setRechnungID(Integer rechnungID) {
 		this.rechnungID = rechnungID;
 		super.setRechnungID(rechnungID);
 	}
 
+	@Override
 	public String toString() {
+		return "Ausgangsrechnung [rechnungID=" + rechnungID + ", status="
+				+ getStatus() + ", datum=" + getDatumString() + ", kundeID="
+				+ kundeID + "]";
+	}
+
+	public String getValues() {
 		return "Ausgangsrechnung:\n" + super.toString() + "\nKunden-ID: "
 				+ kundeID;
 	}

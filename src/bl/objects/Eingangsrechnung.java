@@ -13,37 +13,45 @@ public class Eingangsrechnung extends Rechnung {
 		super();
 	}
 
-	public Eingangsrechnung(String status, Date datum, int kontaktID) {
+	public Eingangsrechnung(String status, Date datum, Integer kontaktID) {
 		super(status, datum);
 		this.kontaktID = kontaktID;
 	}
 
-	public Eingangsrechnung(int rechnungID, String status, Date datum,
-			int kontaktID) {
+	public Eingangsrechnung(Integer rechnungID, String status, Date datum,
+			Integer kontaktID) {
 		super(rechnungID, status, datum);
 		this.kontaktID = kontaktID;
 		this.rechnungID = rechnungID;
 	}
 
-	public int getKontaktID() {
+	public Integer getKontaktID() {
 		return kontaktID;
 	}
 
-	public void setKontaktID(int kontaktID) {
+	public void setKontaktID(Integer kontaktID) {
 		this.kontaktID = kontaktID;
 	}
 
-	public int getRechnungID() {
+	public Integer getRechnungID() {
 		return rechnungID;
 	}
 
-	public void setRechnungID(int rechnungID) {
+	public void setRechnungID(Integer rechnungID) {
 		this.rechnungID = rechnungID;
 		super.setRechnungID(rechnungID);
 	}
 
+	@Override
 	public String toString() {
+		return "Eingangsrechnung [rechnungID=" + rechnungID + ", status="
+				+ getStatus() + ", datum=" + getDatumString() + ", kontaktID="
+				+ kontaktID + "]";
+	}
+
+	public String getValues() {
 		return "Eingangsrechnung:\n" + super.toString() + "\nKontakt-ID: "
 				+ kontaktID;
 	}
+
 }
