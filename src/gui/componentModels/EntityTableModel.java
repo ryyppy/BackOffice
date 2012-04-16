@@ -9,7 +9,9 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 import bl.BL;
+import dal.DALException;
 import dal.DBEntity;
+import dal.DBEntityInfo;
 
 public class EntityTableModel extends AbstractTableModel {
 	private ArrayList<DBEntity> entries;
@@ -27,7 +29,13 @@ public class EntityTableModel extends AbstractTableModel {
 		this.classT = classT;
 		entries = new ArrayList<DBEntity>();
 
-		List<Field> fields = DBEntity.getAllDeclaredFields(classT);
+		List<Field> fields = null;
+		try {
+			fields = DBEntityInfo.get(classT).getMergedFields();
+
+		} catch (DALException e) {
+			e.printStackTrace();
+		}
 		columnNames = new String[fields.size()];
 		columnTypes = new Class<?>[fields.size()];
 
