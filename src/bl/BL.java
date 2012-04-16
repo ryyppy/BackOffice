@@ -80,6 +80,21 @@ public class BL {
 		// return kontakteliste;
 	}
 
+	public static Integer containsKontakt(Kontakt k) throws DALException {
+		WhereChain where = new WhereChain("firma", WhereOperator.EQUALS,
+				k.getFirma());
+		where.addAndCondition("name", WhereOperator.EQUALS, k.getName());
+		where.addAndCondition("telefon", WhereOperator.EQUALS, k.getTelefon());
+		mysql.connect();
+		ArrayList<Kontakt> ret = (ArrayList<Kontakt>) mysql.getEntitiesBy(
+				where, Kontakt.class);
+		mysql.disconnect();
+		if (ret.isEmpty()) {
+			return -1;
+		}
+		return ret.get(0).getKontaktID();
+	}
+
 	public static Kontakt getKontakt(int kontaktID) throws DALException {
 		// for (int i = 0; i < kontakteliste.size(); i++) {
 		// if (kontakteliste.get(i).getKontaktID() == kontaktID) {
@@ -103,7 +118,7 @@ public class BL {
 		mysql.disconnect();
 	}
 
-	public static void saveKontakt(Kontakt k) throws DALException,
+	public static Integer saveKontakt(Kontakt k) throws DALException,
 			InvalidObjectException {
 		// String exception = "";
 		// // ...
@@ -114,8 +129,10 @@ public class BL {
 		// k.setKontaktID(kontaktID++);
 		// kontakteliste.add(k);
 		mysql.connect();
-		mysql.addEntity(k);
+		Object key = mysql.addEntity(k);
 		mysql.disconnect();
+		
+		return Integer.valueOf(String.valueOf(key));
 	}
 
 	public static void updateKontakt(Kontakt k) throws DALException,
@@ -438,7 +455,7 @@ public class BL {
 		return ret;
 	}
 
-	public static void saveEingangsrechnung(Eingangsrechnung e)
+	public static Integer saveEingangsrechnung(Eingangsrechnung e)
 			throws DALException, InvalidObjectException {
 		// String exception = "";
 		// // ... Kontakt-ID überprüfen
@@ -461,7 +478,7 @@ public class BL {
 			throw d;
 		}
 		mysql.disconnect();
-
+		return e.getRechnungID();
 	}
 
 	public static void updateEingangsrechnung(Eingangsrechnung e)
@@ -579,7 +596,7 @@ public class BL {
 		mysql.updateEntity(r);
 		mysql.updateEntity(a);
 		mysql.disconnect();
-		
+
 	}
 
 	public static ArrayList<Rechnung> getRechnungListe() throws DALException {
@@ -655,7 +672,7 @@ public class BL {
 		mysql.disconnect();
 	}
 
-	public static void saveRechnungszeile(Rechnungszeile r)
+	public static Integer saveRechnungszeile(Rechnungszeile r)
 			throws DALException, InvalidObjectException {
 		// String exception = "";
 		// // ... rechnung bzw angebot-ID überprüfen
@@ -666,8 +683,9 @@ public class BL {
 		// r.setRechnungszeileID(rechnungszeileID++);
 		// rechnungszeilenliste.add(r);
 		mysql.connect();
-		mysql.addEntity(r);
+		Object key =mysql.addEntity(r);
 		mysql.disconnect();
+		return Integer.valueOf(String.valueOf(key));
 	}
 
 	public static void updateRechnungszeile(Rechnungszeile r)
