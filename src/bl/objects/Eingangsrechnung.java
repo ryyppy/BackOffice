@@ -50,7 +50,7 @@ public class Eingangsrechnung extends Rechnung {
 	}
 
 	public String getValues() {
-		return "Eingangsrechnung:\n" + super.toString() + "\nKontakt-ID: "
+		return "Eingangsrechnung:\n" + super.getValues() + "\nKontakt-ID: "
 				+ kontaktID;
 	}
 

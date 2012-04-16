@@ -50,7 +50,7 @@ public class Ausgangsrechnung extends Rechnung {
 	}
 
 	public String getValues() {
-		return "Ausgangsrechnung:\n" + super.toString() + "\nKunden-ID: "
+		return "Ausgangsrechnung:\n" + super.getValues() + "\nKunden-ID: "
 				+ kundeID;
 	}
 }
