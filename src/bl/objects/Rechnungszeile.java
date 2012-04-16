@@ -17,7 +17,7 @@ public class Rechnungszeile extends DBEntity {
 	}
 
 	public Rechnungszeile(String kommentar, double steuersatz, double betrag,
-			int rechnungID, int angebotsID) {
+			int rechnungID, Integer angebotsID) {
 		super();
 		this.rechnungID = rechnungID;
 		this.angebotID = angebotsID;
@@ -53,11 +53,11 @@ public class Rechnungszeile extends DBEntity {
 		this.rechnungID = rechnungID;
 	}
 
-	public int getAngebotID() {
+	public Integer getAngebotID() {
 		return angebotID;
 	}
 
-	public void setAngebotID(int angebotsID) {
+	public void setAngebotID(Integer angebotsID) {
 		this.angebotID = angebotsID;
 	}
 

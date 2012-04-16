@@ -35,7 +35,7 @@ public class EditRechnungszeileDialog extends JDialog implements ActionListener 
 
 	private String[] columnNames = { "Rechnungs-ID", "Kommentar", "Steuersatz",
 			"Betrag", "Angebot-ID" };
-	private int rechnungID, kundenID;
+	private int rechnungID, kundeID;
 
 	private Rechnungszeile r;
 
@@ -44,7 +44,8 @@ public class EditRechnungszeileDialog extends JDialog implements ActionListener 
 				+ " hinzufuegen", true);
 		this.r = null;
 		this.rechnungID = rechnungID;
-		this.kundenID = kundenID;
+		this.kundeID = kundenID;
+
 		initDialog();
 	}
 
@@ -54,7 +55,7 @@ public class EditRechnungszeileDialog extends JDialog implements ActionListener 
 				+ " bearbeiten", true);
 		this.r = r;
 		this.rechnungID = rechnungID;
-		this.kundenID = kundenID;
+		this.kundeID = kundenID;
 		initDialog();
 	}
 
@@ -111,39 +112,39 @@ public class EditRechnungszeileDialog extends JDialog implements ActionListener 
 			panel.add(p);
 		}
 
-		try {
-			if (kundenID != -1) {
-				angebote = new JComboBox<Angebot>(new EntityComboBoxModel<Angebot>(
-						BL.getAngebotListe(kundenID)));
-			} else {
-				angebote = new JComboBox<Angebot>(new AngebotComboBoxModel(
-						BL.getAngebotListe()));
+		if (kundeID != -1) {
+			try {
+				angebote = new JComboBox<Angebot>(
+						new EntityComboBoxModel<Angebot>(
+								BL.getAngebotListe(kundeID)));
 
+			} catch (DALException e) {
+				JOptionPane.showMessageDialog(this, e.getMessage());
+				System.exit(0);
 			}
-		} catch (DALException e) {
-			JOptionPane.showMessageDialog(this, e.getMessage());
-			System.exit(0);
+			angebote.setName(columnNames[columnNames.length - 1]);
+			angebote.setRenderer(new MyListCellRenderer("DatumString"));
+
+			JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+			JLabel l = new JLabel(columnNames[columnNames.length - 1]);
+			p.add(l);
+			panel.add(p);
+
+			p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			p.add(angebote);
+			panel.add(p);
 		}
-		angebote.setName(columnNames[columnNames.length - 1]);
-		angebote.setRenderer(new MyListCellRenderer("DatumString"));
-
-		JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		JLabel l = new JLabel(columnNames[columnNames.length - 1]);
-		p.add(l);
-		panel.add(p);
-
-		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		p.add(angebote);
-		panel.add(p);
-
 		if (r != null) {
 			textfeld[1].setText(r.getKommentar());
 			textfeld[2].setText(String.valueOf(r.getSteuersatz()));
 			textfeld[3].setText(String.valueOf(r.getBetrag()));
-			for (int i = 0; i < angebote.getItemCount(); i++) {
-				if (angebote.getItemAt(i).getAngebotID() == r.getAngebotID()) {
-					angebote.setSelectedIndex(i);
-					break;
+			if (kundeID != -1) {
+				for (int i = 0; i < angebote.getItemCount(); i++) {
+					if (angebote.getItemAt(i).getAngebotID() == r
+							.getAngebotID()) {
+						angebote.setSelectedIndex(i);
+						break;
+					}
 				}
 			}
 		}
@@ -165,7 +166,10 @@ public class EditRechnungszeileDialog extends JDialog implements ActionListener 
 						new StandardRule());
 				double betrag = b.bindFrom_double(textfeld[3],
 						new StandardRule());
-				int angebotsID = b.bindFrom_int(angebote, null);
+				Integer angebotsID = null;
+				if (kundeID != -1) {
+					angebotsID = b.bindFrom_int(angebote, null);
+				}
 
 				if (!b.hasErrors()) {
 					if (r != null) {

@@ -35,20 +35,32 @@ public class RechnungszeilenDialog extends JDialog implements ActionListener {
 
 	private JFrame owner;
 
-	private int ausgangsrechnungsID, kundenID;
+	private int rechnungID, kundeID;
 
 	public RechnungszeilenDialog(JFrame owner, int ausgangsrechnungsID,
 			int kundenID) {
 		super(owner, "EPU - Rechnungszeilen für RechnungsID "
 				+ ausgangsrechnungsID, true);
+		this.owner = owner;
+		this.rechnungID = ausgangsrechnungsID;
+		this.kundeID = kundenID;
+		createAndshowGUI();
+	}
+
+	public RechnungszeilenDialog(JFrame owner, int eingangsrechnungsID) {
+		super(owner, "EPU - Rechnungszeilen für RechnungsID "
+				+ eingangsrechnungsID, true);
+		this.owner = owner;
+		this.rechnungID = eingangsrechnungsID;
+		this.kundeID = -1;
+		createAndshowGUI();
+	}
+
+	public void createAndshowGUI() {
 		setSize(500, 300);
 		setLocationRelativeTo(owner);
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
-		this.owner = owner;
-		this.ausgangsrechnungsID = ausgangsrechnungsID;
-		this.kundenID = kundenID;
 
 		JPanel buttonPanel = initButtons();
 		initTable();
@@ -74,19 +86,20 @@ public class RechnungszeilenDialog extends JDialog implements ActionListener {
 		panel1.add(add);
 		panel1.add(edit);
 		panel1.add(delete);
-
+		if (kundeID == -1) {
+			return panel1;
+		}
 		JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		panel2.add(angebotInfo);
 
 		JPanel panel = new JPanel(new GridLayout(2, 1));
 		panel.add(panel1);
 		panel.add(panel2);
-
 		return panel;
 	}
 
 	public void initTable() {
-		tModel = new EntityTableModel(Rechnungszeile.class,ausgangsrechnungsID);
+		tModel = new EntityTableModel(Rechnungszeile.class, rechnungID);
 
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
@@ -110,7 +123,7 @@ public class RechnungszeilenDialog extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
-			new EditRechnungszeileDialog(owner, ausgangsrechnungsID, kundenID);
+			new EditRechnungszeileDialog(owner, rechnungID, kundeID);
 			tModel.refresh();
 
 		} else if (e.getSource() == delete) {
@@ -136,8 +149,7 @@ public class RechnungszeilenDialog extends JDialog implements ActionListener {
 			Rechnungszeile r;
 			try {
 				r = BL.getRechnungszeile((Integer) tModel.getValueAt(a, 0));
-				new EditRechnungszeileDialog(owner, ausgangsrechnungsID,
-						kundenID, r);
+				new EditRechnungszeileDialog(owner, rechnungID, kundeID, r);
 				tModel.refresh();
 			} catch (DALException e1) {
 				JOptionPane.showMessageDialog(this, e1.getMessage());
