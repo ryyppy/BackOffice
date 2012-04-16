@@ -30,7 +30,7 @@ public class Test {
 		 * bearbeiten!
 		 **/
 		try {
-			ArrayList<Eingangsrechnung> liste = BL.getEingangsrechnungenListe();
+			ArrayList<Eingangsrechnung> liste = BL.getEingangsrechnungListe();
 			Eingangsrechnung e = liste.get(0);
 			System.out.println(e.getRechnungID());
 			System.out.println(e.getStatus());
