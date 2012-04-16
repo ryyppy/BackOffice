@@ -83,8 +83,12 @@ public abstract class EntityViewPanel extends JPanel implements ActionListener {
 	public void setAdditionalButtons(JButton[] buttons) {
 		additionalButtons = new JPanel(new GridLayout(buttons.length, 1));
 		for (JButton b : buttons) {
-			b.addActionListener(this);
-			additionalButtons.add(b);
+			if (b == null) {
+				additionalButtons.add(new JLabel());
+			} else {
+				b.addActionListener(this);
+				additionalButtons.add(b);
+			}
 		}
 	}
 
