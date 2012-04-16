@@ -1,0 +1,39 @@
+<eingangsrechnungen>
+	<eingangsrechnung>
+		<kontakt>
+			<firma>Ditech</firma>
+			<name>Mr. Cool</name>
+			<telefon>01 219292</telefon>		
+		</kontakt>
+		<status>offen</status>
+		<datum>15.03.2012</datum>
+		<rechnungszeilen>
+			<rechnungszeile>
+				<kommentar>Notebook</kommentar>
+				<steuersatz>2f0</steuersatz>
+				<betrag>1500</betrag>
+			</rechnungszeile>
+			<rechnungszeile>
+				<kommentar>Tastatur</kommentar>
+				<steuersatz>20</steuersatz>
+				<betrag>30</betrag>
+			</rechnungszeile>
+		</rechnungszeilen>
+	</eingangsrechnung>
+	<eingangsrechnung>
+		<kontakt>
+			<firma>Drei</firma>
+			<name>Mr. Coolio</name>
+			<telefon>01 219292</telefon>		
+		</kontakt>
+		<status>offen</status>
+		<datum>13.03.2012</datum>
+		<rechnungszeilen>
+			<rechnungszeile>
+				<kommentar>Handy</kommentar>
+				<steuersatz>20</steuersatz>
+				<betrag>450</betrag>
+			</rechnungszeile>
+		</rechnungszeilen>
+	</eingangsrechnung>
+</eingangsrechnungen>

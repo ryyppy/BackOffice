@@ -2,6 +2,7 @@ package gui.tabbedViews;
 
 import gui.EntityViewPanel;
 import gui.editEntityViews.EditEingangsrechnungDialog;
+import gui.specialViews.LogView;
 import gui.specialViews.RechnungszeilenDialog;
 
 import java.awt.Desktop;
@@ -11,9 +12,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 import bl.BL;
 import bl.objects.Eingangsrechnung;
@@ -24,9 +29,11 @@ import com.itextpdf.text.DocumentException;
 import dal.DALException;
 import extras.PDFFile;
 import extras.PDFFilter;
+import extras.XMLFile;
+import extras.XMLFilter;
 
 public class EingangsrechnungenPanel extends EntityViewPanel {
-	private JButton kontaktInfo, showRechnungszeilen, print;
+	private JButton kontaktInfo, showRechnungszeilen, print, importRechnung;
 
 	public EingangsrechnungenPanel(JFrame owner) {
 		super(Eingangsrechnung.class, EditEingangsrechnungDialog.class, owner);
@@ -37,8 +44,10 @@ public class EingangsrechnungenPanel extends EntityViewPanel {
 		kontaktInfo = new JButton("Kontaktinfo");
 		showRechnungszeilen = new JButton("Show Rechnungszeilen");
 		print = new JButton("Print (to PDF)");
+		importRechnung = new JButton("Import");
 
-		JButton[] buttons = { kontaktInfo, showRechnungszeilen, print };
+		JButton[] buttons = { kontaktInfo, showRechnungszeilen, print, null,
+				importRechnung };
 		super.setAdditionalButtons(buttons);
 	}
 
@@ -62,10 +71,12 @@ public class EingangsrechnungenPanel extends EntityViewPanel {
 		} else if (e.getSource() == print) {
 			JFileChooser fc = new JFileChooser();
 			fc.setAcceptAllFileFilterUsed(false);
-			// fc.addChoosableFileFilter(new PDFFilter());
 			fc.setFileFilter(new PDFFilter());
+
 			int returnVal = fc.showSaveDialog(this);
+
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
+
 				File file = fc.getSelectedFile();
 				if (!file.exists()) {
 					file = new File(file.getPath() + ".pdf");
@@ -75,19 +86,23 @@ public class EingangsrechnungenPanel extends EntityViewPanel {
 						e1.printStackTrace();
 					}
 				}
+
 				PDFFile f = null;
 				try {
 					f = new PDFFile(file);
+
 					int a = table
 							.convertRowIndexToModel(table.getSelectedRow());
 					int aIndex = table.getColumn("RechnungID").getModelIndex();
-					Eingangsrechnung er;
 
-					er = BL.getEingangsrechnung((Integer) tModel.getValueAt(a,
-							aIndex));
+					Eingangsrechnung er = BL
+							.getEingangsrechnung((Integer) tModel.getValueAt(a,
+									aIndex));
 					er.setRechnungID((Integer) tModel.getValueAt(a, aIndex));
 					f.createRechnung(er);
+
 					Desktop.getDesktop().open(file);
+
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
 					JOptionPane.showMessageDialog(this, e1.getMessage());
@@ -95,6 +110,43 @@ public class EingangsrechnungenPanel extends EntityViewPanel {
 					e1.printStackTrace();
 				} catch (DALException e1) {
 					JOptionPane.showMessageDialog(this, e1.getMessage());
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} finally {
+					f.close();
+				}
+
+			}
+		} else if (e.getSource() == importRechnung) {
+			JFileChooser fc = new JFileChooser();
+			fc.setAcceptAllFileFilterUsed(false);
+			fc.setFileFilter(new XMLFilter());
+
+			int returnVal = fc.showSaveDialog(this);
+
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+				File file = fc.getSelectedFile();
+				if (!file.exists()) {
+					file = new File(file.getPath() + ".xml");
+					try {
+						file.createNewFile();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+
+				XMLFile f = null;
+
+				try {
+					f = new XMLFile(file);
+					f.importRechnungen();
+					new LogView(getOwner(), f.getLog());
+					tModel.refresh();
+				} catch (ParserConfigurationException e1) {
+					e1.printStackTrace();
+				} catch (SAXException e1) {
+					e1.printStackTrace();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} finally {
