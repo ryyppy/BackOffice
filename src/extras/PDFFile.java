@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
+
 import bl.BL;
 import bl.objects.Ausgangsrechnung;
 import bl.objects.Eingangsrechnung;
@@ -163,7 +165,11 @@ public class PDFFile {
 			PdfPCell c = new PdfPCell(new Phrase(
 					"Keine Rechnungszeilen vorhanden"));
 			c.setHorizontalAlignment(Element.ALIGN_CENTER);
-			c.setColspan(5);
+			if (r instanceof Ausgangsrechnung) {
+				c.setColspan(6);
+			} else {
+				c.setColspan(5);
+			}
 			table.addCell(c);
 			return table;
 		}
