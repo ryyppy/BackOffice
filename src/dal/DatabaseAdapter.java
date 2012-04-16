@@ -202,6 +202,7 @@ public abstract class DatabaseAdapter {
      * Tableinformation will be retrieved by the DBEntity-Class-Definition by reflection. Be sure the DBEntity has a proper
      * pkField defined (see tableMeta-Annotation). The db-table has to be named as the reflected class!
      * Be sure to call connect() first, before you use this method, or it will fail with an connection-error.
+     * This method returns the same result as getEntitiesBy(null, entityClass)!
      * @param entityClass -  Class-definition of the datasets which should be retrieved as a list
      * @param <T> - Entity-Class, which should be returned in a list (a DBEntity-model-class)
      * @return List of the wished data-classes with the aided class-type

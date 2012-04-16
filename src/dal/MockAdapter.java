@@ -1,6 +1,6 @@
 package dal;
 
-import bl.objects.Angebot;
+import bl.objects.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,18 +14,19 @@ import java.util.List;
 public class MockAdapter extends DatabaseAdapter{
 
     List<Angebot> angebote = new ArrayList<Angebot>();
+    List<Ausgangsrechnung> ausgangsrechnungen = new ArrayList<Ausgangsrechnung>();
+    List<Buchungszeile> buchungszeilen = new ArrayList<Buchungszeile>();
+    List<Eingangsrechnung> eingangsrechnungen = new ArrayList<Eingangsrechnung>();
+    List<Kategorie> kategorien = new ArrayList<Kategorie>();
+    List<Kontakt> kontakte = new ArrayList<Kontakt>();
+    List<Kunde> kunden = new ArrayList<Kunde>();
+    List<Projekt> projekte = new ArrayList<Projekt>();
+    List<Rechnung> rechnungen = new ArrayList<Rechnung>();
+    List<Rechnung_Buchungszeile> rechnung_buchungszeilen = new ArrayList<Rechnung_Buchungszeile>();
+    List<Rechnungszeile> rechnungszeilen = new ArrayList<Rechnungszeile>();
+
     public MockAdapter(){
         super("mock", "mock", "mock", "mock");
-    }
-
-    @Override
-    protected String createWhereClausel(WhereChain whereChain, Class<? extends DBEntity> entityClass) throws DALException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    protected String createJoinClause(Class<? extends DBEntity> entityClass) throws DALException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

@@ -32,7 +32,7 @@ public class MysqlAdapter extends DatabaseAdapter {
     @Override
     public <T extends DBEntity> T getEntityByID(Object id, Class<T> entityClass) throws DALException{
         //Create a WHERE clausel out of the PKField (for instance "WHERE angebotID = 1")
-        String pkName = DBEntity.getPKField(entityClass).getName();
+        String pkName = DBEntityInfo.get(entityClass).getEntityPk().getName();
         WhereChain where = new WhereChain(pkName, WhereOperator.EQUALS, id);
 
         List<T> result = getEntitiesBy(where, entityClass);
@@ -51,9 +51,10 @@ public class MysqlAdapter extends DatabaseAdapter {
         Class<? extends DBEntity> entityClass = entity.getClass();
 
         //Convenience variables
+        DBEntityInfo classInfo = DBEntityInfo.get(entityClass);
         String table = entityClass.getSimpleName();
-        Field pkField = DBEntity.getPKField(entityClass);
-        List<Field> fields = Arrays.asList(entityClass.getDeclaredFields());
+        Field pkField = classInfo.getEntityPk();
+        List<Field> fields = classInfo.getEntityFields();
 
         if(fields.size() <= 0)
             throw new DALException(String.format("No fields found in DBEntity-class '%s'", table));
@@ -138,9 +139,10 @@ public class MysqlAdapter extends DatabaseAdapter {
         Class<? extends DBEntity> entityClass = entity.getClass();
 
         //Convenience variables
+        DBEntityInfo classInfo = DBEntityInfo.get(entityClass);
         String table = entityClass.getSimpleName();
-        Field pkField = DBEntity.getPKField(entityClass);
-        List<Field> fields = Arrays.asList(entityClass.getDeclaredFields());
+        Field pkField = classInfo.getEntityPk();
+        List<Field> fields = classInfo.getEntityFields();
 
         if(fields.size() <= 0)
             throw new DALException(String.format("No fields found in DBEntity-class '%s'", table));
@@ -206,7 +208,7 @@ public class MysqlAdapter extends DatabaseAdapter {
 
         //Convenience variables
         String table = entityClass.getSimpleName();
-        Field pkField = DBEntity.getPKField(entityClass);
+        Field pkField = DBEntityInfo.get(entityClass).getEntityPk();
         List<Field> fields = Arrays.asList(entityClass.getDeclaredFields());
 
         //Check if PK-field was found
@@ -253,6 +255,9 @@ public class MysqlAdapter extends DatabaseAdapter {
         if(!isConnected())
             throw new DALException("Connection not established! Use method connect() before requesting data from the database!");
 
+        //ClassInfo for the given class
+        DBEntityInfo classInfo = DBEntityInfo.get(entityClass);
+
         //Builder for the Statement Elements
         StringBuilder builder = null;
 
@@ -262,14 +267,14 @@ public class MysqlAdapter extends DatabaseAdapter {
         String whereClausel = "";
 
         //Classes
-        Class<? extends DBEntity> entitySuper = DBEntity.getDBSuperclass(entityClass);
+        Class<? extends DBEntity> entitySuper = classInfo.getSuperClazz();
 
         //PKFields of the classes
-        Field entityPk = DBEntity.getPKField(entityClass);
-        Field superPk = null;
+        Field entityPk = classInfo.getEntityPk();
+        Field superPk = classInfo.getSuperPk();
 
         //Fielddeclarations
-        List<Field> fields = DBEntity.getAllDeclaredFields(entityClass);
+        List<Field> fields = classInfo.getMergedFields();
 
         //Tablenames
         String entityTable = entityClass.getSimpleName();
@@ -279,9 +284,8 @@ public class MysqlAdapter extends DatabaseAdapter {
         List<Object> preparedValues = new ArrayList<Object>();
 
         //Set some information about the superclass and also the join-clausel
-        if(entitySuper != null && !entitySuper.equals(DBEntity.class)){
+        if(entitySuper != null){
             superTable = entitySuper.getSimpleName();
-            superPk = DBEntity.getPKField(entitySuper);
             joinClausel = String.format("JOIN %s ON %s.%s = %s.%s", superTable, superTable, superPk.getName(), entityTable, entityPk.getName());
         }
 
@@ -347,7 +351,7 @@ public class MysqlAdapter extends DatabaseAdapter {
 
         //SELECT Rechnung.datum,... JOIN Rechnung ON Rechnung.rechnungID = Eingangsrechnung.rechnungID WHERE angebotID = ? AND chance = ?;
         String sql = String.format("SELECT %s FROM %s %s %s", fieldClausel, entityTable, joinClausel,whereClausel);
-        System.err.println(sql);
+
         try{
 
             ps = con.prepareStatement(sql);
