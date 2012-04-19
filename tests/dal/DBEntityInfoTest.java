@@ -1,9 +1,6 @@
-package tests;
+package dal;
 
 import bl.objects.*;
-import dal.DALException;
-import dal.DBEntity;
-import dal.DBEntityInfo;
 import junit.framework.Assert;
 import org.junit.Test;
 

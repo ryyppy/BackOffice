@@ -1,7 +1,6 @@
-package tests;
+package logging;
 
 import junit.framework.TestCase;
-import logging.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -68,7 +67,7 @@ public class FileLoggerTest extends TestCase {
 
         BufferedReader br = new BufferedReader(new FileReader(logfile));
 
-        String line = null;
+        String line =   null;
         int count = 0;
         while((line = br.readLine()) != null && line.contains(right))
             count++;

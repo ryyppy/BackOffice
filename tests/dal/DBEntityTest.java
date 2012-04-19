@@ -1,4 +1,4 @@
-package tests;
+package dal;
 
 import bl.objects.Angebot;
 import junit.framework.Assert;

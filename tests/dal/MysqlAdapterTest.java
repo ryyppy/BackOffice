@@ -1,12 +1,8 @@
-package tests;
+package dal;
 
 import bl.objects.Angebot;
 import bl.objects.Eingangsrechnung;
 import bl.objects.Rechnung;
-import dal.DatabaseAdapter;
-import dal.MysqlAdapter;
-import dal.WhereChain;
-import dal.WhereOperator;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,7 +20,7 @@ public class MysqlAdapterTest {
 
     @Before
     public void setUp() throws Exception {
-        db = new MysqlAdapter("root","password", "localhost/backoffice");
+        db = new MysqlAdapter("root","4chaos", "localhost", "backoffice");
     }
 
     @Test
@@ -51,7 +47,8 @@ public class MysqlAdapterTest {
     @Test
     public void testGetEntityByID() throws Exception {
         db.connect();
-
+        Angebot a = db.getEntityByID(1, Angebot.class);
+        System.out.println(a);
         db.disconnect();
     }
 
@@ -138,6 +135,29 @@ public class MysqlAdapterTest {
         for(Eingangsrechnung a : liste2){
             System.out.println(a);
         }
+
+        System.out.println("\n\n GETENTITYBYID:");
+        Eingangsrechnung e = db.getEntityByID(1, Eingangsrechnung.class);
+        System.out.println(e);
+
+        System.out.println("\n\n GETENTITIESBY WHERE:");
+        WhereChain where = new WhereChain("rechnungID", WhereOperator.GREATEREQUALS, 1);
+        where.addAndCondition("status", WhereOperator.LIKE, "%offen%");
+
+        List<Eingangsrechnung> liste3 = db.getEntitiesBy(where, Eingangsrechnung.class);
+        for(Eingangsrechnung a : liste3){
+            System.out.println(a);
+        }
+
+        System.out.println("\n\n FILTER WHERCHAIN:");
+        where = new WhereChain(Eingangsrechnung.class, WhereOperator.EQUALS, "offen", WhereChain.Chainer.OR);
+
+        List<Eingangsrechnung> liste4 = db.getEntitiesBy(null, Eingangsrechnung.class);
+        for(Eingangsrechnung a : liste4){
+            System.out.println(a);
+        }
+
         db.disconnect();
     }
+
 }

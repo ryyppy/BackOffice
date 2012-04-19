@@ -21,10 +21,11 @@ public class MysqlAdapter extends DatabaseAdapter {
      * To connect to the database use connect()!
      * @param dbUser - Username with appropriate privileges to the database
      * @param dbPassword - Password for the user
-     * @param dbUrl - Url (no protocol!) to the database-server with databasename (for instance: localhost/backoffice)
+     * @param dbUrl - Url (no protocol!) to the database-server with databasename (for instance: localhost)
+     * @param dbName - Database-Name on the targeted database-server
      */
-	public MysqlAdapter(String dbUser, String dbPassword,String dbUrl) {
-		super("com.mysql.jdbc.Driver", dbUser, dbPassword, "jdbc:mysql://" + dbUrl);
+	public MysqlAdapter(String dbUser, String dbPassword,String dbUrl, String dbName) {
+		super("com.mysql.jdbc.Driver", dbUser, dbPassword, "jdbc:mysql://" + dbUrl + "/" + dbName);
 	}
 
 

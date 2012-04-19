@@ -20,5 +20,25 @@ package logging;
  * Debug messages should be logged with active logginglevel INFO or WARNING or DEBUG
  */
 public enum LoggingLevel{
-    DEBUG, WARNING, INFO
+    DEBUG, WARNING, INFO;
+
+    /**
+     * Returns the LoggingLevel-Object for the given String-representation
+     * @param loggingLevel - exact name of the constant ("DEBUG", "INFO", "WARNING")
+     * @return LoggingLevel-Object for the string representation "loggingLevel"
+     */
+    public static LoggingLevel get(String loggingLevel){
+        loggingLevel = loggingLevel.toUpperCase();
+
+        if("DEBUG".equals(loggingLevel))
+            return LoggingLevel.DEBUG;
+
+        if("WARNING".equals(loggingLevel))
+            return LoggingLevel.WARNING;
+
+        if("INFO".equals(loggingLevel))
+            return LoggingLevel.INFO;
+
+        return null;
+    }
 }
