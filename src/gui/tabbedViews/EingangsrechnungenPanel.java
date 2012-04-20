@@ -20,6 +20,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import bl.BL;
+import bl.PDFFile;
+import bl.PDFFilter;
+import bl.XMLFile;
+import bl.XMLFilter;
 import bl.objects.Eingangsrechnung;
 import bl.objects.Kontakt;
 import bl.objects.view.EingangsrechnungView;
@@ -27,10 +31,6 @@ import bl.objects.view.EingangsrechnungView;
 import com.itextpdf.text.DocumentException;
 
 import dal.DALException;
-import extras.PDFFile;
-import extras.PDFFilter;
-import extras.XMLFile;
-import extras.XMLFilter;
 
 public class EingangsrechnungenPanel extends EntityViewPanel {
 	private JButton kontaktInfo, showRechnungszeilen, print, importRechnung;
@@ -123,13 +123,14 @@ public class EingangsrechnungenPanel extends EntityViewPanel {
 
 				File file = fc.getSelectedFile();
 
-				XMLFile f = null;
+//				XMLFile f = null;
 
 				try {
 					if (file.exists()) {
-						f = new XMLFile(file);
-						f.importRechnungen();
-						new LogView(getOwner(), f.getLog());
+//						f = new XMLFile(file);
+//						f.importRechnungen();
+						String log = BL.importEingangsrechnung(file);
+						new LogView(getOwner(), log);
 						tModel.refresh();
 					} else {
 						JOptionPane.showMessageDialog(this,
@@ -140,6 +141,9 @@ public class EingangsrechnungenPanel extends EntityViewPanel {
 				} catch (SAXException e1) {
 					e1.printStackTrace();
 				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (DALException e1) {
+					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}

@@ -1,8 +1,7 @@
-package extras;
+package bl;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -16,7 +15,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import bl.BL;
 import bl.objects.Eingangsrechnung;
 import bl.objects.Kontakt;
 import bl.objects.Rechnungszeile;
@@ -100,16 +98,16 @@ public class XMLFile {
 					}
 				} catch (DALException e) {
 					e.printStackTrace();
-					this.addLogLine("ERROR: " + k.toString() + "\nERRORMESSAGE: "
-							+ e.getMessage());
+					this.addLogLine("ERROR: " + k.toString()
+							+ "\nERRORMESSAGE: " + e.getMessage());
 				}
 				try {
 					BL.saveEingangsrechnung(r);
 					this.addLogLine("ADD " + r.toString());
 				} catch (DALException e) {
 					e.printStackTrace();
-					this.addLogLine("ERROR " + r.toString() + "\nERRORMESSAGE: "
-							+ e.getMessage());
+					this.addLogLine("ERROR " + r.toString()
+							+ "\nERRORMESSAGE: " + e.getMessage());
 				}
 
 				NodeList rechnungszeilen = eingangsrechnung
@@ -127,9 +125,10 @@ public class XMLFile {
 								Double.parseDouble(betrag), r.getRechnungID(),
 								null);
 					} catch (Exception e) {
-						this.addLogLine("ERROR Rechnungszeile [kommentar=" + kommentar
-								+ ", steuersatz=" + steuersatz + ", betrag="
-								+ betrag + "]\nERRORMESSAGE: " + e.getMessage());
+						this.addLogLine("ERROR Rechnungszeile [kommentar="
+								+ kommentar + ", steuersatz=" + steuersatz
+								+ ", betrag=" + betrag + "]\nERRORMESSAGE: "
+								+ e.getMessage());
 					}
 					try {
 						if (p != null) {
@@ -139,8 +138,8 @@ public class XMLFile {
 						}
 					} catch (DALException e) {
 						e.printStackTrace();
-						this.addLogLine("ERROR " + p.toString() + "\nERRORMESSAGE: "
-								+ e.getMessage());
+						this.addLogLine("ERROR " + p.toString()
+								+ "\nERRORMESSAGE: " + e.getMessage());
 					}
 				}
 			}

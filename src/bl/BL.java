@@ -1,9 +1,23 @@
 package bl;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InvalidObjectException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 
-import javax.swing.JOptionPane;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
 
 import bl.objects.Angebot;
 import bl.objects.Ausgangsrechnung;
@@ -29,7 +43,6 @@ import dal.DatabaseAdapter;
 import dal.MysqlAdapter;
 import dal.WhereChain;
 import dal.WhereChain.Chainer;
-import dal.WhereCondition;
 import dal.WhereOperator;
 
 public class BL {
@@ -127,10 +140,16 @@ public class BL {
 				k.getFirma());
 		where.addAndCondition("name", WhereOperator.EQUALS, k.getName());
 		where.addAndCondition("telefon", WhereOperator.EQUALS, k.getTelefon());
-		db.connect();
+		boolean a = false;
+		if (!db.isConnected()) {
+			db.connect();
+			a = true;
+		}
 		ArrayList<Kontakt> ret = (ArrayList<Kontakt>) db.getEntitiesBy(where,
 				Kontakt.class);
-		db.disconnect();
+		if (a) {
+			db.disconnect();
+		}
 		if (ret.isEmpty()) {
 			return -1;
 		}
@@ -237,6 +256,7 @@ public class BL {
 		db.disconnect();
 		return ret;
 	}
+
 	public static ArrayList<KundeView> getKundeViewListe(WhereChain where)
 			throws DALException {
 		// return kundenliste;
@@ -347,6 +367,7 @@ public class BL {
 		db.disconnect();
 		return ret;
 	}
+
 	public static ArrayList<ProjektView> getProjektViewListe(WhereChain where)
 			throws DALException {
 		// return projektliste;
@@ -614,6 +635,7 @@ public class BL {
 		db.disconnect();
 		return ret;
 	}
+
 	public static ArrayList<EingangsrechnungView> getEingangsrechnungViewListe(
 			WhereChain where) throws DALException {
 		// return eingangsrechnungenliste;
@@ -981,6 +1003,7 @@ public class BL {
 		db.disconnect();
 		return ret;
 	}
+
 	public static ArrayList<BuchungszeileView> getBuchungszeileViewListe(
 			WhereChain where) throws DALException {
 		// return buchungszeilenliste;
@@ -1164,5 +1187,199 @@ public class BL {
 		db.connect();
 		db.deleteEntity(buchungszeileID, Rechnung_Buchungszeile.class);
 		db.disconnect();
+	}
+
+	private static String getTagValue(String sTag, Element eElement) {
+		NodeList nlList = eElement.getElementsByTagName(sTag).item(0)
+				.getChildNodes();
+		Node nValue = (Node) nlList.item(0);
+		return nValue.getNodeValue();
+	}
+
+	private static String log;
+
+	private static void addLogLine(String txt) {
+		log += txt + "\n\n";
+	}
+
+	public static String importEingangsrechnung(File file)
+			throws ParserConfigurationException, SAXException, IOException,
+			DALException {
+		db.connect();
+		db.beginTransaction();
+		log = "";
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder documentbuilder;
+		Document document = null;
+
+		documentbuilder = dbf.newDocumentBuilder();
+		document = documentbuilder.parse(file);
+		document.getDocumentElement().normalize();
+		// name=document.getDocumentElement().getNodeName();
+
+		NodeList nl = document.getElementsByTagName("eingangsrechnung");
+		for (int i = 0; i < nl.getLength(); i++) {
+			addLogLine("----- Eingangsrechnung #" + (i + 1));
+			Node n = nl.item(i);
+			if (n.getNodeType() == Node.ELEMENT_NODE) {
+				Element eingangsrechnung = (Element) n;
+				Eingangsrechnung r = new Eingangsrechnung();
+				try {
+					r.setDatum(getTagValue("datum", eingangsrechnung));
+				} catch (ParseException e) {
+					r.setDatum(new Date());
+				}
+				r.setStatus(getTagValue("status", eingangsrechnung));
+
+				Element kontakt = (Element) eingangsrechnung
+						.getElementsByTagName("kontakt").item(0);
+				Kontakt k = new Kontakt(getTagValue("firma", kontakt),
+						getTagValue("name", kontakt), getTagValue("telefon",
+								kontakt));
+				try {
+					Integer kontaktID = BL.containsKontakt(k);
+					if (kontaktID != -1) {
+						r.setKontaktID(kontaktID);
+						k.setKontaktID(kontaktID);
+						addLogLine("USE " + k.toString());
+					} else {
+						kontaktID = Integer.valueOf(String.valueOf(db
+								.addEntity(k)));
+						r.setKontaktID(kontaktID);
+						k.setKontaktID(kontaktID);
+						addLogLine("ADD " + k.toString());
+					}
+				} catch (DALException e) {
+					e.printStackTrace();
+					addLogLine("ERROR: " + k.toString() + "\nERRORMESSAGE: "
+							+ e.getMessage());
+					db.rollback();
+					db.disconnect();
+					return log;
+				}
+				try {
+					Rechnung rr = new Rechnung(r.getStatus(), r.getDatum());
+					int key = Integer.valueOf(String.valueOf(db.addEntity(rr)));
+					r.setRechnungID(key);
+					db.addEntity(r);
+
+					addLogLine("ADD " + r.toString());
+				} catch (DALException e) {
+					e.printStackTrace();
+					addLogLine("ERROR " + r.toString() + "\nERRORMESSAGE: "
+							+ e.getMessage());
+					db.rollback();
+					db.disconnect();
+					return log;
+				}
+
+				NodeList rechnungszeilen = eingangsrechnung
+						.getElementsByTagName("rechnungszeile");
+				for (int j = 0; j < rechnungszeilen.getLength(); j++) {
+					Element rechnungszeile = (Element) rechnungszeilen.item(j);
+					Rechnungszeile p = null;
+					String kommentar = getTagValue("kommentar", rechnungszeile);
+					String steuersatz = getTagValue("steuersatz",
+							rechnungszeile);
+					String betrag = getTagValue("betrag", rechnungszeile);
+					try {
+						p = new Rechnungszeile(kommentar,
+								Double.parseDouble(steuersatz),
+								Double.parseDouble(betrag), r.getRechnungID(),
+								null);
+					} catch (Exception e) {
+						addLogLine("ERROR Rechnungszeile [kommentar="
+								+ kommentar + ", steuersatz=" + steuersatz
+								+ ", betrag=" + betrag + "]\nERRORMESSAGE: "
+								+ e.getMessage());
+						db.rollback();
+						db.disconnect();
+						return log;
+					}
+					try {
+						if (p != null) {
+							int rechnungszeileID = Integer.valueOf(String
+									.valueOf(db.addEntity(p)));
+							p.setRechnungszeileID(rechnungszeileID);
+							addLogLine("ADD " + p.toString());
+						}
+					} catch (DALException e) {
+						e.printStackTrace();
+						addLogLine("ERROR " + p.toString() + "\nERRORMESSAGE: "
+								+ e.getMessage());
+						db.rollback();
+						db.disconnect();
+						return log;
+					}
+				}
+			}
+
+			addLogLine("");
+		}
+		db.commit();
+		db.disconnect();
+		return log;
+	}
+
+	public static String importZeit(File file)
+			throws ParserConfigurationException, SAXException, IOException,
+			DALException {
+		db.connect();
+		db.beginTransaction();
+		log = "";
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder documentbuilder;
+		Document document = null;
+
+		documentbuilder = dbf.newDocumentBuilder();
+		document = documentbuilder.parse(file);
+		document.getDocumentElement().normalize();
+		// name=document.getDocumentElement().getNodeName();
+
+		NodeList nl = document.getElementsByTagName("projekt");
+		for (int i = 0; i < nl.getLength(); i++) {
+			log = "";
+			addLogLine("----- Projekt Eintrag#" + (i + 1));
+			Node n = nl.item(i);
+			if (n.getNodeType() == Node.ELEMENT_NODE) {
+				Element projekt = (Element) n;
+
+				try {
+					int projektid = Integer.valueOf(getTagValue("projektID",
+							projekt));
+
+					Projekt p = db.getEntityByID(projektid, Projekt.class);
+
+					if (p == null) {
+						addLogLine("ERRORMESSAGE: Projekt mit projektID=" + projektid
+								+ " nicht vorhanden");
+						db.rollback();
+						db.disconnect();
+						return log;
+					}
+					double verbrauchteStunden = Double.valueOf(getTagValue(
+							"verbrauchteStunden", projekt));
+
+					p.setVerbrauchteStunden(verbrauchteStunden);
+
+					db.updateEntity(p);
+				} catch (DALException e) {
+					e.printStackTrace();
+					addLogLine("ERRORMESSAGE: " + e.getMessage());
+					db.rollback();
+					db.disconnect();
+					return log;
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+					addLogLine("ERRORMESSAGE: " + e.getMessage());
+					db.rollback();
+					db.disconnect();
+					return log;
+				}
+			}
+		}
+		db.commit();
+		db.disconnect();
+		return "";
 	}
 }

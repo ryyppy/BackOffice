@@ -10,7 +10,7 @@
 		<rechnungszeilen>
 			<rechnungszeile>
 				<kommentar>Notebook</kommentar>
-				<steuersatz>2f0</steuersatz>
+				<steuersatz>20</steuersatz>
 				<betrag>1500</betrag>
 			</rechnungszeile>
 			<rechnungszeile>

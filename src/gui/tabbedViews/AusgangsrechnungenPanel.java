@@ -16,6 +16,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import bl.BL;
+import bl.PDFFile;
+import bl.PDFFilter;
 import bl.objects.Ausgangsrechnung;
 import bl.objects.Kunde;
 import bl.objects.view.AusgangsrechnungView;
@@ -23,8 +25,6 @@ import bl.objects.view.AusgangsrechnungView;
 import com.itextpdf.text.DocumentException;
 
 import dal.DALException;
-import extras.PDFFile;
-import extras.PDFFilter;
 
 public class AusgangsrechnungenPanel extends EntityViewPanel {
 	private JButton kundenInfo, showRechnungszeilen, print;

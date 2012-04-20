@@ -1,0 +1,10 @@
+<projekte>
+	<projekt>
+		<projektID>1</projektID>
+		<verbrauchteStunden>1100</verbrauchteStunden>
+	</projekt>
+	<projekt>
+		<projektID>2</projektID>
+		<verbrauchteStunden>1100</verbrauchteStunden>
+	</projekt>
+</projekte>

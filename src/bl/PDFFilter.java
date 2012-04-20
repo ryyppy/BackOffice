@@ -1,15 +1,18 @@
-package extras;
+package bl;
 
 import java.io.File;
 
-/* ImageFilter.java is used by FileChooserDemo2.java. */
-public class XMLFilter extends MyFileFilter {
+import extras.MyFileFilter;
 
-	public XMLFilter() {
-		super("*.xml");
+
+/* ImageFilter.java is used by FileChooserDemo2.java. */
+public class PDFFilter extends MyFileFilter {
+
+	public PDFFilter() {
+		super("*.pdf");
 	}
 
-	// Accept all directories and all xml files.
+	// Accept all directories and all pdf files
 	public boolean accept(File f) {
 		if (f.isDirectory()) {
 			return true;
@@ -17,7 +20,7 @@ public class XMLFilter extends MyFileFilter {
 
 		String extension = getExtension(f);
 		if (extension != null) {
-			if (extension.equals(MyFileFilter.XML)) {
+			if (extension.equals(MyFileFilter.PDF)) {
 				return true;
 			} else {
 				return false;

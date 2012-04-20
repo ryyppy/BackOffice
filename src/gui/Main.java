@@ -1,16 +1,37 @@
 package gui;
 
-import java.awt.AWTEvent;
-import java.awt.EventQueue;
-import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 
-import javax.swing.JDialog;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import logging.ConsoleAdapter;
+import logging.FileAdapter;
+import logging.Logger;
+import logging.LoggerManager;
+import logging.LoggingLevel;
+
 public class Main {
+	
 	public static void main(String[] args) {
+		Logger l = new Logger();
+		try {
+			l.addAdapter(new FileAdapter(new File("log"), "xmlImport"));
+			//TODO: auf config ueberpruefen
+			l.addAdapter(new ConsoleAdapter());
+			
+			LoggerManager.registerLogger("xmlImport", l);
+			
+			//TODO: auf config ueberpruefen
+			LoggerManager.setLoggingLevel(LoggingLevel.DEBUG);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException e1) {
