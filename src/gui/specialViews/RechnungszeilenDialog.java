@@ -1,7 +1,7 @@
 package gui.specialViews;
 
-import gui.componentModels.MyTableCellRenderer;
 import gui.componentModels.EntityTableModel;
+import gui.componentModels.MyTableCellRenderer;
 import gui.editEntityViews.EditRechnungszeileDialog;
 
 import java.awt.BorderLayout;
@@ -24,6 +24,7 @@ import javax.swing.table.TableRowSorter;
 import bl.BL;
 import bl.objects.Angebot;
 import bl.objects.Rechnungszeile;
+import bl.objects.view.RechnungszeileView;
 import dal.DALException;
 
 public class RechnungszeilenDialog extends JDialog implements ActionListener {
@@ -95,11 +96,11 @@ public class RechnungszeilenDialog extends JDialog implements ActionListener {
 		JPanel panel = new JPanel(new GridLayout(2, 1));
 		panel.add(panel1);
 		panel.add(panel2);
-		return panel;
+		return panel1;
 	}
 
 	public void initTable() {
-		tModel = new EntityTableModel(Rechnungszeile.class, rechnungID);
+		tModel = new EntityTableModel(RechnungszeileView.class, rechnungID);
 
 		table = new JTable(tModel);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
@@ -154,7 +155,8 @@ public class RechnungszeilenDialog extends JDialog implements ActionListener {
 			} catch (DALException e1) {
 				JOptionPane.showMessageDialog(this, e1.getMessage());
 			}
-		} else if (e.getSource() == angebotInfo) {
+		} 
+		else if (e.getSource() == angebotInfo) {
 			int a = table.convertRowIndexToModel(table.getSelectedRow());
 			Angebot an;
 			try {
