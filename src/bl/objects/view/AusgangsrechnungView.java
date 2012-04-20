@@ -7,33 +7,23 @@ import dal.TableMeta;
 @TableMeta(pkFieldName = "rechnungID")
 public class AusgangsrechnungView extends RechnungView {
 	private Integer rechnungID;
-	// KUNDE
-	private Integer kundeID;
-	private String nachname;
+	private String kunde;
 
 	public AusgangsrechnungView() {
 		super();
 	}
 
-	public AusgangsrechnungView(String status, Date datum, Integer kundenID) {
+	public AusgangsrechnungView(String status, Date datum, String kundenname) {
 		super(status, datum);
-		this.kundeID = kundenID;
+		this.kunde = kundenname;
 
 	}
 
 	public AusgangsrechnungView(Integer rechnungID, String status, Date datum,
-			Integer kundenID) {
+			String kundenname) {
 		super(rechnungID, status, datum);
-		this.kundeID = kundenID;
+		this.kunde = kundenname;
 		this.rechnungID = rechnungID;
-	}
-
-	public Integer getKundeID() {
-		return kundeID;
-	}
-
-	public void setKundeID(Integer kundenID) {
-		this.kundeID = kundenID;
 	}
 
 	public Integer getRechnungID() {
@@ -45,23 +35,22 @@ public class AusgangsrechnungView extends RechnungView {
 		super.setRechnungID(rechnungID);
 	}
 
-	public String getNachname() {
-		return nachname;
+	public String getKunde() {
+		return kunde;
 	}
 
-	public void setNachname(String nachname) {
-		this.nachname = nachname;
+	public void setKunde(String nachname) {
+		this.kunde = nachname;
 	}
 
 	@Override
 	public String toString() {
 		return "Ausgangsrechnung [rechnungID=" + rechnungID + ", status="
-				+ getStatus() + ", datum=" + getDatumString() + ", kundeID="
-				+ kundeID + ", nachname=" + nachname + "]";
+				+ getStatus() + ", datum=" + getDatumString() + ", kunde="
+				+ kunde + "]";
 	}
 
 	public String getValues() {
-		return "Ausgangsrechnung:\n" + super.getValues() + "\nKunde: "
-				+ kundeID + " - " + nachname;
+		return "Ausgangsrechnung:\n" + super.getValues() + "\nKunde: " + kunde;
 	}
 }

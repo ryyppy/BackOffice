@@ -27,7 +27,8 @@ public class EditProjektDialog extends JDialog implements ActionListener {
 
 	private Projekt p;
 
-	private String[] columnNames = { "Name", "Beschreibung" };
+	private String[] columnNames = { "Name", "Beschreibung",
+			"Verbrauchte Stunden" };
 
 	public EditProjektDialog(JFrame owner) {
 		super(owner, "Projekt hinzufuegen", true);
@@ -91,6 +92,7 @@ public class EditProjektDialog extends JDialog implements ActionListener {
 		if (p != null) {
 			textfeld[0].setText(p.getName());
 			textfeld[1].setText(p.getBeschreibung());
+			textfeld[2].setText(String.valueOf(p.getVerbrauchteStunden()));
 		}
 
 		return panel;
@@ -106,15 +108,18 @@ public class EditProjektDialog extends JDialog implements ActionListener {
 						.bindFrom_String(textfeld[0], new StandardRule());
 				String beschreibung = b.bindFrom_String(textfeld[1],
 						new StandardRule());
+				Double verbrauchteStunden = b.bindFrom_double(textfeld[2],
+						new StandardRule());
 				if (!b.hasErrors()) {
 					if (p != null) {
 						p.setName(name);
 						p.setBeschreibung(beschreibung);
+						p.setVerbrauchteStunden(verbrauchteStunden);
 						BL.updateProjekt(p);
 						JOptionPane.showMessageDialog(this,
 								"Eintrag wurde erfolgreich bearbeitet");
 					} else {
-						p = new Projekt(name, beschreibung);
+						p = new Projekt(name, beschreibung, verbrauchteStunden);
 						BL.saveProjekt(p);
 						JOptionPane.showMessageDialog(this,
 								"Eintrag wurde erfolgreich hinzugefügt");

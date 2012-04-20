@@ -123,7 +123,7 @@ public class EditRechnungszeileDialog extends JDialog implements ActionListener 
 				System.exit(0);
 			}
 			angebote.setName(columnNames[columnNames.length - 1]);
-			angebote.setRenderer(new MyListCellRenderer("DatumString"));
+			angebote.setRenderer(new MyListCellRenderer("beschreibung"));
 
 			JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 			JLabel l = new JLabel(columnNames[columnNames.length - 1]);

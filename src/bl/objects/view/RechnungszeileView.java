@@ -6,32 +6,31 @@ import dal.TableMeta;
 @TableMeta(pkFieldName = "rechnungszeileID")
 public class RechnungszeileView extends DBEntity {
 	private Integer rechnungszeileID;
+	private Integer rechnungID;
 	private String kommentar;
 	private Double steuersatz;
 	private Double betrag;
-	private Integer rechnungID;
-	private Integer angebotID;
+//	private Integer angebotID;
+	private String angebot;
 
 	public RechnungszeileView() {
 
 	}
 
-	public RechnungszeileView(String kommentar, Double steuersatz, Double betrag,
-			Integer rechnungID, Integer angebotsID) {
+	public RechnungszeileView(String kommentar, Double steuersatz,
+			Double betrag, String angebot) {
 		super();
-		this.rechnungID = rechnungID;
-		this.angebotID = angebotsID;
+		this.angebot = angebot;
 		this.steuersatz = steuersatz;
 		this.kommentar = kommentar;
 		this.betrag = betrag;
 	}
 
 	public RechnungszeileView(Integer id, String kommentar, Double steuersatz,
-			Double betrag, Integer rechnungID, Integer angebotsID) {
+			Double betrag, String angebot) {
 		super();
 		this.rechnungszeileID = id;
-		this.rechnungID = rechnungID;
-		this.angebotID = angebotsID;
+		this.angebot = angebot;
 		this.steuersatz = steuersatz;
 		this.kommentar = kommentar;
 		this.betrag = betrag;
@@ -43,22 +42,6 @@ public class RechnungszeileView extends DBEntity {
 
 	public void setRechnungszeileID(Integer rechnungszeileID) {
 		this.rechnungszeileID = rechnungszeileID;
-	}
-
-	public Integer getRechnungID() {
-		return rechnungID;
-	}
-
-	public void setRechnungID(Integer rechnungID) {
-		this.rechnungID = rechnungID;
-	}
-
-	public Integer getAngebotID() {
-		return angebotID;
-	}
-
-	public void setAngebotID(Integer angebotsID) {
-		this.angebotID = angebotsID;
 	}
 
 	public String getKommentar() {
@@ -85,19 +68,41 @@ public class RechnungszeileView extends DBEntity {
 		this.steuersatz = steuersatz;
 	}
 
+	public String getAngebot() {
+		return angebot;
+	}
+
+	public void setAngebot(String angebot) {
+		this.angebot = angebot;
+	}
+
+	public Integer getRechnungID() {
+		return rechnungID;
+	}
+
+	public void setRechnungID(Integer rechnungid) {
+		this.rechnungID = rechnungid;
+	}
+
+//	public Integer getAngebotID() {
+//		return angebotID;
+//	}
+//
+//	public void setAngebotID(Integer angebotID) {
+//		this.angebotID = angebotID;
+//	}
+
 	@Override
 	public String toString() {
 		return "Rechnungszeile [rechnungszeileID=" + rechnungszeileID
 				+ ", kommentar=" + kommentar + ", steuersatz=" + steuersatz
-				+ ", betrag=" + betrag + ", rechnungID=" + rechnungID
-				+ ", angebotID=" + angebotID + "]";
+				+ ", betrag=" + betrag + ", angebot=" + angebot + "]";
 	}
 
 	public String getValues() {
-		return "Rechnungszeile-ID: " + rechnungszeileID + "\nRechnung-ID: "
-				+ rechnungID + "\nKommentar: " + kommentar + "\nSteuersatz: "
-				+ steuersatz + "\nBetrag: " + betrag + "\nAngebot-ID: "
-				+ angebotID;
+		return "Rechnungszeile-ID: " + rechnungszeileID + "\nKommentar: "
+				+ kommentar + "\nSteuersatz: " + steuersatz + "\nBetrag: "
+				+ betrag + "\nAngebot: " + angebot;
 	}
 
 }
