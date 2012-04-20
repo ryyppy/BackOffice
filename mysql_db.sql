@@ -7,6 +7,7 @@ CREATE TABLE projekt(
 	projektID 		integer auto_increment,
 	name 			varchar(30),
 	beschreibung	varchar(100),
+	verbrauchteStunden	double,
 	PRIMARY KEY (projektID)
 );
 
@@ -30,6 +31,7 @@ INSERT INTO kunde(vorname, nachname, geburtsdatum) VALUES ('patrick', 'stapfer',
 DROP TABLE angebot CASCADE;
 CREATE TABLE angebot(
 	angebotID 		integer auto_increment, 
+	beschreibung	varchar(100),
 	summe 			double, 
 	dauer 			double,
 	datum 			date,
@@ -41,10 +43,10 @@ CREATE TABLE angebot(
 	FOREIGN KEY (projektID) REFERENCES projekt(projektID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-INSERT INTO angebot(summe, dauer, datum, chance, kundeID, projektID) VALUES (12,  12, current_timestamp, 12, 1, 1);
-INSERT INTO angebot(summe, dauer, datum, chance, kundeID, projektID) VALUES (12,  12, current_timestamp, 12, 1, 2);
-INSERT INTO angebot(summe, dauer, datum, chance, kundeID, projektID) VALUES (12,  12, current_timestamp, 12, 2, 1);
-INSERT INTO angebot(summe, dauer, datum, chance, kundeID, projektID) VALUES (12,  12, current_timestamp, 12, 2, 2);
+INSERT INTO angebot(beschreibung, summe, dauer, datum, chance, kundeID, projektID) VALUES ('an1', 12,  12, current_timestamp, 12, 1, 1);
+INSERT INTO angebot(beschreibung, summe, dauer, datum, chance, kundeID, projektID) VALUES ('an2', 12,  12, current_timestamp, 12, 1, 2);
+INSERT INTO angebot(beschreibung, summe, dauer, datum, chance, kundeID, projektID) VALUES ('an3', 12,  12, current_timestamp, 12, 2, 1);
+INSERT INTO angebot(beschreibung, summe, dauer, datum, chance, kundeID, projektID) VALUES ('an4', 12,  12, current_timestamp, 12, 2, 2);
 
 
 CREATE TABLE kontakt(
