@@ -14,13 +14,15 @@ import javax.swing.JOptionPane;
 import bl.BL;
 import bl.objects.Buchungszeile;
 import bl.objects.Kategorie;
+import bl.objects.view.BuchungszeileView;
 import dal.DALException;
 
 public class BuchungszeilenPanel extends EntityViewPanel {
 	private JButton addKategorie, kategorieInfo, selectRechnungen;
 
 	public BuchungszeilenPanel(JFrame owner) {
-		super(Buchungszeile.class, EditBuchungszeileDialog.class, owner);
+		super(Buchungszeile.class, BuchungszeileView.class,
+				EditBuchungszeileDialog.class, owner);
 	}
 
 	@Override
@@ -37,22 +39,25 @@ public class BuchungszeilenPanel extends EntityViewPanel {
 		if (e.getSource() == addKategorie) {
 			new AddKategorieDialog(getOwner());
 		} else if (e.getSource() == kategorieInfo) {
-			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Kategorie k;
-			try {
-				k = BL.getKategorie(String.valueOf(tModel.getValueAt(a, 5)));
-				JOptionPane.showMessageDialog(this, k.toString());
-			} catch (DALException e1) {
-				JOptionPane.showMessageDialog(this, e1.getMessage());
+			BuchungszeileView selectedItem = (BuchungszeileView) getSelectedItem();
+			if (selectedItem != null) {
+				try {
+					Kategorie k = BL.getKategorie(selectedItem.getKKbz());
+					JOptionPane.showMessageDialog(this, k.toString());
+				} catch (DALException e1) {
+					JOptionPane.showMessageDialog(this, e1.getMessage());
+				}
 			}
 		} else if (e.getSource() == selectRechnungen) {
-			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			Buchungszeile b;
-			try {
-				b = BL.getBuchungszeile((Integer) tModel.getValueAt(a, 0));
-				new SelectRechnungenDialog(getOwner(), b);
-			} catch (DALException e1) {
-				JOptionPane.showMessageDialog(this, e1.getMessage());
+			BuchungszeileView selectedItem = (BuchungszeileView) getSelectedItem();
+			if (selectedItem != null) {
+				try {
+					Buchungszeile b = BL.getBuchungszeile(selectedItem
+							.getBuchungszeileID());
+					new SelectRechnungenDialog(getOwner(), b);
+				} catch (DALException e1) {
+					JOptionPane.showMessageDialog(this, e1.getMessage());
+				}
 			}
 		}
 	}

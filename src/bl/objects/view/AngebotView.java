@@ -9,40 +9,38 @@ import dal.TableMeta;
 @TableMeta(pkFieldName = "angebotID")
 public class AngebotView extends DBEntity {
 	private Integer angebotID;
+	private String beschreibung;
 	private Double summe;
 	private Double dauer;
 	private Double chance;
 	private Date datum;
-	// KUNDE
-	private Integer kundeID;
-	private String nachname;
-	// PROJEKT
-	private Integer projektID;
-	private String name;
+	private String kunde;
+	private String projekt;
 
 	public AngebotView() {
 
 	}
 
-	public AngebotView(Double summe, Double dauer, Date date, Double chance,
-			Integer kundenID, Integer projektID) {
+	public AngebotView(String beschreibung, Double summe, Double dauer,
+			Date date, Double chance, String nachname, String name) {
+		this.beschreibung = beschreibung;
 		this.summe = summe;
 		this.dauer = dauer;
 		this.datum = date;
 		this.chance = chance;
-		this.kundeID = kundenID;
-		this.projektID = projektID;
+		this.kunde = nachname;
+		this.projekt = name;
 	}
 
 	public AngebotView(Integer id, Double summe, Double dauer, Date date,
-			Double chance, Integer kundenID, Integer projektID) {
+			Double chance, String nachname, String name) {
 		this.angebotID = id;
 		this.summe = summe;
 		this.dauer = dauer;
 		this.datum = date;
 		this.chance = chance;
-		this.kundeID = kundenID;
-		this.projektID = projektID;
+		this.kunde = nachname;
+		this.projekt = name;
 	}
 
 	@Override
@@ -52,6 +50,14 @@ public class AngebotView extends DBEntity {
 
 	public Integer getAngebotID() {
 		return angebotID;
+	}
+
+	public String getBeschreibung() {
+		return beschreibung;
+	}
+
+	public void setBeschreibung(String beschreibung) {
+		this.beschreibung = beschreibung;
 	}
 
 	public void setAngebotID(Integer angebotID) {
@@ -95,50 +101,32 @@ public class AngebotView extends DBEntity {
 		this.datum = date;
 	}
 
-	public Integer getKundeID() {
-		return kundeID;
+	public String getKunde() {
+		return kunde;
 	}
 
-	public void setKundeID(Integer kundenID) {
-		this.kundeID = kundenID;
+	public void setKunde(String nachname) {
+		this.kunde = nachname;
 	}
 
-	public Integer getProjektID() {
-		return projektID;
+	public String getProjekt() {
+		return projekt;
 	}
 
-	public void setProjektID(Integer projektID) {
-		this.projektID = projektID;
-	}
-
-	public String getNachname() {
-		return nachname;
-	}
-
-	public void setNachname(String nachname) {
-		this.nachname = nachname;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+	public void setProjekt(String name) {
+		this.projekt = name;
 	}
 
 	@Override
 	public String toString() {
 		return "Angebot [angebotID=" + angebotID + ", summe=" + summe
 				+ ", dauer=" + dauer + ", chance=" + chance + ", datum="
-				+ datum + ", kundeID=" + kundeID + ", nachname=" + nachname
-				+ ", projektID=" + projektID + ", name=" + name + "]";
+				+ datum + ", kunde=" + kunde + ", projekt=" + projekt + "]";
 	}
 
 	public String getValues() {
 		return "Angebot-ID: " + angebotID + "\nSumme: " + summe + "\nDauer: "
 				+ dauer + "\nDatum: " + getDatumString() + "\nChance: "
-				+ chance + "\nKunde: " + kundeID + " - " + nachname
-				+ "\nProjekt: " + projektID + " - " + name;
+				+ chance + "\nKunde: " + kunde + "\nProjekt: " + projekt;
 	}
 }

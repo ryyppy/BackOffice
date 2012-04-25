@@ -12,7 +12,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -21,22 +20,24 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import bl.BL;
+import bl.PDFFile;
+import bl.PDFFilter;
+import bl.XMLFile;
+import bl.XMLFilter;
 import bl.objects.Eingangsrechnung;
 import bl.objects.Kontakt;
+import bl.objects.view.EingangsrechnungView;
 
 import com.itextpdf.text.DocumentException;
 
 import dal.DALException;
-import extras.PDFFile;
-import extras.PDFFilter;
-import extras.XMLFile;
-import extras.XMLFilter;
 
 public class EingangsrechnungenPanel extends EntityViewPanel {
 	private JButton kontaktInfo, showRechnungszeilen, print, importRechnung;
 
 	public EingangsrechnungenPanel(JFrame owner) {
-		super(Eingangsrechnung.class, EditEingangsrechnungDialog.class, owner);
+		super(Eingangsrechnung.class, EingangsrechnungView.class,
+				EditEingangsrechnungDialog.class, owner);
 	}
 
 	@Override
@@ -54,68 +55,62 @@ public class EingangsrechnungenPanel extends EntityViewPanel {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == kontaktInfo) {
-			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			int kIndex = table.getColumn("KontaktID").getModelIndex();
-			Kontakt k;
-			try {
-				k = BL.getKontakt((Integer) tModel.getValueAt(a, kIndex));
-				JOptionPane.showMessageDialog(this, k.toString());
-			} catch (DALException e1) {
-				JOptionPane.showMessageDialog(this, e1.getMessage());
-			}
-		} else if (e.getSource() == showRechnungszeilen) {
-			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			int aIndex = table.getColumn("RechnungID").getModelIndex();
-			int eingangsrechnungsID = (Integer) tModel.getValueAt(a, aIndex);
-			new RechnungszeilenDialog(getOwner(), eingangsrechnungsID);
-		} else if (e.getSource() == print) {
-			JFileChooser fc = new JFileChooser();
-			fc.setAcceptAllFileFilterUsed(false);
-			fc.setFileFilter(new PDFFilter());
-
-			int returnVal = fc.showSaveDialog(this);
-
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-
-				File file = fc.getSelectedFile();
-				if (!file.exists()) {
-					file = new File(file.getPath() + ".pdf");
-					try {
-						file.createNewFile();
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-				}
-
-				PDFFile f = null;
+			Eingangsrechnung selectedItem = (Eingangsrechnung) getSelectedDBEntity();
+			if (selectedItem != null) {
 				try {
-					f = new PDFFile(file);
-
-					int a = table
-							.convertRowIndexToModel(table.getSelectedRow());
-					int aIndex = table.getColumn("RechnungID").getModelIndex();
-
-					Eingangsrechnung er = BL
-							.getEingangsrechnung((Integer) tModel.getValueAt(a,
-									aIndex));
-					er.setRechnungID((Integer) tModel.getValueAt(a, aIndex));
-					f.createRechnung(er);
-
-					Desktop.getDesktop().open(file);
-
-				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
-					JOptionPane.showMessageDialog(this, e1.getMessage());
-				} catch (DocumentException e1) {
-					e1.printStackTrace();
+					Kontakt k = BL.getKontakt(selectedItem.getKontaktID());
+					JOptionPane.showMessageDialog(this, k.toString());
 				} catch (DALException e1) {
 					JOptionPane.showMessageDialog(this, e1.getMessage());
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				} finally {
-					f.close();
 				}
+			}
+		} else if (e.getSource() == showRechnungszeilen) {
+			Eingangsrechnung selectedItem = (Eingangsrechnung) getSelectedDBEntity();
+			if (selectedItem != null) {
+				new RechnungszeilenDialog(getOwner(),
+						selectedItem.getRechnungID());
+			}
+		} else if (e.getSource() == print) {
+			Eingangsrechnung selectedItem = (Eingangsrechnung) getSelectedDBEntity();
+			if (selectedItem != null) {
 
+				JFileChooser fc = new JFileChooser();
+				fc.setAcceptAllFileFilterUsed(false);
+				fc.setFileFilter(new PDFFilter());
+
+				int returnVal = fc.showSaveDialog(this);
+
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+					File file = fc.getSelectedFile();
+
+					PDFFile f = null;
+					try {
+						f = new PDFFile(file);
+
+						Eingangsrechnung er = BL
+								.getEingangsrechnung(selectedItem
+										.getRechnungID());
+						er.setRechnungID(selectedItem.getRechnungID());
+						f.createRechnung(er);
+
+						Desktop.getDesktop().open(file);
+
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+						JOptionPane.showMessageDialog(this, e1.getMessage());
+					} catch (DocumentException e1) {
+						e1.printStackTrace();
+					} catch (DALException e1) {
+						JOptionPane.showMessageDialog(this, e1.getMessage());
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					} finally {
+						if (f != null) {
+							f.close();
+						}
+					}
+				}
 			}
 		} else if (e.getSource() == importRechnung) {
 			JFileChooser fc = new JFileChooser();
@@ -128,16 +123,18 @@ public class EingangsrechnungenPanel extends EntityViewPanel {
 
 				File file = fc.getSelectedFile();
 
-				XMLFile f = null;
+//				XMLFile f = null;
 
 				try {
 					if (file.exists()) {
-						f = new XMLFile(file);
-						f.importRechnungen();
-						new LogView(getOwner(), f.getLog());
+//						f = new XMLFile(file);
+//						f.importRechnungen();
+						String log = BL.importEingangsrechnung(file);
+						new LogView(getOwner(), log);
 						tModel.refresh();
-					}else{
-						JOptionPane.showMessageDialog(this, "Datei konnte nicht gefunden werden");
+					} else {
+						JOptionPane.showMessageDialog(this,
+								"Datei konnte nicht gefunden werden");
 					}
 				} catch (ParserConfigurationException e1) {
 					e1.printStackTrace();
@@ -145,9 +142,12 @@ public class EingangsrechnungenPanel extends EntityViewPanel {
 					e1.printStackTrace();
 				} catch (IOException e1) {
 					e1.printStackTrace();
-				} 
-
+				} catch (DALException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		}
+
 	}
 }

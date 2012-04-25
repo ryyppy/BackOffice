@@ -8,19 +8,23 @@ public class Projekt extends DBEntity {
 	private Integer projektID;
 	private String name;
 	private String beschreibung;
+	private Double verbrauchteStunden;
 
 	public Projekt() {
 	}
 
-	public Projekt(String name, String beschreibung) {
+	public Projekt(String name, String beschreibung, Double verbrauchteStunden) {
 		this.name = name;
 		this.beschreibung = beschreibung;
+		this.verbrauchteStunden = verbrauchteStunden;
 	}
 
-	public Projekt(Integer id, String name, String beschreibung) {
+	public Projekt(Integer id, String name, String beschreibung,
+			Double verbrauchteStunden) {
 		this.projektID = id;
 		this.name = name;
 		this.beschreibung = beschreibung;
+		this.verbrauchteStunden = verbrauchteStunden;
 	}
 
 	public Integer getProjektID() {
@@ -50,10 +54,19 @@ public class Projekt extends DBEntity {
 		this.beschreibung = beschreibung;
 	}
 
+	public Double getVerbrauchteStunden() {
+		return verbrauchteStunden;
+	}
+
+	public void setVerbrauchteStunden(Double verbrauchteStunden) {
+		this.verbrauchteStunden = verbrauchteStunden;
+	}
+
 	@Override
 	public String toString() {
 		return "Projekt [projektID=" + projektID + ", name=" + name
-				+ ", beschreibung=" + beschreibung + "]";
+				+ ", beschreibung=" + beschreibung + ", verbrauchteStunden="
+				+ verbrauchteStunden + "]";
 	}
 
 	public String getValues() {

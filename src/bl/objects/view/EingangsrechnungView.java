@@ -7,32 +7,30 @@ import dal.TableMeta;
 @TableMeta(pkFieldName = "rechnungID")
 public class EingangsrechnungView extends RechnungView {
 	private Integer rechnungID;
-	// KONTAKT
-	private Integer kontaktID;
-	private String firma;
+	private String kontakt;
 
 	public EingangsrechnungView() {
 		super();
 	}
 
-	public EingangsrechnungView(String status, Date datum, Integer kontaktID) {
+	public EingangsrechnungView(String status, Date datum, String kontakt) {
 		super(status, datum);
-		this.kontaktID = kontaktID;
+		this.kontakt = kontakt;
 	}
 
 	public EingangsrechnungView(Integer rechnungID, String status, Date datum,
-			Integer kontaktID) {
+			String kontakt) {
 		super(rechnungID, status, datum);
-		this.kontaktID = kontaktID;
+		this.kontakt = kontakt;
 		this.rechnungID = rechnungID;
 	}
 
-	public Integer getKontaktID() {
-		return kontaktID;
+	public String getKontakt() {
+		return kontakt;
 	}
 
-	public void setKontaktID(Integer kontaktID) {
-		this.kontaktID = kontaktID;
+	public void setKontakt(String kontakt) {
+		this.kontakt = kontakt;
 	}
 
 	public Integer getRechnungID() {
@@ -44,24 +42,24 @@ public class EingangsrechnungView extends RechnungView {
 		super.setRechnungID(rechnungID);
 	}
 
-	public String getFirma() {
-		return firma;
+	public String getKontaktfirma() {
+		return kontakt;
 	}
 
-	public void setFirma(String firma) {
-		this.firma = firma;
+	public void setKontaktfirma(String firma) {
+		this.kontakt = firma;
 	}
 
 	@Override
 	public String toString() {
 		return "Eingangsrechnung [rechnungID=" + rechnungID + ", status="
-				+ getStatus() + ", datum=" + getDatumString() + ", kontaktID="
-				+ kontaktID + ", firma=" + firma + "]";
+				+ getStatus() + ", datum=" + getDatumString() + ", kontakt="
+				+ kontakt + "]";
 	}
 
 	public String getValues() {
 		return "Eingangsrechnung:\n" + super.getValues() + "\nKontakt: "
-				+ kontaktID + " - " + firma;
+				+ kontakt;
 	}
 
 }

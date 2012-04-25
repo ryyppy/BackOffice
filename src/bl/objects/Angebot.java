@@ -9,6 +9,7 @@ import dal.TableMeta;
 @TableMeta(pkFieldName = "angebotID")
 public class Angebot extends DBEntity {
 	private Integer angebotID;
+	private String beschreibung;
 	private Double summe;
 	private Double dauer;
 	private Double chance;
@@ -20,8 +21,9 @@ public class Angebot extends DBEntity {
 
 	}
 
-	public Angebot(Double summe, Double dauer, Date date, Double chance,
+	public Angebot(String beschreibung, Double summe, Double dauer, Date date, Double chance,
 			Integer kundenID, Integer projektID) {
+		this.beschreibung=beschreibung;
 		this.summe = summe;
 		this.dauer = dauer;
 		this.datum = date;
@@ -30,9 +32,10 @@ public class Angebot extends DBEntity {
 		this.projektID = projektID;
 	}
 
-	public Angebot(Integer id, Double summe, Double dauer, Date date,
+	public Angebot(Integer id, String beschreibung, Double summe, Double dauer, Date date,
 			Double chance, Integer kundenID, Integer projektID) {
 		this.angebotID = id;
+		this.beschreibung=beschreibung;
 		this.summe = summe;
 		this.dauer = dauer;
 		this.datum = date;
@@ -48,6 +51,14 @@ public class Angebot extends DBEntity {
 
 	public Integer getAngebotID() {
 		return angebotID;
+	}
+
+	public String getBeschreibung() {
+		return beschreibung;
+	}
+
+	public void setBeschreibung(String beschreibung) {
+		this.beschreibung = beschreibung;
 	}
 
 	public void setAngebotID(Integer angebotID) {

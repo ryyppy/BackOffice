@@ -1,7 +1,7 @@
 package gui;
 
-import gui.componentModels.MyTableCellRenderer;
 import gui.componentModels.EntityTableModel;
+import gui.componentModels.MyTableCellRenderer;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -16,8 +16,10 @@ import java.awt.event.KeyEvent;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -32,9 +34,11 @@ import javax.swing.table.TableRowSorter;
 import bl.BL;
 import dal.DALException;
 import dal.DBEntity;
+import dal.WhereChain;
+import dal.WhereOperator;
 
 public abstract class EntityViewPanel extends JPanel implements ActionListener {
-	protected JButton add, edit, delete;
+	protected JButton add, edit, delete, search;
 	public JTable table;
 	public EntityTableModel tModel;
 
@@ -46,14 +50,19 @@ public abstract class EntityViewPanel extends JPanel implements ActionListener {
 
 	private JFrame owner;
 
-	private EntityViewPanel(Class<? extends DBEntity> c) {
+	private JComboBox<String> fieldnames;
+	private JComboBox<WhereOperator> operators;
+	private JTextField searchField;
+
+	private EntityViewPanel(Class<? extends DBEntity> entityClass,
+			Class<? extends DBEntity> entityViewClass) {
 		setLayout(new BorderLayout());
 
-		this.entityClass = c;
+		this.entityClass = entityClass;
 		className = entityClass.getName();
 		className = className.substring(className.lastIndexOf('.') + 1);
 
-		tModel = new EntityTableModel(c);
+		tModel = new EntityTableModel(entityViewClass);
 		table = new JTable(tModel);
 
 		JScrollPane scrollpane = this.createTablePanel();
@@ -67,10 +76,11 @@ public abstract class EntityViewPanel extends JPanel implements ActionListener {
 		setVisible(true);
 	}
 
-	public EntityViewPanel(Class<? extends DBEntity> c,
-			Class<? extends JDialog> edit, JFrame owner) {
-		this(c);
-		this.editClass = edit;
+	public EntityViewPanel(Class<? extends DBEntity> entityClass,
+			Class<? extends DBEntity> entityViewClass,
+			Class<? extends JDialog> editClass, JFrame owner) {
+		this(entityClass, entityViewClass);
+		this.editClass = editClass;
 		this.owner = owner;
 	}
 
@@ -78,7 +88,78 @@ public abstract class EntityViewPanel extends JPanel implements ActionListener {
 		return owner;
 	}
 
+	public JComboBox<String> getFieldnames() {
+		return fieldnames;
+	}
+
+	public JButton getSearch() {
+		return search;
+	}
+
+	public JComboBox<WhereOperator> getOperators() {
+		return operators;
+	}
+
+	public JTextField getSearchField() {
+		return searchField;
+	}
+
 	public abstract void initAdditionalButtons();
+
+	public DBEntity getSelectedDBEntity() {
+		if (table.getSelectedRow() == -1) {
+			return null;
+		}
+		int a = table.convertRowIndexToModel(table.getSelectedRow());
+
+		DBEntity selectedItem = (DBEntity) tModel.getValueAt(a);
+
+		String property = entityClass.getName();
+		property = property.substring(property.lastIndexOf('.') + 1);
+		String getter = "get" + property;
+		Method method;
+		DBEntity entity = null;
+		try {
+			method = BL.class.getMethod(getter, int.class);
+			entity = (DBEntity) method.invoke(BL.class, selectedItem.getID());
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (DALException e) {
+			e.printStackTrace();
+		}
+
+		return entity;
+	}
+
+	public Object getSelectedItem() {
+		if (table.getSelectedRow() == -1) {
+			return null;
+		}
+		int a = table.convertRowIndexToModel(table.getSelectedRow());
+
+		return tModel.getValueAt(a);
+	}
+
+	public ArrayList<Object> getSelectedItems() {
+		int[] a = table.getSelectedRows();
+		if (a.length == 0) {
+			return null;
+		}
+		ArrayList<Object> ret = new ArrayList<Object>();
+		for (int i = 0; i < a.length; i++) {
+			int b = table.convertRowIndexToModel(a[i]);
+			ret.add(tModel.getValueAt(b));
+		}
+		return ret;
+	}
 
 	public void setAdditionalButtons(JButton[] buttons) {
 		additionalButtons = new JPanel(new GridLayout(buttons.length, 1));
@@ -160,19 +241,29 @@ public abstract class EntityViewPanel extends JPanel implements ActionListener {
 	}
 
 	private JPanel createSearchPanel() {
-		final JButton search = new JButton("Show Filter");
+		search = new JButton("Select Filter");
 		final JButton refresh = new JButton("Show All");
-		final JTextField searchField = new JTextField();
+		fieldnames = new JComboBox<String>(tModel.columnNamesOriginal);
+		operators = new JComboBox<WhereOperator>(WhereOperator.values());
+		searchField = new JTextField();
 
 		ActionListener al = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == search) {
-					tModel.setFilter(searchField.getText());
+					String fieldname = (String) fieldnames.getSelectedItem();
+					WhereOperator operator = (WhereOperator) operators
+							.getSelectedItem();
+					String value = searchField.getText();
+					WhereChain where = new WhereChain(fieldname, operator,
+							value);
+					tModel.setWhereChain(where);
+					// tModel.setFilter(searchField.getText());
 					tModel.refresh();
 				} else if (e.getSource() == refresh) {
 					searchField.setText("");
 					tModel.setFilter("");
+					tModel.setWhereChain(null);
 					tModel.refresh();
 				}
 			}
@@ -189,9 +280,12 @@ public abstract class EntityViewPanel extends JPanel implements ActionListener {
 			}
 		});
 
-		JPanel ret = new JPanel(new GridLayout(4, 1));
+		JPanel ret = new JPanel(new GridLayout(7, 1));
 		ret.add(new JLabel("<html><body><b> Filter:</b></body></html>"));
+		ret.add(fieldnames);
+		ret.add(operators);
 		ret.add(searchField);
+		ret.add(new JLabel());
 		ret.add(search);
 		ret.add(refresh);
 		return ret;
@@ -221,80 +315,84 @@ public abstract class EntityViewPanel extends JPanel implements ActionListener {
 					e1.printStackTrace();
 				}
 			} else if (e.getSource() == edit) {
-				int a = table.convertRowIndexToModel(table.getSelectedRow());
-				int aIndex = 0;
-				DBEntity entity = null;
+				DBEntity entity = (DBEntity) getSelectedItem();
+				if (entity != null) {
+					try {
+						String getter = "get" + className;
 
-				try {
-					String getter = "get" + className;
+						Method method = BL.class.getMethod(getter, int.class);
 
-					Method method = BL.class.getMethod(getter, int.class);
-					entity = (DBEntity) method.invoke(BL.class,
-							(Integer) tModel.getValueAt(a, aIndex));
+						entity = (DBEntity) method.invoke(BL.class,
+								entity.getID());
 
-					Class<?>[] para = new Class<?>[2];
-					para[0] = JFrame.class;
-					para[1] = entityClass;
+						Class<?>[] para = new Class<?>[2];
+						para[0] = JFrame.class;
+						para[1] = entityClass;
 
-					Object[] args = new Object[2];
-					args[0] = owner;
-					args[1] = entity;
+						Object[] args = new Object[2];
+						args[0] = owner;
+						args[1] = entity;
 
-					Constructor<? extends JDialog> c = editClass
-							.getConstructor(para);
-					c.newInstance(args);
+						Constructor<? extends JDialog> c = editClass
+								.getConstructor(para);
+						c.newInstance(args);
 
-					tModel.refresh();
-				} catch (NoSuchMethodException e1) {
-					e1.printStackTrace();
-				} catch (SecurityException e1) {
-					e1.printStackTrace();
-				} catch (IllegalAccessException e1) {
-					e1.printStackTrace();
-				} catch (IllegalArgumentException e1) {
-					e1.printStackTrace();
-				} catch (InvocationTargetException e1) {
-					e1.printStackTrace();
-				} catch (InstantiationException e1) {
-					e1.printStackTrace();
-				} catch (Exception e1) {
-					e1.printStackTrace();
-					if (e1 instanceof DALException) {
-						JOptionPane.showMessageDialog(owner, e1.getMessage());
+						tModel.refresh();
+					} catch (NoSuchMethodException e1) {
+						e1.printStackTrace();
+					} catch (SecurityException e1) {
+						e1.printStackTrace();
+					} catch (IllegalAccessException e1) {
+						e1.printStackTrace();
+					} catch (IllegalArgumentException e1) {
+						e1.printStackTrace();
+					} catch (InvocationTargetException e1) {
+						e1.printStackTrace();
+					} catch (InstantiationException e1) {
+						e1.printStackTrace();
+					} catch (Exception e1) {
+						e1.printStackTrace();
+						if (e1 instanceof DALException) {
+							JOptionPane.showMessageDialog(owner,
+									e1.getMessage());
+						}
 					}
 				}
 			} else if (e.getSource() == delete) {
-				int option = JOptionPane.showConfirmDialog(owner,
-						"Sollen die ausgewählten Elemente gelöscht werden?",
-						"Löschauftrag", JOptionPane.YES_NO_OPTION,
-						JOptionPane.QUESTION_MESSAGE);
-				if (option == JOptionPane.YES_OPTION) {
-					int[] a = table.getSelectedRows();
-					int aIndex = 0;
-					for (int i = 0; i < a.length; i++) {
-						int b = table.convertRowIndexToModel(a[i]);
-						try {
-							String getter = "delete" + className;
+				ArrayList<Object> selected = getSelectedItems();
+				if (selected != null) {
+					int option = JOptionPane
+							.showConfirmDialog(
+									owner,
+									"Sollen die ausgewählten Elemente gelöscht werden?",
+									"Löschauftrag", JOptionPane.YES_NO_OPTION,
+									JOptionPane.QUESTION_MESSAGE);
+					if (option == JOptionPane.YES_OPTION) {
+						for (Object item : selected) {
+							DBEntity entity = (DBEntity) item;
+							try {
+								String getter = "delete" + className;
 
-							Method method = BL.class.getMethod(getter,
-									int.class);
+								Method method = BL.class.getMethod(getter,
+										int.class);
 
-							method.invoke(BL.class,
-									(Integer) tModel.getValueAt(b, aIndex));
-
-						} catch (NoSuchMethodException e1) {
-							e1.printStackTrace();
-						} catch (SecurityException e1) {
-							e1.printStackTrace();
-						} catch (IllegalAccessException e1) {
-							e1.printStackTrace();
-						} catch (IllegalArgumentException e1) {
-							e1.printStackTrace();
-						} catch (InvocationTargetException e1) {
-							e1.printStackTrace();
+								method.invoke(BL.class, entity.getID());
+							} catch (NoSuchMethodException e1) {
+								e1.printStackTrace();
+							} catch (SecurityException e1) {
+								e1.printStackTrace();
+							} catch (IllegalAccessException e1) {
+								e1.printStackTrace();
+							} catch (IllegalArgumentException e1) {
+								e1.printStackTrace();
+							} catch (InvocationTargetException e1) {
+								e1.printStackTrace();
+							} catch (DALException e1) {
+								e1.printStackTrace();
+							}
 						}
+						tModel.refresh();
 					}
-					tModel.refresh();
 				}
 			}
 		}

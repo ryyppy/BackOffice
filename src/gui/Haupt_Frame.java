@@ -37,4 +37,7 @@ public class Haupt_Frame extends JFrame {
 		setVisible(true);
 	}
 
+	public JTabbedPane getReiter() {
+		return reiter;
+	}
 }

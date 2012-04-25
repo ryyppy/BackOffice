@@ -37,8 +37,8 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 
 	private Angebot a;
 
-	private String[] columnNames = { "Summe", "Dauer", "Chance", "Kunde-ID",
-			"Projekt-ID" };
+	private String[] columnNames = { "Beschreibung", "Summe", "Dauer",
+			"Chance", "Kunde-ID", "Projekt-ID" };
 
 	public EditAngebotDialog(JFrame owner) {
 		super(owner, "Angebot hinzufuegen", true);
@@ -139,9 +139,10 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 		panel.add(p);
 
 		if (a != null) {
-			textfeld[0].setText(String.valueOf(a.getSumme()));
-			textfeld[1].setText(String.valueOf(a.getDauer()));
-			textfeld[2].setText(String.valueOf(a.getChance()));
+			textfeld[0].setText(String.valueOf(a.getBeschreibung()));
+			textfeld[1].setText(String.valueOf(a.getSumme()));
+			textfeld[2].setText(String.valueOf(a.getDauer()));
+			textfeld[3].setText(String.valueOf(a.getChance()));
 			for (int i = 0; i < kunden.getItemCount(); i++) {
 				if (kunden.getItemAt(i).getKundeID() == a.getKundeID()) {
 					kunden.setSelectedIndex(i);
@@ -165,17 +166,20 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 		if (e.getSource() == save) {
 			try {
 				DataBinder b = new DataBinder();
-				double summe = b.bindFrom_double(textfeld[0],
+				String beschreibung = b.bindFrom_String(textfeld[0],
 						new StandardRule());
-				double dauer = b.bindFrom_double(textfeld[1],
+				double summe = b.bindFrom_double(textfeld[1],
 						new StandardRule());
-				double chance = b.bindFrom_double(textfeld[2],
+				double dauer = b.bindFrom_double(textfeld[2],
+						new StandardRule());
+				double chance = b.bindFrom_double(textfeld[3],
 						new PercentRule());
 				int kundenID = b.bindFrom_int(kunden, null);
 				int projektID = b.bindFrom_int(projekte, null);
 
 				if (!b.hasErrors()) {
 					if (a != null) {
+						a.setBeschreibung(beschreibung);
 						a.setSumme(summe);
 						a.setDauer(dauer);
 						a.setChance(chance);
@@ -185,8 +189,8 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 						JOptionPane.showMessageDialog(this,
 								"Eintrag wurde erfolgreich bearbeitet");
 					} else {
-						a = new Angebot(summe, dauer, new Date(), chance,
-								kundenID, projektID);
+						a = new Angebot(beschreibung, summe, dauer, new Date(),
+								chance, kundenID, projektID);
 						BL.saveAngebot(a);
 						JOptionPane.showMessageDialog(this,
 								"Eintrag wurde erfolgreich hinzugefügt");

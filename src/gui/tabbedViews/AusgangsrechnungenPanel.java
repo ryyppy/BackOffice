@@ -16,20 +16,22 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import bl.BL;
+import bl.PDFFile;
+import bl.PDFFilter;
 import bl.objects.Ausgangsrechnung;
 import bl.objects.Kunde;
+import bl.objects.view.AusgangsrechnungView;
 
 import com.itextpdf.text.DocumentException;
 
 import dal.DALException;
-import extras.PDFFile;
-import extras.PDFFilter;
 
 public class AusgangsrechnungenPanel extends EntityViewPanel {
 	private JButton kundenInfo, showRechnungszeilen, print;
 
 	public AusgangsrechnungenPanel(JFrame owner) {
-		super(Ausgangsrechnung.class, EditAusgangsrechnungDialog.class, owner);
+		super(Ausgangsrechnung.class, AusgangsrechnungView.class,
+				EditAusgangsrechnungDialog.class, owner);
 	}
 
 	@Override
@@ -44,65 +46,58 @@ public class AusgangsrechnungenPanel extends EntityViewPanel {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == kundenInfo) {
-			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			int kIndex = table.getColumn("KundeID").getModelIndex();
-			Kunde k;
-			try {
-				k = BL.getKunde((Integer) tModel.getValueAt(a, kIndex));
-				JOptionPane.showMessageDialog(this, k.toString());
-			} catch (DALException e1) {
-				JOptionPane.showMessageDialog(this, e1.getMessage());
-			}
-		} else if (e.getSource() == showRechnungszeilen) {
-			int a = table.convertRowIndexToModel(table.getSelectedRow());
-			int aIndex = table.getColumn("RechnungID").getModelIndex();
-			int kIndex = table.getColumn("KundeID").getModelIndex();
-			int ausgangsrechnungsID = (Integer) tModel.getValueAt(a, aIndex);
-			int kundenID = Integer.valueOf(String.valueOf(tModel.getValueAt(a,
-					kIndex)));
-			new RechnungszeilenDialog(getOwner(), ausgangsrechnungsID, kundenID);
-		} else if (e.getSource() == print) {
-			JFileChooser fc = new JFileChooser();
-			fc.setAcceptAllFileFilterUsed(false);
-			// fc.addChoosableFileFilter(new PDFFilter());
-			fc.setFileFilter(new PDFFilter());
-			int returnVal = fc.showSaveDialog(this);
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				File file = fc.getSelectedFile();
-				if (!file.exists()) {
-					file = new File(file.getPath() + ".pdf");
-					try {
-						file.createNewFile();
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-				}
-				PDFFile f = null;
+			Ausgangsrechnung selectedItem = (Ausgangsrechnung) getSelectedDBEntity();
+			if (selectedItem != null) {
 				try {
-					f = new PDFFile(file);
-					int a = table
-							.convertRowIndexToModel(table.getSelectedRow());
-					int aIndex = table.getColumn("RechnungID").getModelIndex();
-					Ausgangsrechnung r;
-
-					r = BL.getAusgangsrechnung((Integer) tModel.getValueAt(a,
-							aIndex));
-					r.setRechnungID((Integer) tModel.getValueAt(a, aIndex));
-					f.createRechnung(r);
-					Desktop.getDesktop().open(file);
-				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
-					JOptionPane.showMessageDialog(this, e1.getMessage());
-				} catch (DocumentException e1) {
-					e1.printStackTrace();
+					Kunde k = BL.getKunde(selectedItem.getKundeID());
+					JOptionPane.showMessageDialog(this, k.toString());
 				} catch (DALException e1) {
 					JOptionPane.showMessageDialog(this, e1.getMessage());
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				} finally {
-					f.close();
 				}
+			}
+		} else if (e.getSource() == showRechnungszeilen) {
+			Ausgangsrechnung selectedItem = (Ausgangsrechnung) getSelectedDBEntity();
+			if (selectedItem != null) {
+				new RechnungszeilenDialog(getOwner(),
+						selectedItem.getRechnungID(), selectedItem.getKundeID());
+			}
+		} else if (e.getSource() == print) {
+			Ausgangsrechnung selectedItem = (Ausgangsrechnung) getSelectedDBEntity();
+			if (selectedItem != null) {
 
+				JFileChooser fc = new JFileChooser();
+				fc.setAcceptAllFileFilterUsed(false);
+				fc.setFileFilter(new PDFFilter()); // addchoosablefilefilter
+				int returnVal = fc.showSaveDialog(this);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+
+					PDFFile f = null;
+					try {
+						f = new PDFFile(file);
+
+						Ausgangsrechnung r;
+
+						r = BL.getAusgangsrechnung(selectedItem.getRechnungID());
+						r.setRechnungID(selectedItem.getRechnungID());
+						f.createRechnung(r);
+						Desktop.getDesktop().open(file);
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+						JOptionPane.showMessageDialog(this, e1.getMessage());
+					} catch (DocumentException e1) {
+						e1.printStackTrace();
+					} catch (DALException e1) {
+						JOptionPane.showMessageDialog(this, e1.getMessage());
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					} finally {
+						if (f != null) {
+							f.close();
+						}
+					}
+
+				}
 			}
 		}
 	}
