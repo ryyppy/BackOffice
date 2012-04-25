@@ -13,6 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -195,6 +197,14 @@ public abstract class EntityViewPanel extends JPanel implements ActionListener {
 		tSorter.setSortsOnUpdates(true);
 
 		table.setRowSorter(tSorter);
+
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					edit.doClick();
+				}
+			}
+		});
 
 		return new JScrollPane(table);
 	}
