@@ -1,13 +1,11 @@
 package config;
 
-import org.junit.After;
-import org.junit.Before;
+import dal.DatabaseAdapter;
+import dal.MysqlAdapter;
+import junit.framework.Assert;
 import org.junit.Test;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Properties;
+import java.io.File;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,34 +15,47 @@ import java.util.Properties;
  */
 public class ConfigurationTest {
 
-    private Properties original = new Properties();
 
-    @Before
-    public void setUp() throws Exception {
-        try{
-            original.load(new FileInputStream(Configuration.CONFIG_FILENAME));
-        }catch(IOException ioe){
-            //If there is no file, there will be no original-file to be restored
-            original = null;
-        }
+    @Test
+    public void testValidConfig() throws Exception{
+        System.out.println("Reading config-file 'tests/config/valid_config.properties' ...");
+        Configuration config = new Configuration("tests/config/valid_config.properties");
+        System.out.println(config);
+
+        DatabaseAdapter db = config.getDatabaseAdapter();
+        Assert.assertNotNull("Database-Adapter not initialized!", db);
+        Assert.assertEquals("Did not load the right DB-Adapter!", MysqlAdapter.class, db.getClass());
+
+        Assert.assertTrue("LoggingStdout should be true!", config.isLoggingStdout());
+
+        File expectedDir = new File("loggy");
+        File foundDir = config.getLoggingDirectory();
+        Assert.assertEquals(String.format("Loggingdirectory should be %s - found: %s", expectedDir.getAbsolutePath(), foundDir.getAbsolutePath()), expectedDir, foundDir);
     }
 
-    @After
-    public void tearDown() throws Exception {
-        try{
-        //Restore the original file
-        if(original != null)
-            original.store(new FileOutputStream(Configuration.CONFIG_FILENAME), null);
-        }catch(IOException ioe){
-            ioe.printStackTrace();
-        }
+    /**
+     * Tests the config-file of the production-environment (config.properties) for the right DB-configuration
+     * @throws Exception - If there could not be made any connection to the db
+     */
+    @Test
+    public void testDatabaseConfig() throws Exception{
+        System.out.println(String.format("Reading config-file '%s' ...", Configuration.CONFIG_FILENAME));
+        Configuration config = Configuration.getInstance();
 
+        DatabaseAdapter db = config.getDatabaseAdapter();
+        try{
+            db.connect();
+            System.out.println(String.format("Connection could be established with '%s'",db.toString()));
+        }finally{
+            if(db.isConnected())
+                db.disconnect();
+        }
     }
 
     @Test
-    public void getInstanceTest() throws Exception{
-        Configuration config = Configuration.getInstance();
+    public void testInvalidConfig() throws Exception {
+            Configuration config = new Configuration("tests/config/invalid_config.properties");
 
-        System.out.println(config);
+
     }
 }
