@@ -3,10 +3,12 @@ package dal;
 import bl.objects.Angebot;
 import bl.objects.Eingangsrechnung;
 import bl.objects.Rechnung;
+import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -27,17 +29,17 @@ public class MysqlAdapterTest {
     public void testAddEntity() throws Exception {
 
         db.connect();
-        /*
+
         Angebot a = new Angebot();
         a.setChance(20.0);
         a.setDatum(GregorianCalendar.getInstance().getTime());
-        a.setDauer(100);
+        a.setDauer(100.0);
         a.setSumme(20.0);
 
         Object newKey = db.addEntity(a);
 
         Assert.assertNotNull("Insert did not succeed", newKey);
-        */
+
         db.connect();
 
         db.disconnect();
@@ -122,7 +124,7 @@ public class MysqlAdapterTest {
 
 
     @Test
-    public void random() throws Exception{
+    public void testAllGetMethods() throws Exception{
         db.connect();
         List<Angebot> liste = db.getEntityList(Angebot.class);
 
@@ -142,7 +144,7 @@ public class MysqlAdapterTest {
 
         System.out.println("\n\n GETENTITIESBY WHERE:");
         WhereChain where = new WhereChain("rechnungID", WhereOperator.GREATEREQUALS, 1);
-        where.addAndCondition("status", WhereOperator.LIKE, "%offen%");
+        where.addAndCondition("status", WhereOperator.LIKE, "off");
 
         List<Eingangsrechnung> liste3 = db.getEntitiesBy(where, Eingangsrechnung.class);
         for(Eingangsrechnung a : liste3){

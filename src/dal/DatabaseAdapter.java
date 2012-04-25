@@ -95,6 +95,11 @@ public abstract class DatabaseAdapter {
             throw new DALException("Error while trying to commit!", sqle);
         }finally{
             transaction = false;
+            try{
+                con.setAutoCommit(true);
+            }catch(SQLException sqle){
+                throw new DALException("Error while setting auto-commit-mode!", sqle);
+            }
         }
     }
 
@@ -112,6 +117,11 @@ public abstract class DatabaseAdapter {
             throw new DALException("Error while trying to rollback!", sqle);
         }finally{
             transaction = false;
+            try{
+                con.setAutoCommit(true);
+            }catch(SQLException sqle){
+                throw new DALException("Error while setting auto-commit-mode!", sqle);
+            }
         }
     }
 

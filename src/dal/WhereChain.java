@@ -15,6 +15,8 @@ public class WhereChain {
 
     /**
      * Initializes the new WhereChaine like in the give init(...) method
+     * If operator "WhereOperator.LIKE" is used, then value will be converted to "%value%".
+     * All %-signs will be removed first.
      * @param fieldname - Fieldname for the where condition
      * @param operator - WhereOperator for comparison
      * @param value - Value for the field-condition
@@ -24,7 +26,9 @@ public class WhereChain {
     }
 
     /**
-     * Initializes the new WhereChain like in the given init(...) ethod
+     * Initializes the new WhereChain like in the given init(...) method
+     * If operator "WhereOperator.LIKE" is used, then value will be converted to "%value%".
+     * All %-signs will be removed first.
      * @param entityClass - Class, which fields should be retrieved for the WHERE-Conditions
      * @param operator  - Operator which should be used for each condition
      * @param value - Value which should be used for each condition
@@ -37,6 +41,8 @@ public class WhereChain {
     /**
      * This method REINITIALIZES the WhereChain and sets the initial condition, the base of the whole chain on
      * which each other condition builds on
+     * If operator "WhereOperator.LIKE" is used, then value will be converted to "%value%".
+     * All %-signs will be removed first.
      * Warning: Existing where-conditions will be dropped!
      * @param fieldname - Fieldname for the where condition
      * @param operator - WhereOperator for comparison
@@ -53,6 +59,8 @@ public class WhereChain {
      * This method REINITIALIZES the whereChain, that means, existing where-conditions will be dropped!
      * It constructs a WhereCondition-Chain for each field in the given class-definiton with the same Operator and
      * value and links them with the given chainword.
+     * If operator "WhereOperator.LIKE" is used, then value will be converted to "%value%".
+     * All %-signs will be removed first.
      * For instance:
      * WhereCondition(Angebot.class, WhereOperator.LIKE, "%max%", WhereChain.Chainer.OR)
      * Creates following syntactic WHERE-Clausel:
@@ -73,6 +81,8 @@ public class WhereChain {
      * Adds a AND-Condition to the other conditions
      * It will be intepreted like that:
      * WHERE [condition] AND [your new condition] ...
+     * If operator "WhereOperator.LIKE" is used, then value will be converted to "%value%".
+     * All %-signs will be removed first.
      * @param fieldname - Fieldname for the where condition
      * @param operator - WhereOperator for comparison
      * @param value - Value for the field-condition
@@ -85,6 +95,8 @@ public class WhereChain {
      * Adds a OR-Condition to the other conditions
      * It will be intepreted like that:
      * WHERE [condition] OR [your new condition] ...
+     * If operator "WhereOperator.LIKE" is used, then value will be converted to "%value%".
+     * All %-signs will be removed first.
      * @param fieldname - Fieldname for the where condition
      * @param operator - WhereOperator for comparison
      * @param value - Value for the field-condition
@@ -102,6 +114,11 @@ public class WhereChain {
      * @param value - Value for the field-condition
      */
     private void addCondition(Chainer chainer, String fieldname, WhereOperator operator, Object value){
+        if(operator.equals(WhereOperator.LIKE) && value != null && String.class.equals(value.getClass())) {
+            value = ((String)value).replace("%", ""); //Stripslash all %-percentage-signs
+            value = String.format("%%%s%%", value.toString());
+        }
+
         conditions.add(new WhereCondition(chainer, fieldname, operator, value));
     }
 
