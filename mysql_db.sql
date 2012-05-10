@@ -43,10 +43,10 @@ CREATE TABLE angebot(
 	FOREIGN KEY (projektID) REFERENCES projekt(projektID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-INSERT INTO angebot(beschreibung, summe, dauer, datum, chance, kundeID, projektID) VALUES ('an1', 12,  12, current_timestamp, 12, 1, 1);
-INSERT INTO angebot(beschreibung, summe, dauer, datum, chance, kundeID, projektID) VALUES ('an2', 12,  12, current_timestamp, 12, 1, 2);
-INSERT INTO angebot(beschreibung, summe, dauer, datum, chance, kundeID, projektID) VALUES ('an3', 12,  12, current_timestamp, 12, 2, 1);
-INSERT INTO angebot(beschreibung, summe, dauer, datum, chance, kundeID, projektID) VALUES ('an4', 12,  12, current_timestamp, 12, 2, 2);
+INSERT INTO angebot(beschreibung, summe, dauer, datum, chance, kundeID, projektID) VALUES ('an1', 12000,  200, current_timestamp, 12, 1, 1);
+INSERT INTO angebot(beschreibung, summe, dauer, datum, chance, kundeID, projektID) VALUES ('an2', 23000,  600, current_timestamp, 12, 1, 2);
+INSERT INTO angebot(beschreibung, summe, dauer, datum, chance, kundeID, projektID) VALUES ('an3', 15000,  350, current_timestamp, 12, 2, 1);
+INSERT INTO angebot(beschreibung, summe, dauer, datum, chance, kundeID, projektID) VALUES ('an4', 10000,  100, current_timestamp, 12, 2, 2);
 
 
 CREATE TABLE kontakt(

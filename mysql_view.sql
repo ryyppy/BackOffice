@@ -1,3 +1,46 @@
+DROP VIEW IF EXISTS stundensatz;
+CREATE VIEW stundensatz AS
+	SELECT p.projektid, p.name AS Projekt ,a.angebotid, a.beschreibung as Angebot, 
+			a.dauer, a.summe, round(a.summe/a.dauer,2) AS Stundensatz
+	FROM projekt p, angebot a
+	WHERE p.projektid = a.projektid
+;
+
+DROP VIEW IF EXISTS offeneProjekte;
+CREATE VIEW offeneProjekte AS
+	SELECT *
+	FROM projekt p
+	WHERE p.projektid NOT IN
+		(SELECT DISTINCT projektid FROM angebot)
+;
+
+DROP VIEW IF EXISTS offeneAusgangsrechnungen;
+CREATE VIEW offeneAusgangsrechnungen AS
+	SELECT r.rechnungid, r.status, r.datum, k.kundeid, k.nachname as Kunde
+	FROM rechnung r, ausgangsrechnung a, kunde k
+	WHERE r.status='offen'
+	AND r.rechnungid = a.rechnungid
+	AND a.kundeid = k.kundeid
+;
+
+DROP VIEW IF EXISTS einnahmen;
+CREATE VIEW einnahmen AS
+	SELECT rz.rechnungszeileid, rz.kommentar, rz.steuersatz, rz.betrag, r.datum
+	FROM rechnungszeile rz, rechnung r
+	WHERE rz.rechnungid=r.rechnungid 
+	AND rz.rechnungid IN 
+		(SELECT rechnungid FROM ausgangsrechnung)
+;
+
+DROP VIEW IF EXISTS ausgaben;
+CREATE VIEW ausgaben AS
+	SELECT rz.rechnungszeileid, rz.kommentar, rz.steuersatz, rz.betrag, r.datum
+	FROM rechnungszeile rz, rechnung r
+	WHERE rz.rechnungid=r.rechnungid 
+	AND rz.rechnungid IN 
+		(SELECT rechnungid FROM eingangsrechnung)
+;
+
 DROP VIEW IF EXISTS angebotview;
 CREATE VIEW angebotview AS 
 	SELECT a.angebotid, a.beschreibung, a.summe, a.dauer, a.chance, a.datum, k.kundeid, k.nachname AS kunde, p.projektid, p.name AS projekt
