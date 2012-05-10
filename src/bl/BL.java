@@ -1,9 +1,14 @@
 package bl;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InvalidObjectException;
+import java.nio.channels.FileChannel;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -16,6 +21,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import sun.misc.IOUtils;
 
 import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
 
@@ -586,6 +593,15 @@ public class BL {
 		// eingangsrechnungenliste.remove(a);
 		// }
 		db.connect();
+		Eingangsrechnung e = db.getEntityByID(rechnungID, Eingangsrechnung.class);
+
+		if (e.getFile() != null) {
+			File del = new File(e.getFile());
+			try {
+				del.delete();
+			} catch (Exception ee) {
+			}
+		}
 		db.deleteEntity(rechnungID, Rechnung.class);
 		db.disconnect();
 	}
@@ -646,8 +662,8 @@ public class BL {
 		return ret;
 	}
 
-	public static Integer saveEingangsrechnung(Eingangsrechnung e)
-			throws DALException, InvalidObjectException {
+	public static Integer saveEingangsrechnung(Eingangsrechnung e, File f)
+			throws DALException, IOException {
 		// String exception = "";
 		// // ... Kontakt-ID überprüfen
 		// if (!exception.isEmpty()) {
@@ -656,12 +672,33 @@ public class BL {
 		//
 		// e.setRechnungID(rechnungID++);
 		// eingangsrechnungenliste.add(e);
+		if (f != null) {
+			String pfad = "file/"
+					+ new StringBuilder(
+							new SimpleDateFormat("yyyy/MM/dd")
+									.format(new Date())).toString();
+			File ff = new File(pfad);
+
+			if (!ff.exists()) {
+				ff.mkdirs();
+			}
+			ff = new File(ff.getPath() + "/" + f.getName());
+			if (!ff.exists()) {
+				ff.createNewFile();
+			}
+
+			FileChannel inChannel = new FileInputStream(f).getChannel();
+			FileChannel outChannel = new FileOutputStream(ff).getChannel();
+			inChannel.transferTo(0, inChannel.size(), outChannel);
+			e.setFile(ff.getPath());
+		}
 		db.connect();
 		db.beginTransaction();
 		try {
 			Rechnung r = new Rechnung(e.getStatus(), e.getDatum());
 			Object key = db.addEntity(r);
 			e.setRechnungID(Integer.valueOf(String.valueOf(key)));
+
 			db.addEntity(e);
 			db.commit();
 		} catch (DALException d) {
@@ -672,8 +709,8 @@ public class BL {
 		return e.getRechnungID();
 	}
 
-	public static void updateEingangsrechnung(Eingangsrechnung e)
-			throws DALException, InvalidObjectException {
+	public static void updateEingangsrechnung(Eingangsrechnung e, File f)
+			throws DALException, IOException {
 		// String exception = "";
 		// // ... Kontakt-ID überprüfen
 		// if (!exception.isEmpty()) {
@@ -685,6 +722,33 @@ public class BL {
 		// er = e;
 		// }
 		// }
+		if (f != null) {
+			if (e.getFile() != null) {
+				File del = new File(e.getFile());
+				try {
+					del.delete();
+				} catch (Exception ee) {
+				}
+			}
+			String pfad = "file/"
+					+ new StringBuilder(
+							new SimpleDateFormat("yyyy/MM/dd")
+									.format(new Date())).toString();
+			File ff = new File(pfad);
+
+			if (!ff.exists()) {
+				ff.mkdirs();
+			}
+			ff = new File(ff.getPath() + "/" + f.getName());
+			if (!ff.exists()) {
+				ff.createNewFile();
+			}
+
+			FileChannel inChannel = new FileInputStream(f).getChannel();
+			FileChannel outChannel = new FileOutputStream(ff).getChannel();
+			inChannel.transferTo(0, inChannel.size(), outChannel);
+			e.setFile(ff.getPath());
+		}
 		db.connect();
 		Rechnung r = new Rechnung(e.getRechnungID(), e.getStatus(),
 				e.getDatum());
@@ -1351,8 +1415,8 @@ public class BL {
 					Projekt p = db.getEntityByID(projektid, Projekt.class);
 
 					if (p == null) {
-						addLogLine("ERRORMESSAGE: Projekt mit projektID=" + projektid
-								+ " nicht vorhanden");
+						addLogLine("ERRORMESSAGE: Projekt mit projektID="
+								+ projektid + " nicht vorhanden");
 						db.rollback();
 						db.disconnect();
 						return log;
@@ -1382,4 +1446,5 @@ public class BL {
 		db.disconnect();
 		return "";
 	}
+
 }

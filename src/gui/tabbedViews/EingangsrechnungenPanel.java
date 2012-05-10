@@ -14,6 +14,7 @@ import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -33,7 +34,8 @@ import com.itextpdf.text.DocumentException;
 import dal.DALException;
 
 public class EingangsrechnungenPanel extends EntityViewPanel {
-	private JButton kontaktInfo, showRechnungszeilen, print, importRechnung;
+	private JMenuItem kontaktInfo, showRechnungszeilen,showRechnung, print;
+	private JButton importRechnung;
 
 	public EingangsrechnungenPanel(JFrame owner) {
 		super(Eingangsrechnung.class, EingangsrechnungView.class,
@@ -42,14 +44,26 @@ public class EingangsrechnungenPanel extends EntityViewPanel {
 
 	@Override
 	public void initAdditionalButtons() {
-		kontaktInfo = new JButton("Kontaktinfo");
-		showRechnungszeilen = new JButton("Show Rechnungszeilen");
-		print = new JButton("Print (to PDF)");
 		importRechnung = new JButton("Import");
 
-		JButton[] buttons = { kontaktInfo, showRechnungszeilen, print, null,
-				importRechnung };
+		JButton[] buttons = { importRechnung };
 		super.setAdditionalButtons(buttons);
+	}
+
+	@Override
+	public void initAnalysisPanel() {
+
+	}
+
+	@Override
+	public void initPopupMenuItems() {
+		kontaktInfo = new JMenuItem("Kontaktinfo");
+		showRechnung= new JMenuItem("Show Rechnung");
+		showRechnungszeilen = new JMenuItem("Show Rechnungszeilen");
+		print = new JMenuItem("Als PDF drucken");
+
+		JMenuItem[] menuitems = { showRechnung, showRechnungszeilen, print, kontaktInfo };
+		super.setPopupMenuItems(menuitems);
 	}
 
 	@Override
@@ -63,6 +77,17 @@ public class EingangsrechnungenPanel extends EntityViewPanel {
 				} catch (DALException e1) {
 					JOptionPane.showMessageDialog(this, e1.getMessage());
 				}
+			}
+		}else if (e.getSource() == showRechnung){
+			Eingangsrechnung selectedItem = (Eingangsrechnung) getSelectedDBEntity();
+			if (selectedItem != null && selectedItem.getFile()!=null) {
+				try {
+					Desktop.getDesktop().open(new File(selectedItem.getFile()));
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(this, "Fehler beim Anzeigen der Rechnung");
+				}
+			}else{
+				JOptionPane.showMessageDialog(this, "Es ist keine Bild zu dieser Rechnung hinterlegt worden!");
 			}
 		} else if (e.getSource() == showRechnungszeilen) {
 			Eingangsrechnung selectedItem = (Eingangsrechnung) getSelectedDBEntity();
@@ -123,12 +148,12 @@ public class EingangsrechnungenPanel extends EntityViewPanel {
 
 				File file = fc.getSelectedFile();
 
-//				XMLFile f = null;
+				// XMLFile f = null;
 
 				try {
 					if (file.exists()) {
-//						f = new XMLFile(file);
-//						f.importRechnungen();
+						// f = new XMLFile(file);
+						// f.importRechnungen();
 						String log = BL.importEingangsrechnung(file);
 						new LogView(getOwner(), log);
 						tModel.refresh();

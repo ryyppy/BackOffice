@@ -88,6 +88,7 @@ DROP TABLE eingangsrechnung CASCADE;
 CREATE TABLE eingangsrechnung(
 	kontaktID 		integer,
 	rechnungID		integer,
+	file			varchar(255),
 	PRIMARY KEY (rechnungID),
 	FOREIGN KEY (rechnungID) REFERENCES rechnung(rechnungID) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (kontaktID) REFERENCES kontakt(kontaktID) ON DELETE CASCADE ON UPDATE CASCADE

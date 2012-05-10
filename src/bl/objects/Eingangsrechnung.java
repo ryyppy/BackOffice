@@ -8,6 +8,7 @@ import dal.TableMeta;
 public class Eingangsrechnung extends Rechnung {
 	private Integer rechnungID;
 	private Integer kontaktID;
+	private String file;
 
 	public Eingangsrechnung() {
 		super();
@@ -17,12 +18,19 @@ public class Eingangsrechnung extends Rechnung {
 		super(status, datum);
 		this.kontaktID = kontaktID;
 	}
+	
+	public Eingangsrechnung(String status, Date datum, Integer kontaktID, String file) {
+		super(status, datum);
+		this.kontaktID = kontaktID;
+		this.file=file;
+	}
 
 	public Eingangsrechnung(Integer rechnungID, String status, Date datum,
-			Integer kontaktID) {
+			Integer kontaktID,String file) {
 		super(rechnungID, status, datum);
 		this.kontaktID = kontaktID;
 		this.rechnungID = rechnungID;
+		this.file=file;
 	}
 
 	public Integer getKontaktID() {
@@ -40,6 +48,14 @@ public class Eingangsrechnung extends Rechnung {
 	public void setRechnungID(Integer rechnungID) {
 		this.rechnungID = rechnungID;
 		super.setRechnungID(rechnungID);
+	}
+
+	public String getFile() {
+		return file;
+	}
+
+	public void setFile(String file) {
+		this.file = file;
 	}
 
 	@Override

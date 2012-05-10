@@ -2,12 +2,15 @@ package gui.editEntityViews;
 
 import gui.componentModels.EntityComboBoxModel;
 import gui.componentModels.MyListCellRenderer;
+import gui.specialViews.LogView;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,13 +18,19 @@ import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 import bl.BL;
+import bl.ImageFilter;
+import bl.XMLFilter;
 import bl.objects.Eingangsrechnung;
 import bl.objects.Kontakt;
 import dal.DALException;
@@ -33,9 +42,11 @@ public class EditEingangsrechnungDialog extends JDialog implements
 	private JComboBox<Kontakt> kontakt;
 	private JComboBox<String> status;
 	private JTextField datum;
-	private JButton add, cancel;
+	private JLabel fileLabel;
+	private File file = null;
+	private JButton add, cancel, select;
 
-	private String[] columnNames = { "Status", "Datum", "Kontakt" };
+	private String[] columnNames = { "Status", "Datum", "Kontakt", "File" };
 	private String[] statusValues = { "offen", "bezahlt" };
 
 	private Eingangsrechnung er;
@@ -55,7 +66,7 @@ public class EditEingangsrechnungDialog extends JDialog implements
 	}
 
 	public void initDialog() {
-		setSize(300, 150);
+		setSize(300, 220);
 		setLocationRelativeTo(getOwner());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
@@ -128,6 +139,24 @@ public class EditEingangsrechnungDialog extends JDialog implements
 		p.add(kontakt);
 		panel.add(p);
 
+		select = new JButton("Select");
+		select.setName(columnNames[3]);
+		select.addActionListener(this);
+		JPanel grid = new JPanel(new GridLayout(2, 1));
+		p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		l = new JLabel(columnNames[3]);
+		p.add(l);
+		grid.add(p);
+		p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		fileLabel = new JLabel();
+		p.add(fileLabel);
+		grid.add(p);
+		panel.add(grid);
+
+		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		p.add(select);
+		panel.add(p);
+
 		if (er != null) {
 			status.setSelectedItem(er.getStatus());
 			for (int i = 0; i < kontakt.getItemCount(); i++) {
@@ -137,6 +166,9 @@ public class EditEingangsrechnungDialog extends JDialog implements
 				}
 			}
 			datum.setText(er.getDatumString());
+			File f = new File(er.getFile());
+			fileLabel.setText(f.getName());
+			fileLabel.setToolTipText(f.getName());
 		} else {
 			datum.setText(new StringBuilder(new SimpleDateFormat("dd.MM.yyyy")
 					.format(new Date())).toString());
@@ -154,18 +186,19 @@ public class EditEingangsrechnungDialog extends JDialog implements
 				String status = b.bindFrom_String2(this.status, null);
 				Date datum = b.bindFrom_Date(this.datum, new StandardRule());
 				int kontaktID = b.bindFrom_int(kontakt, null);
+				
 
 				if (!b.hasErrors()) {
 					if (er != null) {
 						er.setStatus(status);
 						er.setDatum(datum);
 						er.setKontaktID(kontaktID);
-						BL.updateEingangsrechnung(er);
+						BL.updateEingangsrechnung(er, file);
 						JOptionPane.showMessageDialog(this,
 								"Eintrag wurde erfolgreich bearbeitet");
 					} else {
 						er = new Eingangsrechnung(status, datum, kontaktID);
-						BL.saveEingangsrechnung(er);
+						BL.saveEingangsrechnung(er, file);
 						JOptionPane.showMessageDialog(this,
 								"Eintrag wurde erfolgreich hinzugefügt");
 					}
@@ -183,9 +216,33 @@ public class EditEingangsrechnungDialog extends JDialog implements
 			} catch (DALException de) {
 				de.printStackTrace();
 				JOptionPane.showMessageDialog(this, de.getMessage());
+			} catch (IOException ioe) {
+				// TODO Auto-generated catch block
+				ioe.printStackTrace();
 			}
 		} else if (e.getSource() == cancel) {
 			dispose();
+		} else if (e.getSource() == select) {
+			JFileChooser fc = new JFileChooser();
+			fc.setAcceptAllFileFilterUsed(false);
+			fc.setFileFilter(new ImageFilter());
+
+			int returnVal = fc.showOpenDialog(this);
+
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+				file = fc.getSelectedFile();
+
+				if (file.exists()) {
+					fileLabel.setText(file.getName());
+					fileLabel.setToolTipText(file.getName());
+				} else {
+					file=null;
+					JOptionPane.showMessageDialog(this,
+							"Image konnte nicht gefunden werden");
+				}
+
+			}
 		}
 	}
 }
