@@ -682,7 +682,7 @@ public class BL {
 			if (!ff.exists()) {
 				ff.mkdirs();
 			}
-			ff = new File(ff.getPath() + "/" + f.getName());
+			ff = new File(ff.getPath() + "/" +e.getRechnungID()+"_"+ f.getName());
 			if (!ff.exists()) {
 				ff.createNewFile();
 			}
@@ -690,6 +690,8 @@ public class BL {
 			FileChannel inChannel = new FileInputStream(f).getChannel();
 			FileChannel outChannel = new FileOutputStream(ff).getChannel();
 			inChannel.transferTo(0, inChannel.size(), outChannel);
+			inChannel.close();
+			outChannel.close();
 			e.setFile(ff.getPath());
 		}
 		db.connect();
@@ -722,14 +724,17 @@ public class BL {
 		// er = e;
 		// }
 		// }
-		if (f != null) {
-			if (e.getFile() != null) {
-				File del = new File(e.getFile());
-				try {
-					del.delete();
-				} catch (Exception ee) {
-				}
+		
+		if (e.getFile() != null) {
+			File del = new File(e.getFile());
+			try {
+				del.delete();
+			} catch (Exception ee) {
 			}
+			e.setFile(null);
+		}
+		if (f != null) {
+			
 			String pfad = "file/"
 					+ new StringBuilder(
 							new SimpleDateFormat("yyyy/MM/dd")
@@ -739,7 +744,7 @@ public class BL {
 			if (!ff.exists()) {
 				ff.mkdirs();
 			}
-			ff = new File(ff.getPath() + "/" + f.getName());
+			ff = new File(ff.getPath() + "/"+e.getRechnungID()+"_" + f.getName());
 			if (!ff.exists()) {
 				ff.createNewFile();
 			}
@@ -747,6 +752,8 @@ public class BL {
 			FileChannel inChannel = new FileInputStream(f).getChannel();
 			FileChannel outChannel = new FileOutputStream(ff).getChannel();
 			inChannel.transferTo(0, inChannel.size(), outChannel);
+			inChannel.close();
+			outChannel.close();
 			e.setFile(ff.getPath());
 		}
 		db.connect();
