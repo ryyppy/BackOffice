@@ -14,7 +14,7 @@ public enum WhereOperator {
     },
     NOT{
         public String toString() {
-            return "NOT";
+            return "!=";
         }
     },
     GREATER{
