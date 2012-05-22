@@ -91,8 +91,12 @@ DROP VIEW IF EXISTS rechnungszeileview;
 CREATE VIEW rechnungszeileview AS
 	SELECT rz.rechnungszeileid, rz.kommentar, rz.steuersatz, rz.betrag, rz.rechnungid, a.angebotid, a.beschreibung AS angebot
 	FROM rechnungszeile rz, angebot a
-	WHERE rz.angebotid = a.angebotid
-;
+	WHERE rz.angebotid is not null and rz.angebotid = a.angebotid
+	UNION
+	SELECT rz.rechnungszeileid, rz.kommentar, rz.steuersatz, rz.betrag, rz.rechnungid, null, null AS angebot
+	FROM rechnungszeile rz
+	WHERE rz.angebotid is null
+;SELECT * FROM rechnungszeileview;
 
 DROP VIEW IF EXISTS rechnungview;
 CREATE VIEW rechnungview AS

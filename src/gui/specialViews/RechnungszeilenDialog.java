@@ -137,8 +137,7 @@ public class RechnungszeilenDialog extends JDialog implements ActionListener {
 				for (int i = 0; i < a.length; i++) {
 					int b = table.convertRowIndexToModel(a[i]);
 					try {
-						BL.deleteRechnungszeile((Integer) (tModel.getValueAt(b
-								- i, 0)));
+						BL.deleteRechnungszeile((Integer) (tModel.getValueAt(b, 0)));
 					} catch (DALException e1) {
 						JOptionPane.showMessageDialog(this, e1.getMessage());
 					}

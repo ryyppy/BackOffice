@@ -19,8 +19,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import z_unbenutzt.AngebotComboBoxModel;
-
 import bl.BL;
 import bl.objects.Angebot;
 import bl.objects.Rechnungszeile;
@@ -28,7 +26,8 @@ import dal.DALException;
 import databinding.DataBinder;
 import databinding.StandardRule;
 
-public class EditRechnungszeileDialog extends JDialog implements ActionListener {
+public class EditRechnungszeileDialog extends JDialog implements
+		ActionListener {
 	private JTextField[] textfeld;
 	private JButton add, cancel;
 	private JComboBox<Angebot> angebote;
@@ -49,8 +48,8 @@ public class EditRechnungszeileDialog extends JDialog implements ActionListener 
 		initDialog();
 	}
 
-	public EditRechnungszeileDialog(JFrame owner, int rechnungID, int kundenID,
-			Rechnungszeile r) {
+	public EditRechnungszeileDialog(JFrame owner, int rechnungID,
+			int kundenID, Rechnungszeile r) {
 		super(owner, "Rechnungszeile der Rechnung " + rechnungID
 				+ " bearbeiten", true);
 		this.r = r;

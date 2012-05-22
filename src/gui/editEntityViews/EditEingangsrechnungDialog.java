@@ -44,7 +44,7 @@ public class EditEingangsrechnungDialog extends JDialog implements
 	private JTextField datum;
 	private JLabel fileLabel;
 	private File file = null;
-	private JButton add, cancel, select;
+	private JButton add, cancel, select, unselect;
 
 	private String[] columnNames = { "Status", "Datum", "Kontakt", "File" };
 	private String[] statusValues = { "offen", "bezahlt" };
@@ -66,7 +66,7 @@ public class EditEingangsrechnungDialog extends JDialog implements
 	}
 
 	public void initDialog() {
-		setSize(300, 220);
+		setSize(310, 220);
 		setLocationRelativeTo(getOwner());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
@@ -140,8 +140,11 @@ public class EditEingangsrechnungDialog extends JDialog implements
 		panel.add(p);
 
 		select = new JButton("Select");
+		unselect = new JButton("Unselect");
+		unselect.setEnabled(false);
 		select.setName(columnNames[3]);
 		select.addActionListener(this);
+		unselect.addActionListener(this);
 		JPanel grid = new JPanel(new GridLayout(2, 1));
 		p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		l = new JLabel(columnNames[3]);
@@ -154,7 +157,7 @@ public class EditEingangsrechnungDialog extends JDialog implements
 		panel.add(grid);
 
 		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		p.add(select);
+		p.add(select);p.add(unselect);
 		panel.add(p);
 
 		if (er != null) {
@@ -166,9 +169,12 @@ public class EditEingangsrechnungDialog extends JDialog implements
 				}
 			}
 			datum.setText(er.getDatumString());
+			if(er.getFile()!=null){
 			File f = new File(er.getFile());
 			fileLabel.setText(f.getName());
 			fileLabel.setToolTipText(f.getName());
+			unselect.setEnabled(true);
+			}
 		} else {
 			datum.setText(new StringBuilder(new SimpleDateFormat("dd.MM.yyyy")
 					.format(new Date())).toString());
@@ -222,6 +228,11 @@ public class EditEingangsrechnungDialog extends JDialog implements
 			}
 		} else if (e.getSource() == cancel) {
 			dispose();
+		}else if(e.getSource() == unselect){
+			file=null;
+			fileLabel.setText("");
+			fileLabel.setToolTipText("");
+			unselect.setEnabled(false);
 		} else if (e.getSource() == select) {
 			JFileChooser fc = new JFileChooser();
 			fc.setAcceptAllFileFilterUsed(false);
@@ -236,6 +247,7 @@ public class EditEingangsrechnungDialog extends JDialog implements
 				if (file.exists()) {
 					fileLabel.setText(file.getName());
 					fileLabel.setToolTipText(file.getName());
+					unselect.setEnabled(true);
 				} else {
 					file=null;
 					JOptionPane.showMessageDialog(this,
