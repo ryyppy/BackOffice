@@ -3,11 +3,16 @@ package gui.tabbedViews;
 import gui.EntityViewPanel;
 import gui.editEntityViews.EditAngebotDialog;
 
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import bl.BL;
 import bl.objects.Angebot;
@@ -17,7 +22,10 @@ import bl.objects.view.AngebotView;
 import dal.DALException;
 
 public class AngebotePanel extends EntityViewPanel {
-	private JButton kunden_info, projekt_info;
+	private JMenuItem kundenInfo, projektInfo;
+	private JButton angebotsReport;
+
+	// private JTextField jahresUmsatz;
 
 	public AngebotePanel(JFrame owner) {
 		super(Angebot.class, AngebotView.class, EditAngebotDialog.class, owner);
@@ -25,15 +33,36 @@ public class AngebotePanel extends EntityViewPanel {
 
 	@Override
 	public void initAdditionalButtons() {
-		kunden_info = new JButton("Kundeninfo");
-		projekt_info = new JButton("Projektinfo");
-		JButton[] buttons = { kunden_info, projekt_info };
+		angebotsReport = new JButton("Angebotsreport (PDF)");
+		JButton[] buttons = { angebotsReport };
 		super.setAdditionalButtons(buttons);
 	}
 
 	@Override
+	public void initAnalysisPanel() {
+		// JPanel analysisPanel = new JPanel(new GridLayout(2, 1));
+		//
+		// analysisPanel.add(new JLabel("Jahresumsatz"));
+		// jahresUmsatz = new JTextField();
+		// jahresUmsatz.setEnabled(false);
+		// jahresUmsatz.setEditable(false);
+		// jahresUmsatz.setHorizontalAlignment(JTextField.CENTER);
+		// analysisPanel.add(jahresUmsatz);
+		//
+		// super.setAnalysisPanel(analysisPanel);
+	}
+
+	@Override
+	public void initPopupMenuItems() {
+		kundenInfo = new JMenuItem("Kundeninfo");
+		projektInfo = new JMenuItem("Projektinfo");
+		JMenuItem[] menuitems = { kundenInfo, projektInfo };
+		super.setPopupMenuItems(menuitems);
+	}
+
+	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == kunden_info) {
+		if (e.getSource() == kundenInfo) {
 			Angebot selectedItem = (Angebot) getSelectedDBEntity();
 			if (selectedItem != null) {
 				try {
@@ -43,7 +72,7 @@ public class AngebotePanel extends EntityViewPanel {
 					JOptionPane.showMessageDialog(this, e1.getMessage());
 				}
 			}
-		} else if (e.getSource() == projekt_info) {
+		} else if (e.getSource() == projektInfo) {
 			Angebot selectedItem = (Angebot) getSelectedDBEntity();
 			if (selectedItem != null) {
 				try {
@@ -55,4 +84,5 @@ public class AngebotePanel extends EntityViewPanel {
 			}
 		}
 	}
+
 }

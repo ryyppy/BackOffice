@@ -5,9 +5,13 @@ import gui.Haupt_Frame;
 import gui.editEntityViews.EditKontaktDialog;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
 import dal.WhereOperator;
@@ -17,18 +21,29 @@ import bl.objects.view.KontaktView;
 import bl.objects.view.KundeView;
 
 public class KontaktPanel extends EntityViewPanel {
-	private JButton rechnungen;
+	private JMenuItem rechnungen;
 
 	public KontaktPanel(JFrame owner) {
 		super(Kontakt.class, KontaktView.class, EditKontaktDialog.class, owner);
+
 	}
 
 	@Override
 	public void initAdditionalButtons() {
-		rechnungen = new JButton("Show Rechnungen");
 
-		JButton[] extra = { rechnungen };
-		super.setAdditionalButtons(extra);
+	}
+
+	@Override
+	public void initAnalysisPanel() {
+
+	}
+
+	@Override
+	public void initPopupMenuItems() {
+		rechnungen = new JMenuItem("Rechnungen anzeigen");
+
+		JMenuItem[] menuitems = { rechnungen };
+		super.setPopupMenuItems(menuitems);
 	}
 
 	@Override

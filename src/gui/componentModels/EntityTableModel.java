@@ -84,7 +84,8 @@ public class EntityTableModel extends AbstractTableModel {
 		try {
 			Method method = classT.getMethod("get" + columnNames[col],
 					new Class<?>[0]);
-			return method.invoke(entry, new Object[0]);
+			Object a = method.invoke(entry, new Object[0]);
+			return a;
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
@@ -95,7 +96,7 @@ public class EntityTableModel extends AbstractTableModel {
 			e.printStackTrace();
 		} catch (SecurityException e) {
 			e.printStackTrace();
-		}
+		} 
 		return "";
 	}
 

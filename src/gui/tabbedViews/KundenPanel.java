@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
 
 import bl.objects.Kunde;
@@ -15,7 +16,7 @@ import bl.objects.view.KundeView;
 import dal.WhereOperator;
 
 public class KundenPanel extends EntityViewPanel {
-	private JButton angebote, rechnungen;
+	private JMenuItem angebote, rechnungen;
 
 	public KundenPanel(JFrame owner) {
 		super(Kunde.class, KundeView.class, EditKundeDialog.class, owner);
@@ -23,11 +24,21 @@ public class KundenPanel extends EntityViewPanel {
 
 	@Override
 	public void initAdditionalButtons() {
-		angebote = new JButton("Show Angebote");
-		rechnungen = new JButton("Show Rechnungen");
 
-		JButton[] extra = { angebote, rechnungen };
-		super.setAdditionalButtons(extra);
+	}
+
+	@Override
+	public void initAnalysisPanel() {
+
+	}
+
+	@Override
+	public void initPopupMenuItems() {
+		angebote = new JMenuItem("Angebote anzeigen");
+		rechnungen = new JMenuItem("Rechnungen anzeigen");
+
+		JMenuItem[] menuitems = { angebote, rechnungen };
+		super.setPopupMenuItems(menuitems);
 	}
 
 	@Override
@@ -44,7 +55,7 @@ public class KundenPanel extends EntityViewPanel {
 				evp.getFieldnames().setSelectedItem("kunde");
 				evp.getSearch().doClick();
 			}
-		}else if (e.getSource() == rechnungen) {
+		} else if (e.getSource() == rechnungen) {
 			KundeView selectedItem = (KundeView) getSelectedItem();
 			if (selectedItem != null) {
 				JTabbedPane reiter = ((Haupt_Frame) getOwner()).getReiter();

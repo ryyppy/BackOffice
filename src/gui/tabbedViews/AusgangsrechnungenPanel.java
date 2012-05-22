@@ -13,6 +13,7 @@ import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import bl.BL;
@@ -27,7 +28,7 @@ import com.itextpdf.text.DocumentException;
 import dal.DALException;
 
 public class AusgangsrechnungenPanel extends EntityViewPanel {
-	private JButton kundenInfo, showRechnungszeilen, print;
+	private JMenuItem kundenInfo, showRechnungszeilen, print;
 
 	public AusgangsrechnungenPanel(JFrame owner) {
 		super(Ausgangsrechnung.class, AusgangsrechnungView.class,
@@ -36,11 +37,21 @@ public class AusgangsrechnungenPanel extends EntityViewPanel {
 
 	@Override
 	public void initAdditionalButtons() {
-		kundenInfo = new JButton("Kundeninfo");
-		showRechnungszeilen = new JButton("Show Rechnungszeilen");
-		print = new JButton("Print (to PDF)");
-		JButton[] buttons = { kundenInfo, showRechnungszeilen, print };
-		super.setAdditionalButtons(buttons);
+
+	}
+
+	@Override
+	public void initAnalysisPanel() {
+
+	}
+
+	@Override
+	public void initPopupMenuItems() {
+		print = new JMenuItem("Als PDF drucken");
+		kundenInfo = new JMenuItem("Kundeninfo");
+		showRechnungszeilen = new JMenuItem("Show Rechnungszeilen");
+		JMenuItem[] menuitems = { showRechnungszeilen, print, kundenInfo };
+		super.setPopupMenuItems(menuitems);
 	}
 
 	@Override
@@ -101,4 +112,5 @@ public class AusgangsrechnungenPanel extends EntityViewPanel {
 			}
 		}
 	}
+
 }

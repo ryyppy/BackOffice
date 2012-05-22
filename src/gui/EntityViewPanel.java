@@ -4,6 +4,7 @@ import gui.componentModels.EntityTableModel;
 import gui.componentModels.MyTableCellRenderer;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -20,14 +21,18 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.TableModel;
@@ -41,10 +46,12 @@ import dal.WhereOperator;
 
 public abstract class EntityViewPanel extends JPanel implements ActionListener {
 	protected JButton add, edit, delete, search;
+	protected JPopupMenu popup;
 	public JTable table;
 	public EntityTableModel tModel;
 
 	private JPanel additionalButtons = null;
+	private JPanel analysisPanel = null;
 
 	private Class<? extends JDialog> editClass;
 	private Class<? extends DBEntity> entityClass;
@@ -66,14 +73,19 @@ public abstract class EntityViewPanel extends JPanel implements ActionListener {
 
 		tModel = new EntityTableModel(entityViewClass);
 		table = new JTable(tModel);
+		popup = new JPopupMenu();
 
 		JScrollPane scrollpane = this.createTablePanel();
 
 		initAdditionalButtons();
+		initAnalysisPanel();
 
 		JPanel navi = this.createButtonPanel();
 		add(navi, BorderLayout.WEST);
 		add(scrollpane);
+
+		createStandardPopupMenuItems();
+		initPopupMenuItems();
 
 		setVisible(true);
 	}
@@ -107,6 +119,10 @@ public abstract class EntityViewPanel extends JPanel implements ActionListener {
 	}
 
 	public abstract void initAdditionalButtons();
+
+	public abstract void initAnalysisPanel();
+
+	public abstract void initPopupMenuItems();
 
 	public DBEntity getSelectedDBEntity() {
 		if (table.getSelectedRow() == -1) {
@@ -163,6 +179,26 @@ public abstract class EntityViewPanel extends JPanel implements ActionListener {
 		return ret;
 	}
 
+	public void setAnalysisPanel(String[] labels, String[] content) {
+		if (labels.length != content.length) {
+
+		}
+		analysisPanel = new JPanel(new GridLayout(labels.length * 2, 1));
+		for (int i = 0; i < labels.length; i++) {
+			analysisPanel.add(new JLabel(labels[i]));
+			JTextField f = new JTextField(content[i]);
+			f.setEnabled(false);
+			f.setEditable(false);
+			f.setHorizontalAlignment(JTextField.CENTER);
+			analysisPanel.add(f);
+			// analysisPanel.add(new JSeparator());
+		}
+	}
+	public void setAnalysisPanel(JPanel p ){
+		this.analysisPanel=p;
+	}
+	
+
 	public void setAdditionalButtons(JButton[] buttons) {
 		additionalButtons = new JPanel(new GridLayout(buttons.length, 1));
 		for (JButton b : buttons) {
@@ -173,6 +209,33 @@ public abstract class EntityViewPanel extends JPanel implements ActionListener {
 				additionalButtons.add(b);
 			}
 		}
+	}
+
+	public void setPopupMenuItems(JMenuItem[] menuitems) {
+		for (JMenuItem menuitem : menuitems) {
+			popup.add(menuitem);
+			menuitem.addActionListener(this);
+		}
+	}
+
+	private void createStandardPopupMenuItems() {
+		JMenuItem editItem = new JMenuItem(this.edit.getText());
+		JMenuItem deleteItem = new JMenuItem(this.delete.getText());
+		popup.add(editItem);
+		popup.add(deleteItem);
+		popup.add(new JSeparator());
+		editItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				edit.doClick();
+			}
+		});
+		deleteItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				delete.doClick();
+			}
+		});
 	}
 
 	private JScrollPane createTablePanel() {
@@ -204,14 +267,61 @@ public abstract class EntityViewPanel extends JPanel implements ActionListener {
 					edit.doClick();
 				}
 			}
+
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					int rowIndex = table.rowAtPoint(table.getMousePosition());
+					int columnIndex = table.columnAtPoint(table
+							.getMousePosition());
+					if (rowIndex != -1) {
+						table.changeSelection(rowIndex, columnIndex, false,
+								false);
+
+						if (popup.getSubElements().length > 0) {
+							popup.show(table, e.getX(), e.getY());
+						}
+					}
+				}
+			}
 		});
 
 		return new JScrollPane(table);
 	}
 
 	private JPanel createButtonPanel() {
-		JPanel panel = new JPanel(new GridBagLayout());
+		GridBagLayout gbl = new GridBagLayout();
+		// gbl.columnWidths = new int[] { 0 };
+		// gbl.rowHeights = new int[] { 0 };
+		// gbl.columnWeights = new double[] {Double.MIN_VALUE};
+		// gbl.rowWeights = new double[] { 1.0 };
+		//
+		JPanel panel = new JPanel(gbl);
+		// int y = 0;
 		GridBagConstraints gbc = new GridBagConstraints();
+		// gbc.gridx = 0;
+		// gbc.gridy = y++;
+		// gbc.anchor = GridBagConstraints.NORTH;
+		// gbc.fill = GridBagConstraints.HORIZONTAL;
+		// createSearchPanel();
+		// createStandardButtonPanel();
+		//
+		// panel.add(new JLabel("asd1"), gbc);
+		//
+		// if (additionalButtons != null) {
+		// GridBagConstraints gbc2 = new GridBagConstraints();
+		// gbc2.gridx = 0;
+		// gbc2.gridy = y++;
+		// gbc2.anchor = GridBagConstraints.NORTH;
+		// gbc2.fill = GridBagConstraints.HORIZONTAL;
+		// panel.add(new JLabel("asd2"), gbc2);
+		// }
+		//
+		// GridBagConstraints gbc3 = new GridBagConstraints();
+		// gbc3.gridx = 0;
+		// gbc3.gridy = y++;
+		// gbc3.anchor = GridBagConstraints.NORTH;
+		// gbc3.fill = GridBagConstraints.HORIZONTAL;
+		// panel.add(new JLabel("asd3"), gbc3);
 
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
@@ -219,20 +329,29 @@ public abstract class EntityViewPanel extends JPanel implements ActionListener {
 		panel.add(this.createStandardButtonPanel(), gbc);
 
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.gridy = 2;
-		panel.add(this.createSearchPanel(), gbc);
-
-		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.gridy = 1;
-		/** LAST ELEMENT **/
-		gbc.anchor = GridBagConstraints.NORTH;
-		gbc.weighty = 1.0;
-		/** LAST ELEMENT **/
 		if (additionalButtons != null) {
 			panel.add(additionalButtons, gbc);
 		} else {
 			panel.add(new JPanel(new FlowLayout()), gbc);
 		}
+
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.gridy = 3;
+		panel.add(this.createSearchPanel(), gbc);
+
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.gridy = 2;
+		/** LAST ELEMENT **/
+		gbc.anchor = GridBagConstraints.CENTER;
+		gbc.weighty = 1.0;
+		/** LAST ELEMENT **/
+		if (analysisPanel != null) {
+			panel.add(analysisPanel, gbc);
+		} else {
+			panel.add(new JPanel(new FlowLayout()), gbc);
+		}
+
 		return panel;
 	}
 
@@ -310,7 +429,10 @@ public abstract class EntityViewPanel extends JPanel implements ActionListener {
 					Constructor<? extends JDialog> c = editClass
 							.getConstructor(JFrame.class);
 					c.newInstance(owner);
+
 					tModel.refresh();
+					table.changeSelection(table.convertRowIndexToView(tModel
+							.getRowCount() - 1), 0, false, false);
 				} catch (InstantiationException e1) {
 					e1.printStackTrace();
 				} catch (IllegalAccessException e1) {
@@ -347,7 +469,11 @@ public abstract class EntityViewPanel extends JPanel implements ActionListener {
 								.getConstructor(para);
 						c.newInstance(args);
 
+						int row = table.convertRowIndexToModel(table
+								.getSelectedRow());
 						tModel.refresh();
+						table.changeSelection(table.convertRowIndexToView(row),
+								0, false, false);
 					} catch (NoSuchMethodException e1) {
 						e1.printStackTrace();
 					} catch (SecurityException e1) {

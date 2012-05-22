@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import bl.BL;
@@ -18,7 +19,8 @@ import bl.objects.view.BuchungszeileView;
 import dal.DALException;
 
 public class BuchungszeilenPanel extends EntityViewPanel {
-	private JButton addKategorie, kategorieInfo, selectRechnungen;
+	private JButton addKategorie;
+	private JMenuItem kategorieInfo, selectRechnungen;
 
 	public BuchungszeilenPanel(JFrame owner) {
 		super(Buchungszeile.class, BuchungszeileView.class,
@@ -28,10 +30,21 @@ public class BuchungszeilenPanel extends EntityViewPanel {
 	@Override
 	public void initAdditionalButtons() {
 		addKategorie = new JButton("Add Kategorie");
-		kategorieInfo = new JButton("Kategorieinfo");
-		selectRechnungen = new JButton("Select Rechnungen");
-		JButton[] buttons = { addKategorie, kategorieInfo, selectRechnungen };
+		JButton[] buttons = { addKategorie };
 		super.setAdditionalButtons(buttons);
+	}
+
+	@Override
+	public void initAnalysisPanel() {
+
+	}
+
+	@Override
+	public void initPopupMenuItems() {
+		kategorieInfo = new JMenuItem("Kategorieinfo");
+		selectRechnungen = new JMenuItem("Select Rechnungen");
+		JMenuItem[] menuitems = { selectRechnungen, kategorieInfo };
+		super.setPopupMenuItems(menuitems);
 	}
 
 	@Override

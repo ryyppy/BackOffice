@@ -5,6 +5,7 @@ import gui.Haupt_Frame;
 import gui.editEntityViews.EditProjektDialog;
 import gui.specialViews.LogView;
 
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -12,8 +13,12 @@ import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
@@ -26,7 +31,8 @@ import dal.DALException;
 import dal.WhereOperator;
 
 public class ProjektePanel extends EntityViewPanel {
-	private JButton angebote, zeiterfassung;
+	private JMenuItem angebote;
+	private JButton zeiterfassung;
 
 	public ProjektePanel(JFrame owner) {
 		super(Projekt.class, ProjektView.class, EditProjektDialog.class, owner);
@@ -34,11 +40,24 @@ public class ProjektePanel extends EntityViewPanel {
 
 	@Override
 	public void initAdditionalButtons() {
-
-		angebote = new JButton("Show Angebote");
 		zeiterfassung = new JButton("Zeiterfassung");
-		JButton[] buttons = { angebote, null, zeiterfassung };
+		JButton[] buttons = { zeiterfassung };
 		super.setAdditionalButtons(buttons);
+	}
+
+	@Override
+	public void initAnalysisPanel() {
+//		
+//		super.setAnalysisPanel(new String[] { "Offene Rechnungen", "Noch was cooles" },
+//				new String[] { "12", "13" });
+	}
+
+	@Override
+	public void initPopupMenuItems() {
+		angebote = new JMenuItem("Angebote anzeigen");
+
+		JMenuItem[] menuitems = { angebote };
+		super.setPopupMenuItems(menuitems);
 	}
 
 	@Override

@@ -46,7 +46,7 @@ public class EingangsrechnungenPanel extends EntityViewPanel {
 	public void initAdditionalButtons() {
 		importRechnung = new JButton("Import");
 
-		JButton[] buttons = { importRechnung };
+		JButton[] buttons = {  };
 		super.setAdditionalButtons(buttons);
 	}
 
@@ -83,7 +83,7 @@ public class EingangsrechnungenPanel extends EntityViewPanel {
 			if (selectedItem != null && selectedItem.getFile()!=null) {
 				try {
 					Desktop.getDesktop().open(new File(selectedItem.getFile()));
-				} catch (IOException e1) {
+				} catch (Exception e1) {
 					JOptionPane.showMessageDialog(this, "Fehler beim Anzeigen der Rechnung");
 				}
 			}else{
