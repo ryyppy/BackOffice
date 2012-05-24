@@ -76,9 +76,4 @@ public class Jahresumsatz extends DBEntity {
 				+ summeAngebote + ", avgAngebote=" + avgAngebote + "]";
 	}
 
-	public String getValues() {
-		return "Jahresumsatz: " + projektid + "\nAnzahl Angebote: "
-				+ anzahlAngebote + "\nSumme Angebote: " + summeAngebote
-				+ "\nAVG Angebotsumme: " + avgAngebote;
-	}
 }
