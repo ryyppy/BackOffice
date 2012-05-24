@@ -163,4 +163,12 @@ public class EntityTableModel extends AbstractTableModel {
 		super.fireTableDataChanged();
 	}
 
+	public ArrayList<DBEntity> getEntries() {
+		return entries;
+	}
+
+	public void setEntries(ArrayList<DBEntity> entries) {
+		this.entries = entries;
+	}
+
 }

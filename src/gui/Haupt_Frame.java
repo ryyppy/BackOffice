@@ -7,6 +7,7 @@ import gui.tabbedViews.EingangsrechnungenPanel;
 import gui.tabbedViews.KontaktPanel;
 import gui.tabbedViews.KundenPanel;
 import gui.tabbedViews.ProjektePanel;
+import gui.tabbedViews.reports.JahresumsatzPanel;
 
 import java.awt.BorderLayout;
 
@@ -31,6 +32,7 @@ public class Haupt_Frame extends JFrame {
 		reiter.addTab("Ausgangsrechnungen", new AusgangsrechnungenPanel(this));
 		reiter.addTab("Eingangsrechnungen", new EingangsrechnungenPanel(this));
 		reiter.addTab("Bankkonto", new BuchungszeilenPanel(this));
+		reiter.addTab("Berichte", new Report_Tabbed_Panel(this));
 
 		add(reiter);
 
