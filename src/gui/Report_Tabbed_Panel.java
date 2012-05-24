@@ -1,8 +1,9 @@
 package gui;
 
-import java.awt.BorderLayout;
-
 import gui.tabbedViews.reports.JahresumsatzPanel;
+import gui.tabbedViews.reports.OffeneProjektePanel;
+
+import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,6 +17,9 @@ public class Report_Tabbed_Panel extends JPanel {
 		setLayout(new BorderLayout());
 		reiter = new JTabbedPane(JTabbedPane.LEFT);
 		reiter.addTab("Jahresumsatz", new JahresumsatzPanel(owner));
+		reiter.addTab("Offene Projekte", new OffeneProjektePanel(owner));
+		reiter.addTab("Offene Rechnungen", new JPanel());
+		reiter.addTab("Stundensatz", new JPanel());
 		reiter.addTab("Ein-/Ausgaben", new JPanel());
 		reiter.addTab("Angebotsreport", new JPanel());
 		reiter.addTab("Rechnungsreport", new JPanel());
