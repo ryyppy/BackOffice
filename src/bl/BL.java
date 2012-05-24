@@ -45,6 +45,7 @@ import bl.objects.view.KontaktView;
 import bl.objects.view.KundeView;
 import bl.objects.view.ProjektView;
 import bl.objects.view.RechnungszeileView;
+import bl.objects.view.reports.Jahresumsatz;
 import dal.DALException;
 import dal.DatabaseAdapter;
 import dal.MysqlAdapter;
@@ -593,7 +594,8 @@ public class BL {
 		// eingangsrechnungenliste.remove(a);
 		// }
 		db.connect();
-		Eingangsrechnung e = db.getEntityByID(rechnungID, Eingangsrechnung.class);
+		Eingangsrechnung e = db.getEntityByID(rechnungID,
+				Eingangsrechnung.class);
 
 		if (e.getFile() != null) {
 			File del = new File(e.getFile());
@@ -682,7 +684,8 @@ public class BL {
 			if (!ff.exists()) {
 				ff.mkdirs();
 			}
-			ff = new File(ff.getPath() + "/" +e.getRechnungID()+"_"+ f.getName());
+			ff = new File(ff.getPath() + "/" + e.getRechnungID() + "_"
+					+ f.getName());
 			if (!ff.exists()) {
 				ff.createNewFile();
 			}
@@ -724,7 +727,7 @@ public class BL {
 		// er = e;
 		// }
 		// }
-		
+
 		if (e.getFile() != null) {
 			File del = new File(e.getFile());
 			try {
@@ -734,7 +737,7 @@ public class BL {
 			e.setFile(null);
 		}
 		if (f != null) {
-			
+
 			String pfad = "file/"
 					+ new StringBuilder(
 							new SimpleDateFormat("yyyy/MM/dd")
@@ -744,7 +747,8 @@ public class BL {
 			if (!ff.exists()) {
 				ff.mkdirs();
 			}
-			ff = new File(ff.getPath() + "/"+e.getRechnungID()+"_" + f.getName());
+			ff = new File(ff.getPath() + "/" + e.getRechnungID() + "_"
+					+ f.getName());
 			if (!ff.exists()) {
 				ff.createNewFile();
 			}
@@ -1454,4 +1458,22 @@ public class BL {
 		return "";
 	}
 
+	public static ArrayList<Jahresumsatz> getJahresumsatzListe()
+			throws DALException {
+		db.connect();
+		ArrayList<Jahresumsatz> ret = (ArrayList<Jahresumsatz>) db
+				.getEntityList(Jahresumsatz.class);
+		db.disconnect();
+		return ret;
+	}
+	
+	public static ArrayList<Jahresumsatz> getJahresumsatzListe(
+			WhereChain where) throws DALException {
+		// return buchungszeilenliste;
+		db.connect();
+		ArrayList<Jahresumsatz> ret = (ArrayList<Jahresumsatz>) db
+				.getEntitiesBy(where, Jahresumsatz.class);
+		db.disconnect();
+		return ret;
+	}
 }
