@@ -1,3 +1,11 @@
+DROP VIEW IF EXISTS jahresumsatz;
+CREATE VIEW jahresumsatz AS
+	SELECT projektid, YEAR(datum) as 'Jahr', COUNT(summe) as 'AnzahlAngebote', 
+			SUM(summe) as 'SummeAngebote', SUM(summe)/COUNT(summe) as 'AvgAngebote' 
+	FROM angebot 
+	GROUP BY projektid
+;
+
 DROP VIEW IF EXISTS stundensatz;
 CREATE VIEW stundensatz AS
 	SELECT p.projektid, p.name AS Projekt ,a.angebotid, a.beschreibung as Angebot, 
