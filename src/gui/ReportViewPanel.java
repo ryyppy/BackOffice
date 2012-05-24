@@ -4,7 +4,6 @@ import gui.componentModels.EntityTableModel;
 import gui.componentModels.MyTableCellRenderer;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -16,30 +15,21 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import bl.BL;
-import dal.DALException;
 import dal.DBEntity;
 import dal.WhereChain;
 import dal.WhereOperator;
@@ -108,39 +98,6 @@ public abstract class ReportViewPanel extends JPanel implements ActionListener {
 	public abstract void initAnalysisPanel();
 
 	public abstract void initPopupMenuItems();
-
-	public DBEntity getSelectedDBEntity() {
-		if (table.getSelectedRow() == -1) {
-			return null;
-		}
-		int a = table.convertRowIndexToModel(table.getSelectedRow());
-
-		DBEntity selectedItem = (DBEntity) tModel.getValueAt(a);
-
-		String property = entityClass.getName();
-		property = property.substring(property.lastIndexOf('.') + 1);
-		String getter = "get" + property;
-		Method method;
-		DBEntity entity = null;
-		try {
-			method = BL.class.getMethod(getter, int.class);
-			entity = (DBEntity) method.invoke(BL.class, selectedItem.getID());
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (DALException e) {
-			e.printStackTrace();
-		}
-
-		return entity;
-	}
 
 	public Object getSelectedItem() {
 		if (table.getSelectedRow() == -1) {
