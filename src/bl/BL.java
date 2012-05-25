@@ -47,6 +47,7 @@ import bl.objects.view.ProjektView;
 import bl.objects.view.RechnungszeileView;
 import bl.objects.view.reports.Jahresumsatz;
 import bl.objects.view.reports.OffeneProjekte;
+import bl.objects.view.reports.Stundensatz;
 import dal.DALException;
 import dal.DatabaseAdapter;
 import dal.MysqlAdapter;
@@ -1493,6 +1494,25 @@ public class BL {
 		db.connect();
 		ArrayList<OffeneProjekte> ret = (ArrayList<OffeneProjekte>) db
 				.getEntitiesBy(where, OffeneProjekte.class);
+		db.disconnect();
+		return ret;
+	}
+	
+	public static ArrayList<Stundensatz> getStundensatzListe()
+			throws DALException {
+		db.connect();
+		ArrayList<Stundensatz> ret = (ArrayList<Stundensatz>) db
+				.getEntityList(Stundensatz.class);
+		db.disconnect();
+		return ret;
+	}
+	
+	public static ArrayList<Stundensatz> getStundensatzListe(
+			WhereChain where) throws DALException {
+		// return buchungszeilenliste;
+		db.connect();
+		ArrayList<Stundensatz> ret = (ArrayList<Stundensatz>) db
+				.getEntitiesBy(where, Stundensatz.class);
 		db.disconnect();
 		return ret;
 	}

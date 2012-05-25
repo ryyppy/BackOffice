@@ -3,6 +3,7 @@ package gui.tabbedViews.reports;
 import gui.ReportViewPanel;
 
 import java.awt.event.ActionEvent;
+import java.text.NumberFormat;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -41,7 +42,8 @@ public class JahresumsatzPanel extends ReportViewPanel {
 			Jahresumsatz eintrag = (Jahresumsatz) entry;
 			prognose += eintrag.getAvgAngebote();
 		}
-		jahresUmsatz.setText(String.valueOf(prognose));
+		String ausgabe = NumberFormat.getCurrencyInstance().format(prognose);
+		jahresUmsatz.setText(ausgabe);
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package gui;
 
 import gui.tabbedViews.reports.JahresumsatzPanel;
 import gui.tabbedViews.reports.OffeneProjektePanel;
+import gui.tabbedViews.reports.StundensatzPanel;
 
 import java.awt.BorderLayout;
 
@@ -19,7 +20,7 @@ public class Report_Tabbed_Panel extends JPanel {
 		reiter.addTab("Jahresumsatz", new JahresumsatzPanel(owner));
 		reiter.addTab("Offene Projekte", new OffeneProjektePanel(owner));
 		reiter.addTab("Offene Rechnungen", new JPanel());
-		reiter.addTab("Stundensatz", new JPanel());
+		reiter.addTab("Stundensatz", new StundensatzPanel(owner));
 		reiter.addTab("Ein-/Ausgaben", new JPanel());
 		reiter.addTab("Angebotsreport", new JPanel());
 		reiter.addTab("Rechnungsreport", new JPanel());
