@@ -47,6 +47,7 @@ import bl.objects.view.ProjektView;
 import bl.objects.view.RechnungszeileView;
 import bl.objects.view.reports.Jahresumsatz;
 import bl.objects.view.reports.OffeneProjekte;
+import bl.objects.view.reports.OffeneRechnungen;
 import bl.objects.view.reports.Stundensatz;
 import dal.DALException;
 import dal.DatabaseAdapter;
@@ -1513,6 +1514,25 @@ public class BL {
 		db.connect();
 		ArrayList<Stundensatz> ret = (ArrayList<Stundensatz>) db
 				.getEntitiesBy(where, Stundensatz.class);
+		db.disconnect();
+		return ret;
+	}
+	
+	public static ArrayList<OffeneRechnungen> getOffeneRechnungenListe()
+			throws DALException {
+		db.connect();
+		ArrayList<OffeneRechnungen> ret = (ArrayList<OffeneRechnungen>) db
+				.getEntityList(OffeneRechnungen.class);
+		db.disconnect();
+		return ret;
+	}
+	
+	public static ArrayList<OffeneRechnungen> getOffeneRechnungenListe(
+			WhereChain where) throws DALException {
+		// return buchungszeilenliste;
+		db.connect();
+		ArrayList<OffeneRechnungen> ret = (ArrayList<OffeneRechnungen>) db
+				.getEntitiesBy(where, OffeneRechnungen.class);
 		db.disconnect();
 		return ret;
 	}

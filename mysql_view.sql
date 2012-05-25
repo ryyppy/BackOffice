@@ -23,13 +23,23 @@ CREATE VIEW offeneProjekte AS
 		(SELECT DISTINCT projektid FROM angebot)
 ;
 
-DROP VIEW IF EXISTS offeneAusgangsrechnungen;
-CREATE VIEW offeneAusgangsrechnungen AS
-	SELECT r.rechnungid, r.status, r.datum, k.kundeid, k.nachname as Kunde
+DROP VIEW IF EXISTS offeneRechnungen;
+CREATE VIEW offeneRechnungen AS
+	SELECT r.rechnungid, r.status, r.datum, k.nachname as 'Kunde_Kontakt', 'Ausgangsrechnung' as 'Art'
 	FROM rechnung r, ausgangsrechnung a, kunde k
 	WHERE r.status='offen'
 	AND r.rechnungid = a.rechnungid
 	AND a.kundeid = k.kundeid
+	
+	UNION
+	
+	SELECT r.rechnungid, r.status, r.datum, k.firma, 'Eingangsrechnung'
+	FROM rechnung r, eingangsrechnung e, kontakt k
+	WHERE r.status='offen'
+	AND r.rechnungid = e.rechnungid
+	AND e.kontaktid = k.kontaktid
+	
+	ORDER BY (1)
 ;
 
 DROP VIEW IF EXISTS einnahmen;
