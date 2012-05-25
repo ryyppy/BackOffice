@@ -60,6 +60,6 @@ public class Main {
 //						super.dispatchEvent(event);
 //					}
 //				});
-		new Haupt_Frame();
+		new HauptFrame();
 	}
 }

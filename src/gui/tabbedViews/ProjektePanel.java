@@ -1,11 +1,10 @@
 package gui.tabbedViews;
 
 import gui.EntityViewPanel;
-import gui.Haupt_Frame;
+import gui.HauptFrame;
 import gui.editEntityViews.EditProjektDialog;
 import gui.specialViews.LogView;
 
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -13,12 +12,9 @@ import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
@@ -47,9 +43,10 @@ public class ProjektePanel extends EntityViewPanel {
 
 	@Override
 	public void initAnalysisPanel() {
-//		
-//		super.setAnalysisPanel(new String[] { "Offene Rechnungen", "Noch was cooles" },
-//				new String[] { "12", "13" });
+		//
+		// super.setAnalysisPanel(new String[] { "Offene Rechnungen",
+		// "Noch was cooles" },
+		// new String[] { "12", "13" });
 	}
 
 	@Override
@@ -65,7 +62,7 @@ public class ProjektePanel extends EntityViewPanel {
 		if (e.getSource() == angebote) {
 			ProjektView selectedItem = (ProjektView) getSelectedItem();
 			if (selectedItem != null) {
-				JTabbedPane reiter = ((Haupt_Frame) getOwner()).getReiter();
+				JTabbedPane reiter = ((HauptFrame) getOwner()).getReiter();
 				reiter.setSelectedIndex(reiter.indexOfTab("Angebote"));
 				EntityViewPanel evp = (EntityViewPanel) reiter
 						.getSelectedComponent();

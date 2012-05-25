@@ -1,12 +1,11 @@
 package gui.tabbedViews;
 
 import gui.EntityViewPanel;
-import gui.Haupt_Frame;
+import gui.HauptFrame;
 import gui.editEntityViews.EditKundeDialog;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
@@ -46,7 +45,7 @@ public class KundenPanel extends EntityViewPanel {
 		if (e.getSource() == angebote) {
 			KundeView selectedItem = (KundeView) getSelectedItem();
 			if (selectedItem != null) {
-				JTabbedPane reiter = ((Haupt_Frame) getOwner()).getReiter();
+				JTabbedPane reiter = ((HauptFrame) getOwner()).getReiter();
 				reiter.setSelectedIndex(reiter.indexOfTab("Angebote"));
 				EntityViewPanel evp = (EntityViewPanel) reiter
 						.getSelectedComponent();
@@ -58,7 +57,7 @@ public class KundenPanel extends EntityViewPanel {
 		} else if (e.getSource() == rechnungen) {
 			KundeView selectedItem = (KundeView) getSelectedItem();
 			if (selectedItem != null) {
-				JTabbedPane reiter = ((Haupt_Frame) getOwner()).getReiter();
+				JTabbedPane reiter = ((HauptFrame) getOwner()).getReiter();
 				reiter.setSelectedIndex(reiter.indexOfTab("Ausgangsrechnungen"));
 				EntityViewPanel evp = (EntityViewPanel) reiter
 						.getSelectedComponent();

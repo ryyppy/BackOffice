@@ -1,24 +1,18 @@
 package gui.tabbedViews;
 
 import gui.EntityViewPanel;
-import gui.Haupt_Frame;
+import gui.HauptFrame;
 import gui.editEntityViews.EditKontaktDialog;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
-
-import dal.WhereOperator;
 
 import bl.objects.Kontakt;
 import bl.objects.view.KontaktView;
-import bl.objects.view.KundeView;
+import dal.WhereOperator;
 
 public class KontaktPanel extends EntityViewPanel {
 	private JMenuItem rechnungen;
@@ -51,7 +45,7 @@ public class KontaktPanel extends EntityViewPanel {
 		if (e.getSource() == rechnungen) {
 			KontaktView selectedItem = (KontaktView) getSelectedItem();
 			if (selectedItem != null) {
-				JTabbedPane reiter = ((Haupt_Frame) getOwner()).getReiter();
+				JTabbedPane reiter = ((HauptFrame) getOwner()).getReiter();
 				reiter.setSelectedIndex(reiter.indexOfTab("Eingangsrechnungen"));
 				EntityViewPanel evp = (EntityViewPanel) reiter
 						.getSelectedComponent();
