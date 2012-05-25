@@ -35,6 +35,7 @@ import dal.WhereChain;
 import dal.WhereOperator;
 
 public abstract class ReportViewPanel extends JPanel implements ActionListener {
+	public JButton save, refresh;
 	protected JButton search;
 	protected JPopupMenu popup;
 	public JTable table;
@@ -93,7 +94,9 @@ public abstract class ReportViewPanel extends JPanel implements ActionListener {
 		return searchField;
 	}
 
-	public abstract void initAdditionalButtons();
+	public void initAdditionalButtons() {
+		setAdditionalButtons();
+	}
 
 	public abstract void initAnalysisPanel();
 
@@ -146,8 +149,11 @@ public abstract class ReportViewPanel extends JPanel implements ActionListener {
 		this.analysisPanel = p;
 	}
 
-	public void setAdditionalButtons(JButton[] buttons) {
-		additionalButtons = new JPanel(new GridLayout(buttons.length, 1));
+	public void setAdditionalButtons() {
+		save = new JButton("Als PDF speichern");
+		refresh = new JButton("Refresh");
+		JButton[] buttons = { save, refresh };
+		additionalButtons = new JPanel(new FlowLayout());
 		for (JButton b : buttons) {
 			if (b == null) {
 				additionalButtons.add(new JLabel());

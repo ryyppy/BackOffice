@@ -4,7 +4,6 @@ import gui.ReportViewPanel;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -18,20 +17,12 @@ import dal.DBEntity;
 
 public class JahresumsatzPanel extends ReportViewPanel {
 	private JMenuItem projektInfo;
-	private JButton angebotsReport;
 
 	private JTextField jahresUmsatz;
 
 	public JahresumsatzPanel(JFrame owner) {
 		super(Jahresumsatz.class, owner);
 
-	}
-
-	@Override
-	public void initAdditionalButtons() {
-		angebotsReport = new JButton("Als PDF speichern");
-		JButton[] buttons = { angebotsReport };
-		super.setAdditionalButtons(buttons);
 	}
 
 	@Override
@@ -72,6 +63,11 @@ public class JahresumsatzPanel extends ReportViewPanel {
 					JOptionPane.showMessageDialog(this, e1.getMessage());
 				}
 			}
+		} else if (e.getSource() == save) {
+
+		} else if (e.getSource() == refresh) {
+			tModel.refresh();
+			refreshAnalysis();
 		}
 	}
 
