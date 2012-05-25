@@ -1,5 +1,6 @@
 package gui;
 
+import gui.tabbedViews.reports.EinAusgabenPanel;
 import gui.tabbedViews.reports.JahresumsatzPanel;
 import gui.tabbedViews.reports.OffeneProjektePanel;
 import gui.tabbedViews.reports.OffeneRechnungenPanel;
@@ -22,7 +23,7 @@ public class Report_Tabbed_Panel extends JPanel {
 		reiter.addTab("Offene Projekte", new OffeneProjektePanel(owner));
 		reiter.addTab("Offene Rechnungen", new OffeneRechnungenPanel(owner));
 		reiter.addTab("Stundensatz", new StundensatzPanel(owner));
-		reiter.addTab("Ein-/Ausgaben", new JPanel());
+		reiter.addTab("Ein-/Ausgaben", new EinAusgabenPanel(owner));
 		reiter.addTab("Angebotsreport", new JPanel());
 		reiter.addTab("Rechnungsreport", new JPanel());
 

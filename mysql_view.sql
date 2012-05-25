@@ -44,7 +44,7 @@ CREATE VIEW offeneRechnungen AS
 
 DROP VIEW IF EXISTS einnahmen;
 CREATE VIEW einnahmen AS
-	SELECT rz.rechnungszeileid, rz.kommentar, rz.steuersatz, rz.betrag, r.datum
+	SELECT rz.rechnungszeileid as ID, rz.kommentar, rz.steuersatz, rz.betrag, r.datum
 	FROM rechnungszeile rz, rechnung r
 	WHERE rz.rechnungid=r.rechnungid 
 	AND rz.rechnungid IN 
@@ -53,7 +53,7 @@ CREATE VIEW einnahmen AS
 
 DROP VIEW IF EXISTS ausgaben;
 CREATE VIEW ausgaben AS
-	SELECT rz.rechnungszeileid, rz.kommentar, rz.steuersatz, rz.betrag, r.datum
+	SELECT rz.rechnungszeileid as ID, rz.kommentar, rz.steuersatz, rz.betrag, r.datum
 	FROM rechnungszeile rz, rechnung r
 	WHERE rz.rechnungid=r.rechnungid 
 	AND rz.rechnungid IN 

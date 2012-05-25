@@ -6,6 +6,7 @@ import gui.componentModels.MyTableCellRenderer;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -27,6 +28,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -38,13 +40,12 @@ public abstract class ReportViewPanel extends JPanel implements ActionListener {
 	public JButton save, refresh;
 	protected JButton search;
 	protected JPopupMenu popup;
-	public JTable table;
-	public EntityTableModel tModel;
+	public JTable table, table2;
+	public EntityTableModel tModel, tModel2;
 
 	private JPanel additionalButtons = null;
 	private JPanel analysisPanel = null;
 
-	private Class<? extends DBEntity> entityClass;
 	private JFrame owner;
 
 	private JComboBox<String> fieldnames;
@@ -55,7 +56,6 @@ public abstract class ReportViewPanel extends JPanel implements ActionListener {
 			JFrame owner) {
 		setLayout(new BorderLayout());
 
-		this.entityClass = entityViewClass;
 		tModel = new EntityTableModel(entityViewClass);
 		table = new JTable(tModel);
 		popup = new JPopupMenu();
@@ -68,6 +68,49 @@ public abstract class ReportViewPanel extends JPanel implements ActionListener {
 		JPanel navi = this.createButtonPanel();
 		add(navi, BorderLayout.SOUTH);
 		add(scrollpane);
+
+		initPopupMenuItems();
+
+		setVisible(true);
+	}
+
+	public ReportViewPanel(Class<? extends DBEntity> entityViewClass,
+			Class<? extends DBEntity> entityViewClass2, JFrame owner) {
+		setLayout(new BorderLayout());
+
+		tModel = new EntityTableModel(entityViewClass);
+		tModel2 = new EntityTableModel(entityViewClass2);
+		table = new JTable(tModel);
+		table2 = new JTable(tModel2);
+		popup = new JPopupMenu();
+
+		String title1 = entityViewClass.getName();
+		String title2 = entityViewClass2.getName();
+		JPanel titles = new JPanel(new GridLayout(1, 2));
+		JLabel t1 = new JLabel(title1.substring(title1.lastIndexOf('.') + 1,
+				title1.length()), SwingConstants.CENTER);
+		t1.setFont(new Font("Arial", Font.BOLD, 16));
+		JLabel t2 = new JLabel(title2.substring(title2.lastIndexOf('.') + 1,
+				title2.length()), SwingConstants.CENTER);
+		t2.setFont(new Font("Arial", Font.BOLD, 16));
+
+		titles.add(t1);
+		titles.add(t2);
+
+		JScrollPane scrollpane = this.createTablePanel();
+		JScrollPane scrollpane2 = this.createTable2Panel();
+
+		JPanel tables = new JPanel(new GridLayout(1, 2));
+		tables.add(scrollpane);
+		tables.add(scrollpane2);
+
+		initAdditionalButtons();
+		initAnalysisPanel();
+
+		JPanel navi = this.createButtonPanel();
+		add(navi, BorderLayout.SOUTH);
+		add(titles, BorderLayout.NORTH);
+		add(tables);
 
 		initPopupMenuItems();
 
@@ -216,6 +259,51 @@ public abstract class ReportViewPanel extends JPanel implements ActionListener {
 		return new JScrollPane(table);
 	}
 
+	private JScrollPane createTable2Panel() {
+		table2.setPreferredScrollableViewportSize(new Dimension(500, 70));
+		table2.setFillsViewportHeight(true);
+
+		for (String columnname : tModel2.getColumnNames()) {
+			table2.getColumn(columnname).setCellRenderer(
+					new MyTableCellRenderer());
+		}
+		table2.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent evt) {
+				if (evt.getKeyCode() == KeyEvent.VK_F5) {
+					tModel2.refresh();
+				}
+			}
+		});
+
+		TableRowSorter<TableModel> tSorter = new TableRowSorter<TableModel>(
+				table2.getModel());
+		tSorter.toggleSortOrder(0);
+		tSorter.setSortsOnUpdates(true);
+
+		table2.setRowSorter(tSorter);
+
+		table2.addMouseListener(new MouseAdapter() {
+
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					int rowIndex = table2.rowAtPoint(table2.getMousePosition());
+					int columnIndex = table2.columnAtPoint(table2
+							.getMousePosition());
+					if (rowIndex != -1) {
+						table2.changeSelection(rowIndex, columnIndex, false,
+								false);
+
+						if (popup.getSubElements().length > 0) {
+							popup.show(table2, e.getX(), e.getY());
+						}
+					}
+				}
+			}
+		});
+
+		return new JScrollPane(table2);
+	}
+
 	private JPanel createButtonPanel() {
 		GridBagLayout gbl = new GridBagLayout();
 		// gbl.columnWidths = new int[] { 0 };
@@ -299,6 +387,11 @@ public abstract class ReportViewPanel extends JPanel implements ActionListener {
 	}
 
 	private JPanel createSearchPanel() {
+		if (tModel2 != null) {
+			if (tModel.columnNamesOriginal.length != tModel2.columnNamesOriginal.length) {
+				return new JPanel();
+			}
+		}
 		search = new JButton("Select Filter");
 		final JButton refresh = new JButton("Show All");
 		fieldnames = new JComboBox<String>(tModel.columnNamesOriginal);
@@ -318,13 +411,21 @@ public abstract class ReportViewPanel extends JPanel implements ActionListener {
 					tModel.setWhereChain(where);
 					// tModel.setFilter(searchField.getText());
 					tModel.refresh();
+					if (tModel2 != null) {
+						tModel2.setWhereChain(where);
+						tModel2.refresh();
+					}
 					refreshAnalysis();
 				} else if (e.getSource() == refresh) {
 					searchField.setText("");
 					tModel.setFilter("");
 					tModel.setWhereChain(null);
 					tModel.refresh();
-
+					if (tModel2 != null) {
+						tModel.setFilter("");
+						tModel2.setWhereChain(null);
+						tModel2.refresh();
+					}
 					refreshAnalysis();
 				}
 			}
@@ -353,117 +454,4 @@ public abstract class ReportViewPanel extends JPanel implements ActionListener {
 		return ret;
 	}
 
-	// private class StandardButtonActionListener implements ActionListener {
-	//
-	// @Override
-	// public void actionPerformed(ActionEvent e) {
-	// if (e.getSource() == add) {
-	// try {
-	// Constructor<? extends JDialog> c = editClass
-	// .getConstructor(JFrame.class);
-	// c.newInstance(owner);
-	//
-	// tModel.refresh();
-	// table.changeSelection(table.convertRowIndexToView(tModel
-	// .getRowCount() - 1), 0, false, false);
-	// } catch (InstantiationException e1) {
-	// e1.printStackTrace();
-	// } catch (IllegalAccessException e1) {
-	// e1.printStackTrace();
-	// } catch (IllegalArgumentException e1) {
-	// e1.printStackTrace();
-	// } catch (InvocationTargetException e1) {
-	// e1.printStackTrace();
-	// } catch (NoSuchMethodException e1) {
-	// e1.printStackTrace();
-	// } catch (SecurityException e1) {
-	// e1.printStackTrace();
-	// }
-	// } else if (e.getSource() == edit) {
-	// DBEntity entity = (DBEntity) getSelectedItem();
-	// if (entity != null) {
-	// try {
-	// String getter = "get" + className;
-	//
-	// Method method = BL.class.getMethod(getter, int.class);
-	//
-	// entity = (DBEntity) method.invoke(BL.class,
-	// entity.getID());
-	//
-	// Class<?>[] para = new Class<?>[2];
-	// para[0] = JFrame.class;
-	// para[1] = entityClass;
-	//
-	// Object[] args = new Object[2];
-	// args[0] = owner;
-	// args[1] = entity;
-	//
-	// Constructor<? extends JDialog> c = editClass
-	// .getConstructor(para);
-	// c.newInstance(args);
-	//
-	// int row = table.convertRowIndexToModel(table
-	// .getSelectedRow());
-	// tModel.refresh();
-	// table.changeSelection(table.convertRowIndexToView(row),
-	// 0, false, false);
-	// } catch (NoSuchMethodException e1) {
-	// e1.printStackTrace();
-	// } catch (SecurityException e1) {
-	// e1.printStackTrace();
-	// } catch (IllegalAccessException e1) {
-	// e1.printStackTrace();
-	// } catch (IllegalArgumentException e1) {
-	// e1.printStackTrace();
-	// } catch (InvocationTargetException e1) {
-	// e1.printStackTrace();
-	// } catch (InstantiationException e1) {
-	// e1.printStackTrace();
-	// } catch (Exception e1) {
-	// e1.printStackTrace();
-	// if (e1 instanceof DALException) {
-	// JOptionPane.showMessageDialog(owner,
-	// e1.getMessage());
-	// }
-	// }
-	// }
-	// } else if (e.getSource() == delete) {
-	// ArrayList<Object> selected = getSelectedItems();
-	// if (selected != null) {
-	// int option = JOptionPane
-	// .showConfirmDialog(
-	// owner,
-	// "Sollen die ausgewählten Elemente gelöscht werden?",
-	// "Löschauftrag", JOptionPane.YES_NO_OPTION,
-	// JOptionPane.QUESTION_MESSAGE);
-	// if (option == JOptionPane.YES_OPTION) {
-	// for (Object item : selected) {
-	// DBEntity entity = (DBEntity) item;
-	// try {
-	// String getter = "delete" + className;
-	//
-	// Method method = BL.class.getMethod(getter,
-	// int.class);
-	//
-	// method.invoke(BL.class, entity.getID());
-	// } catch (NoSuchMethodException e1) {
-	// e1.printStackTrace();
-	// } catch (SecurityException e1) {
-	// e1.printStackTrace();
-	// } catch (IllegalAccessException e1) {
-	// e1.printStackTrace();
-	// } catch (IllegalArgumentException e1) {
-	// e1.printStackTrace();
-	// } catch (InvocationTargetException e1) {
-	// e1.printStackTrace();
-	// } catch (DALException e1) {
-	// e1.printStackTrace();
-	// }
-	// }
-	// tModel.refresh();
-	// }
-	// }
-	// }
-	// }
-	// }
 }

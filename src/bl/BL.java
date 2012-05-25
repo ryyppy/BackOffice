@@ -2,7 +2,6 @@ package bl;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -21,10 +20,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import sun.misc.IOUtils;
-
-import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
 
 import bl.objects.Angebot;
 import bl.objects.Ausgangsrechnung;
@@ -45,6 +40,8 @@ import bl.objects.view.KontaktView;
 import bl.objects.view.KundeView;
 import bl.objects.view.ProjektView;
 import bl.objects.view.RechnungszeileView;
+import bl.objects.view.reports.Ausgaben;
+import bl.objects.view.reports.Einnahmen;
 import bl.objects.view.reports.Jahresumsatz;
 import bl.objects.view.reports.OffeneProjekte;
 import bl.objects.view.reports.OffeneRechnungen;
@@ -1469,9 +1466,9 @@ public class BL {
 		db.disconnect();
 		return ret;
 	}
-	
-	public static ArrayList<Jahresumsatz> getJahresumsatzListe(
-			WhereChain where) throws DALException {
+
+	public static ArrayList<Jahresumsatz> getJahresumsatzListe(WhereChain where)
+			throws DALException {
 		// return buchungszeilenliste;
 		db.connect();
 		ArrayList<Jahresumsatz> ret = (ArrayList<Jahresumsatz>) db
@@ -1479,7 +1476,7 @@ public class BL {
 		db.disconnect();
 		return ret;
 	}
-	
+
 	public static ArrayList<OffeneProjekte> getOffeneProjekteListe()
 			throws DALException {
 		db.connect();
@@ -1488,7 +1485,7 @@ public class BL {
 		db.disconnect();
 		return ret;
 	}
-	
+
 	public static ArrayList<OffeneProjekte> getOffeneProjekteListe(
 			WhereChain where) throws DALException {
 		// return buchungszeilenliste;
@@ -1498,7 +1495,7 @@ public class BL {
 		db.disconnect();
 		return ret;
 	}
-	
+
 	public static ArrayList<Stundensatz> getStundensatzListe()
 			throws DALException {
 		db.connect();
@@ -1507,17 +1504,17 @@ public class BL {
 		db.disconnect();
 		return ret;
 	}
-	
-	public static ArrayList<Stundensatz> getStundensatzListe(
-			WhereChain where) throws DALException {
+
+	public static ArrayList<Stundensatz> getStundensatzListe(WhereChain where)
+			throws DALException {
 		// return buchungszeilenliste;
 		db.connect();
-		ArrayList<Stundensatz> ret = (ArrayList<Stundensatz>) db
-				.getEntitiesBy(where, Stundensatz.class);
+		ArrayList<Stundensatz> ret = (ArrayList<Stundensatz>) db.getEntitiesBy(
+				where, Stundensatz.class);
 		db.disconnect();
 		return ret;
 	}
-	
+
 	public static ArrayList<OffeneRechnungen> getOffeneRechnungenListe()
 			throws DALException {
 		db.connect();
@@ -1526,13 +1523,49 @@ public class BL {
 		db.disconnect();
 		return ret;
 	}
-	
+
 	public static ArrayList<OffeneRechnungen> getOffeneRechnungenListe(
 			WhereChain where) throws DALException {
 		// return buchungszeilenliste;
 		db.connect();
 		ArrayList<OffeneRechnungen> ret = (ArrayList<OffeneRechnungen>) db
 				.getEntitiesBy(where, OffeneRechnungen.class);
+		db.disconnect();
+		return ret;
+	}
+
+	public static ArrayList<Einnahmen> getEinnahmenListe() throws DALException {
+		db.connect();
+		ArrayList<Einnahmen> ret = (ArrayList<Einnahmen>) db
+				.getEntityList(Einnahmen.class);
+		db.disconnect();
+		return ret;
+	}
+
+	public static ArrayList<Einnahmen> getEinnahmenListe(WhereChain where)
+			throws DALException {
+		// return buchungszeilenliste;
+		db.connect();
+		ArrayList<Einnahmen> ret = (ArrayList<Einnahmen>) db.getEntitiesBy(
+				where, Einnahmen.class);
+		db.disconnect();
+		return ret;
+	}
+
+	public static ArrayList<Ausgaben> getAusgabenListe() throws DALException {
+		db.connect();
+		ArrayList<Ausgaben> ret = (ArrayList<Ausgaben>) db
+				.getEntityList(Ausgaben.class);
+		db.disconnect();
+		return ret;
+	}
+
+	public static ArrayList<Ausgaben> getAusgabenListe(WhereChain where)
+			throws DALException {
+		// return buchungszeilenliste;
+		db.connect();
+		ArrayList<Ausgaben> ret = (ArrayList<Ausgaben>) db.getEntitiesBy(where,
+				Ausgaben.class);
 		db.disconnect();
 		return ret;
 	}
