@@ -226,6 +226,9 @@ public abstract class ReportViewPanel extends JPanel implements ActionListener {
 			public void keyPressed(KeyEvent evt) {
 				if (evt.getKeyCode() == KeyEvent.VK_F5) {
 					tModel.refresh();
+					if (tModel2 != null) {
+						tModel2.refresh();
+					}
 				}
 			}
 		});
@@ -271,6 +274,7 @@ public abstract class ReportViewPanel extends JPanel implements ActionListener {
 			public void keyPressed(KeyEvent evt) {
 				if (evt.getKeyCode() == KeyEvent.VK_F5) {
 					tModel2.refresh();
+					tModel.refresh();
 				}
 			}
 		});
