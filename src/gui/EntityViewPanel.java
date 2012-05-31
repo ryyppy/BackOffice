@@ -4,7 +4,6 @@ import gui.componentModels.EntityTableModel;
 import gui.componentModels.MyTableCellRenderer;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -21,7 +20,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -194,10 +192,10 @@ public abstract class EntityViewPanel extends JPanel implements ActionListener {
 			// analysisPanel.add(new JSeparator());
 		}
 	}
-	public void setAnalysisPanel(JPanel p ){
-		this.analysisPanel=p;
+
+	public void setAnalysisPanel(JPanel p) {
+		this.analysisPanel = p;
 	}
-	
 
 	public void setAdditionalButtons(JButton[] buttons) {
 		additionalButtons = new JPanel(new GridLayout(buttons.length, 1));

@@ -21,9 +21,9 @@ public class Angebot extends DBEntity {
 
 	}
 
-	public Angebot(String beschreibung, Double summe, Double dauer, Date date, Double chance,
-			Integer kundenID, Integer projektID) {
-		this.beschreibung=beschreibung;
+	public Angebot(String beschreibung, Double summe, Double dauer, Date date,
+			Double chance, Integer kundenID, Integer projektID) {
+		this.beschreibung = beschreibung;
 		this.summe = summe;
 		this.dauer = dauer;
 		this.datum = date;
@@ -32,10 +32,10 @@ public class Angebot extends DBEntity {
 		this.projektID = projektID;
 	}
 
-	public Angebot(Integer id, String beschreibung, Double summe, Double dauer, Date date,
-			Double chance, Integer kundenID, Integer projektID) {
+	public Angebot(Integer id, String beschreibung, Double summe, Double dauer,
+			Date date, Double chance, Integer kundenID, Integer projektID) {
 		this.angebotID = id;
-		this.beschreibung=beschreibung;
+		this.beschreibung = beschreibung;
 		this.summe = summe;
 		this.dauer = dauer;
 		this.datum = date;

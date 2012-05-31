@@ -83,8 +83,8 @@ public class Kunde extends DBEntity {
 	@Override
 	public String toString() {
 		return "Kunde [kundeID=" + kundeID + ", vorname=" + vorname
-				+ ", nachname=" + nachname + ", geburtsdatum=" + getGeburtsdatumString()
-				+ "]";
+				+ ", nachname=" + nachname + ", geburtsdatum="
+				+ getGeburtsdatumString() + "]";
 	}
 
 	public String getValues() {

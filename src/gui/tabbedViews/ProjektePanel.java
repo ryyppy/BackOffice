@@ -20,7 +20,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import bl.BL;
-import bl.XMLFilter;
+import bl.filter.XMLFilter;
 import bl.objects.Projekt;
 import bl.objects.view.ProjektView;
 import dal.DALException;
@@ -100,8 +100,9 @@ public class ProjektePanel extends EntityViewPanel {
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} catch (DALException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					JOptionPane.showMessageDialog(this,
+							"Fehler beim importieren der verbrauchten Stunden");
 				}
 			}
 		}

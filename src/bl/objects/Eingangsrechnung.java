@@ -18,19 +18,20 @@ public class Eingangsrechnung extends Rechnung {
 		super(status, datum);
 		this.kontaktID = kontaktID;
 	}
-	
-	public Eingangsrechnung(String status, Date datum, Integer kontaktID, String file) {
+
+	public Eingangsrechnung(String status, Date datum, Integer kontaktID,
+			String file) {
 		super(status, datum);
 		this.kontaktID = kontaktID;
-		this.file=file;
+		this.file = file;
 	}
 
 	public Eingangsrechnung(Integer rechnungID, String status, Date datum,
-			Integer kontaktID,String file) {
+			Integer kontaktID, String file) {
 		super(rechnungID, status, datum);
 		this.kontaktID = kontaktID;
 		this.rechnungID = rechnungID;
-		this.file=file;
+		this.file = file;
 	}
 
 	public Integer getKontaktID() {

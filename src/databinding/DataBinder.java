@@ -1,9 +1,6 @@
 package databinding;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Insets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -11,8 +8,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
-import javax.swing.border.MatteBorder;
 
 import dal.DBEntity;
 
@@ -37,7 +32,7 @@ public class DataBinder {
 		return ret;
 	}
 
-	public String bindFrom_String(JComboBox f, Rule r) {
+	public String bindFrom_String(JComboBox<?> f, Rule r) {
 		setComponentBorder(f, Color.GREEN);
 		String ret = "";
 		// Convert
@@ -60,7 +55,8 @@ public class DataBinder {
 
 		return ret;
 	}
-	public String bindFrom_String2(JComboBox f, Rule r) {
+
+	public String bindFrom_String2(JComboBox<?> f, Rule r) {
 		setComponentBorder(f, Color.GREEN);
 		String ret = "";
 		// Convert
@@ -104,7 +100,7 @@ public class DataBinder {
 		return ret;
 	}
 
-	public int bindFrom_int(JComboBox f, Rule r) {
+	public int bindFrom_int(JComboBox<?> f, Rule r) {
 		setComponentBorder(f, Color.GREEN);
 		int ret = -1;
 		// Convert

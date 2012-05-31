@@ -3,14 +3,15 @@ package bl.objects;
 import dal.DBEntity;
 import dal.TableMeta;
 
-@TableMeta(pkFieldName="buchungszeileID")
+@TableMeta(pkFieldName = "buchungszeileID")
 public class Rechnung_Buchungszeile extends DBEntity {
 	private Integer rechnungID;
 	private Integer buchungszeileID;
 
-	public Rechnung_Buchungszeile(){
-		
+	public Rechnung_Buchungszeile() {
+
 	}
+
 	public Rechnung_Buchungszeile(Integer rechnungsID, Integer buchungszeileID) {
 		this.rechnungID = rechnungsID;
 		this.buchungszeileID = buchungszeileID;

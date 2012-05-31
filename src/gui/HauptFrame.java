@@ -7,7 +7,6 @@ import gui.tabbedViews.EingangsrechnungenPanel;
 import gui.tabbedViews.KontaktPanel;
 import gui.tabbedViews.KundenPanel;
 import gui.tabbedViews.ProjektePanel;
-import gui.tabbedViews.reports.JahresumsatzPanel;
 
 import java.awt.BorderLayout;
 

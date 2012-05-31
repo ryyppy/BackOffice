@@ -1,9 +1,6 @@
-package bl;
+package bl.filter;
 
 import java.io.File;
-
-import extras.MyFileFilter;
-
 
 /* ImageFilter.java is used by FileChooserDemo2.java. */
 public class PDFFilter extends MyFileFilter {

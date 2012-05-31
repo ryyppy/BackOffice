@@ -1,7 +1,6 @@
 package bl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -208,6 +207,7 @@ public class PDFFile {
 
 	}
 
+	@SuppressWarnings("unused")
 	private void addTitlePage(Document document) throws DocumentException {
 		Paragraph preface = new Paragraph();
 		// We add one empty line
@@ -236,6 +236,7 @@ public class PDFFile {
 		document.newPage();
 	}
 
+	@SuppressWarnings("unused")
 	private void addContent(Document document) throws DocumentException {
 		Anchor anchor = new Anchor("First Chapter", catFont);
 		anchor.setName("First Chapter");

@@ -35,13 +35,13 @@ public class MyListCellRenderer extends DefaultListCellRenderer {
 				return method.invoke(object, new Object[0]);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			// e.printStackTrace();
 		}
 		return null;
 	}
 
 	@Override
-	public Component getListCellRendererComponent(JList list, Object value,
+	public Component getListCellRendererComponent(JList<?> list, Object value,
 			int index, boolean isSelected, boolean cellHasFocus) {
 		Object property = getPropertyValue(value);
 		return super.getListCellRendererComponent(list, property, index,

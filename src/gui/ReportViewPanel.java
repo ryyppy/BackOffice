@@ -412,6 +412,7 @@ public abstract class ReportViewPanel extends JPanel implements ActionListener {
 					String value = searchField.getText();
 					WhereChain where = new WhereChain(fieldname, operator,
 							value);
+					where = new WhereChain(fieldname, operator, value);
 					tModel.setWhereChain(where);
 					// tModel.setFilter(searchField.getText());
 					tModel.refresh();

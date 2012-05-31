@@ -8,5 +8,4 @@ public class ErrorControl extends ArrayList<Error> {
 		this.add(new Error(name, msg, type));
 	}
 
-	
 }

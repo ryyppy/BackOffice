@@ -6,7 +6,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFrame;
 import javax.swing.table.AbstractTableModel;
 
 import bl.BL;
@@ -14,7 +13,6 @@ import dal.DALException;
 import dal.DBEntity;
 import dal.DBEntityInfo;
 import dal.WhereChain;
-import dal.WhereCondition;
 
 public class EntityTableModel extends AbstractTableModel {
 	private ArrayList<DBEntity> entries;
@@ -96,7 +94,7 @@ public class EntityTableModel extends AbstractTableModel {
 			e.printStackTrace();
 		} catch (SecurityException e) {
 			e.printStackTrace();
-		} 
+		}
 		return "";
 	}
 
@@ -133,7 +131,7 @@ public class EntityTableModel extends AbstractTableModel {
 		String getter = "get" + property + "Liste";
 
 		try {
-			if (where==null) {
+			if (where == null) {
 				if (parameter == -1) {
 					Method method = BL.class.getMethod(getter, new Class<?>[0]);
 					entries = (ArrayList<DBEntity>) method.invoke(BL.class,

@@ -24,7 +24,8 @@ public class KundeView extends DBEntity {
 		this.geburtsdatum = geburtsdatum;
 	}
 
-	public KundeView(Integer id, String vorname, String nachname, Date geburtsdatum) {
+	public KundeView(Integer id, String vorname, String nachname,
+			Date geburtsdatum) {
 		this.kundeID = id;
 		this.vorname = vorname;
 		this.nachname = nachname;
@@ -83,8 +84,8 @@ public class KundeView extends DBEntity {
 	@Override
 	public String toString() {
 		return "Kunde [kundeID=" + kundeID + ", vorname=" + vorname
-				+ ", nachname=" + nachname + ", geburtsdatum=" + getGeburtsdatumString()
-				+ "]";
+				+ ", nachname=" + nachname + ", geburtsdatum="
+				+ getGeburtsdatumString() + "]";
 	}
 
 	public String getValues() {

@@ -9,8 +9,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
-
-
 public class LogView extends JDialog {
 	private JTextArea t;
 

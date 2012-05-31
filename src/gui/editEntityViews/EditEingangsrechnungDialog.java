@@ -2,7 +2,6 @@ package gui.editEntityViews;
 
 import gui.componentModels.EntityComboBoxModel;
 import gui.componentModels.MyListCellRenderer;
-import gui.specialViews.LogView;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -24,13 +23,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
 
 import bl.BL;
-import bl.ImageFilter;
-import bl.XMLFilter;
+import bl.filter.ImageFilter;
 import bl.objects.Eingangsrechnung;
 import bl.objects.Kontakt;
 import dal.DALException;
@@ -157,7 +152,8 @@ public class EditEingangsrechnungDialog extends JDialog implements
 		panel.add(grid);
 
 		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		p.add(select);p.add(unselect);
+		p.add(select);
+		p.add(unselect);
 		panel.add(p);
 
 		if (er != null) {
@@ -169,11 +165,11 @@ public class EditEingangsrechnungDialog extends JDialog implements
 				}
 			}
 			datum.setText(er.getDatumString());
-			if(er.getFile()!=null){
-			File f = new File(er.getFile());
-			fileLabel.setText(f.getName());
-			fileLabel.setToolTipText(f.getName());
-			unselect.setEnabled(true);
+			if (er.getFile() != null) {
+				File f = new File(er.getFile());
+				fileLabel.setText(f.getName());
+				fileLabel.setToolTipText(f.getName());
+				unselect.setEnabled(true);
 			}
 		} else {
 			datum.setText(new StringBuilder(new SimpleDateFormat("dd.MM.yyyy")
@@ -185,14 +181,12 @@ public class EditEingangsrechnungDialog extends JDialog implements
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
 			try {
 				DataBinder b = new DataBinder();
 				String status = b.bindFrom_String2(this.status, null);
 				Date datum = b.bindFrom_Date(this.datum, new StandardRule());
 				int kontaktID = b.bindFrom_int(kontakt, null);
-				
 
 				if (!b.hasErrors()) {
 					if (er != null) {
@@ -223,13 +217,12 @@ public class EditEingangsrechnungDialog extends JDialog implements
 				de.printStackTrace();
 				JOptionPane.showMessageDialog(this, de.getMessage());
 			} catch (IOException ioe) {
-				// TODO Auto-generated catch block
 				ioe.printStackTrace();
 			}
 		} else if (e.getSource() == cancel) {
 			dispose();
-		}else if(e.getSource() == unselect){
-			file=null;
+		} else if (e.getSource() == unselect) {
+			file = null;
 			fileLabel.setText("");
 			fileLabel.setToolTipText("");
 			unselect.setEnabled(false);
@@ -249,7 +242,7 @@ public class EditEingangsrechnungDialog extends JDialog implements
 					fileLabel.setToolTipText(file.getName());
 					unselect.setEnabled(true);
 				} else {
-					file=null;
+					file = null;
 					JOptionPane.showMessageDialog(this,
 							"Image konnte nicht gefunden werden");
 				}

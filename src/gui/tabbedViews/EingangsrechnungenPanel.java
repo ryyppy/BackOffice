@@ -22,9 +22,8 @@ import org.xml.sax.SAXException;
 
 import bl.BL;
 import bl.PDFFile;
-import bl.PDFFilter;
-import bl.XMLFile;
-import bl.XMLFilter;
+import bl.filter.PDFFilter;
+import bl.filter.XMLFilter;
 import bl.objects.Eingangsrechnung;
 import bl.objects.Kontakt;
 import bl.objects.view.EingangsrechnungView;

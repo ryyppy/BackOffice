@@ -15,7 +15,6 @@ public class EntityComboBoxModel<T> implements ComboBoxModel<T> {
 
 	@Override
 	public void addListDataListener(ListDataListener arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -31,7 +30,6 @@ public class EntityComboBoxModel<T> implements ComboBoxModel<T> {
 
 	@Override
 	public void removeListDataListener(ListDataListener arg0) {
-		// TODO Auto-generated method stub
 
 	}
 

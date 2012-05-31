@@ -6,20 +6,13 @@ import java.awt.event.ActionEvent;
 import java.text.NumberFormat;
 
 import javax.swing.JFrame;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import bl.BL;
-import bl.objects.Projekt;
 import bl.objects.view.reports.Ausgaben;
 import bl.objects.view.reports.Einnahmen;
-import bl.objects.view.reports.Jahresumsatz;
-import dal.DALException;
 import dal.DBEntity;
 
 public class EinAusgabenPanel extends ReportViewPanel {
-	private JMenuItem projektInfo;
 
 	private JTextField einnahmen, ausgaben, gv;
 
@@ -56,31 +49,20 @@ public class EinAusgabenPanel extends ReportViewPanel {
 		}
 		ausgabe = NumberFormat.getCurrencyInstance().format(ausgaben);
 		this.ausgaben.setText(ausgabe);
-		
-		ausgabe = NumberFormat.getCurrencyInstance().format(einnahmen-ausgaben);
+
+		ausgabe = NumberFormat.getCurrencyInstance().format(
+				einnahmen - ausgaben);
 		this.gv.setText(ausgabe);
 	}
 
 	@Override
 	public void initPopupMenuItems() {
-		projektInfo = new JMenuItem("Projektinfo");
-		JMenuItem[] menuitems = { projektInfo };
-		super.setPopupMenuItems(menuitems);
+
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == projektInfo) {
-			Jahresumsatz selectedItem = (Jahresumsatz) getSelectedItem();
-			if (selectedItem != null) {
-				try {
-					Projekt p = BL.getProjekt(selectedItem.getProjektid());
-					JOptionPane.showMessageDialog(this, p.toString());
-				} catch (DALException e1) {
-					JOptionPane.showMessageDialog(this, e1.getMessage());
-				}
-			}
-		} else if (e.getSource() == save) {
+		if (e.getSource() == save) {
 
 		} else if (e.getSource() == refresh) {
 			tModel.refresh();

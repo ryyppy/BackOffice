@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -18,7 +17,7 @@ import javax.swing.JOptionPane;
 
 import bl.BL;
 import bl.PDFFile;
-import bl.PDFFilter;
+import bl.filter.PDFFilter;
 import bl.objects.Ausgangsrechnung;
 import bl.objects.Kunde;
 import bl.objects.view.AusgangsrechnungView;

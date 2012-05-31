@@ -104,7 +104,6 @@ public class EditKontaktDialog extends JDialog implements ActionListener,
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 
 		if (e.getSource() == save) {
 
@@ -158,11 +157,9 @@ public class EditKontaktDialog extends JDialog implements ActionListener,
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
 	}
 }

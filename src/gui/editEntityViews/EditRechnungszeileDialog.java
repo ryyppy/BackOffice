@@ -26,8 +26,7 @@ import dal.DALException;
 import databinding.DataBinder;
 import databinding.StandardRule;
 
-public class EditRechnungszeileDialog extends JDialog implements
-		ActionListener {
+public class EditRechnungszeileDialog extends JDialog implements ActionListener {
 	private JTextField[] textfeld;
 	private JButton add, cancel;
 	private JComboBox<Angebot> angebote;
@@ -48,8 +47,8 @@ public class EditRechnungszeileDialog extends JDialog implements
 		initDialog();
 	}
 
-	public EditRechnungszeileDialog(JFrame owner, int rechnungID,
-			int kundenID, Rechnungszeile r) {
+	public EditRechnungszeileDialog(JFrame owner, int rechnungID, int kundenID,
+			Rechnungszeile r) {
 		super(owner, "Rechnungszeile der Rechnung " + rechnungID
 				+ " bearbeiten", true);
 		this.r = r;
@@ -153,7 +152,6 @@ public class EditRechnungszeileDialog extends JDialog implements
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		if (e.getSource() == add) {
 
 			try {

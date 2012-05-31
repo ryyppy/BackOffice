@@ -10,7 +10,7 @@ public class RechnungszeileView extends DBEntity {
 	private String kommentar;
 	private Double steuersatz;
 	private Double betrag;
-//	private Integer angebotID;
+	// private Integer angebotID;
 	private String angebot;
 
 	public RechnungszeileView() {
@@ -84,13 +84,13 @@ public class RechnungszeileView extends DBEntity {
 		this.rechnungID = rechnungid;
 	}
 
-//	public Integer getAngebotID() {
-//		return angebotID;
-//	}
-//
-//	public void setAngebotID(Integer angebotID) {
-//		this.angebotID = angebotID;
-//	}
+	// public Integer getAngebotID() {
+	// return angebotID;
+	// }
+	//
+	// public void setAngebotID(Integer angebotID) {
+	// this.angebotID = angebotID;
+	// }
 
 	@Override
 	public String toString() {
