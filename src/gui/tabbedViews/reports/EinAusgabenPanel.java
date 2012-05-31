@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.text.NumberFormat;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import bl.objects.view.reports.Ausgaben;
@@ -18,7 +19,7 @@ public class EinAusgabenPanel extends ReportViewPanel {
 
 	public EinAusgabenPanel(JFrame owner) {
 		super(Einnahmen.class, Ausgaben.class, owner);
-
+		search.doClick();
 	}
 
 	@Override
@@ -58,6 +59,11 @@ public class EinAusgabenPanel extends ReportViewPanel {
 	@Override
 	public void initPopupMenuItems() {
 
+	}
+
+	@Override
+	public JPanel createSearchPanel() {
+		return createFilterDatePanel();
 	}
 
 	@Override

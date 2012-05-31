@@ -16,7 +16,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -31,6 +33,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+
+import com.toedter.calendar.JMonthChooser;
+import com.toedter.calendar.JYearChooser;
 
 import dal.DBEntity;
 import dal.WhereChain;
@@ -359,7 +364,10 @@ public abstract class ReportViewPanel extends JPanel implements ActionListener {
 
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.gridy = 3;
-		panel.add(this.createSearchPanel(), gbc);
+		// JPanel grid = new JPanel(new GridLayout(2, 1));
+		// grid.add(this.createFilterDatePanel());
+		// grid.add(this.createSearchPanel());
+		panel.add(createSearchPanel(), gbc);
 
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.gridy = 2;
@@ -390,7 +398,7 @@ public abstract class ReportViewPanel extends JPanel implements ActionListener {
 		return new JPanel();
 	}
 
-	private JPanel createSearchPanel() {
+	public JPanel createSearchPanel() {
 		if (tModel2 != null) {
 			if (tModel.columnNamesOriginal.length != tModel2.columnNamesOriginal.length) {
 				return new JPanel();
@@ -412,7 +420,6 @@ public abstract class ReportViewPanel extends JPanel implements ActionListener {
 					String value = searchField.getText();
 					WhereChain where = new WhereChain(fieldname, operator,
 							value);
-					where = new WhereChain(fieldname, operator, value);
 					tModel.setWhereChain(where);
 					// tModel.setFilter(searchField.getText());
 					tModel.refresh();
@@ -459,4 +466,77 @@ public abstract class ReportViewPanel extends JPanel implements ActionListener {
 		return ret;
 	}
 
+	public JPanel createFilterDatePanel() {
+		if (tModel2 != null) {
+			if (tModel.columnNamesOriginal.length != tModel2.columnNamesOriginal.length) {
+				return new JPanel();
+			}
+		}
+		search = new JButton("Select month");
+		final JButton refresh = new JButton("Select current month");
+		final JMonthChooser month = new JMonthChooser(true);
+		final JYearChooser year = new JYearChooser();
+		month.setYearChooser(year);
+
+		ActionListener al = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == search) {
+					String monthString = "";
+					if (month.getMonth() + 1 < 10) {
+						monthString = "0";
+					}
+					monthString += month.getMonth() + 1;
+					String value = year.getYear() + "-" + monthString;
+
+					WhereChain where = new WhereChain("datum",
+							WhereOperator.LIKE, value);
+					tModel.setWhereChain(where);
+					// tModel.setFilter(searchField.getText());
+					tModel.refresh();
+					if (tModel2 != null) {
+						tModel2.setWhereChain(where);
+						tModel2.refresh();
+					}
+					refreshAnalysis();
+				} else if (e.getSource() == refresh) {
+					month.setMonth(Integer.valueOf(new SimpleDateFormat("MM")
+							.format(new Date())) - 1);
+					year.setYear(Integer.valueOf(new SimpleDateFormat("yyyy")
+							.format(new Date())));
+
+					String monthString = "";
+					if (month.getMonth() + 1 < 10) {
+						monthString = "0";
+					}
+					monthString += month.getMonth() + 1;
+					String value = year.getYear() + "-" + monthString;
+					WhereChain where = new WhereChain("datum",
+							WhereOperator.LIKE, value);
+
+					tModel.setFilter("");
+					tModel.setWhereChain(where);
+					tModel.refresh();
+					if (tModel2 != null) {
+						tModel.setFilter("");
+						tModel2.setWhereChain(where);
+						tModel2.refresh();
+					}
+					refreshAnalysis();
+				}
+			}
+		};
+		search.addActionListener(al);
+		refresh.addActionListener(al);
+
+		JPanel ret = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+		ret.add(new JLabel("<html><body><b> Filter:</b></body></html>"));
+		ret.add(month);
+		ret.add(year);
+		ret.add(new JLabel());
+		ret.add(search);
+		ret.add(refresh);
+		return ret;
+	}
 }
