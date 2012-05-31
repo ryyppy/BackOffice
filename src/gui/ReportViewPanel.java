@@ -16,6 +16,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -477,10 +479,24 @@ public abstract class ReportViewPanel extends JPanel implements ActionListener {
 		final JMonthChooser month = new JMonthChooser(true);
 		final JYearChooser year = new JYearChooser();
 		month.setYearChooser(year);
+		
+		PropertyChangeListener pcl = new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				if(evt.getSource()==year || evt.getSource()==month){
+					search.doClick();
+				}
+			}
+		};
+
+		month.addPropertyChangeListener(pcl);
+		year.addPropertyChangeListener(pcl);
 
 		ActionListener al = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
 				if (e.getSource() == search) {
 					String monthString = "";
 					if (month.getMonth() + 1 < 10) {
@@ -535,7 +551,7 @@ public abstract class ReportViewPanel extends JPanel implements ActionListener {
 		ret.add(month);
 		ret.add(year);
 		ret.add(new JLabel());
-		ret.add(search);
+//		ret.add(search);
 		ret.add(refresh);
 		return ret;
 	}
