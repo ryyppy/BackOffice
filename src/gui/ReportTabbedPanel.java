@@ -24,8 +24,8 @@ public class ReportTabbedPanel extends JPanel {
 		reiter.addTab("Offene Rechnungen", new OffeneRechnungenPanel(owner));
 		reiter.addTab("Stundensatz", new StundensatzPanel(owner));
 		reiter.addTab("Ein-/Ausgaben", new EinAusgabenPanel(owner));
-		reiter.addTab("Angebotsreport", new JPanel());
-		reiter.addTab("Rechnungsreport", new JPanel());
+		// reiter.addTab("Angebotsreport", new JPanel());
+		// reiter.addTab("Rechnungsreport", new JPanel());
 
 		add(reiter);
 
