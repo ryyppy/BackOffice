@@ -31,6 +31,10 @@ public class ConfigurationTest {
         File expectedDir = new File("loggy");
         File foundDir = config.getLoggingDirectory();
         Assert.assertEquals(String.format("Loggingdirectory should be %s - found: %s", expectedDir.getAbsolutePath(), foundDir.getAbsolutePath()), expectedDir, foundDir);
+
+        expectedDir = new File("files");
+        foundDir = config.getDocumentDirectory();
+        Assert.assertEquals(String.format("DocumentDirectory should be %s - found: %s", expectedDir.getAbsolutePath(), foundDir.getAbsolutePath()), expectedDir, foundDir);
     }
 
     /**
@@ -38,7 +42,7 @@ public class ConfigurationTest {
      * @throws Exception - If there could not be made any connection to the db
      */
     @Test
-    public void testDatabaseConfig() throws Exception{
+    public void testGetInstance() throws Exception{
         System.out.println(String.format("Reading config-file '%s' ...", Configuration.CONFIG_FILENAME));
         Configuration config = Configuration.getInstance();
 
@@ -53,9 +57,27 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void testInvalidConfig() throws Exception {
-            Configuration config = new Configuration("tests/config/invalid_config.properties");
+    public void testSetLoggingStdout() throws Exception {
+        //To change body of created methods use File | Settings | File Templates.
+    }
 
+    @Test
+    public void testSetDatabaseAdapter() throws Exception {
+        //To change body of created methods use File | Settings | File Templates.
+    }
 
+    @Test
+    public void testSetLoggingDirectory() throws Exception {
+        //To change body of created methods use File | Settings | File Templates.
+    }
+
+    @Test
+    public void testSetDocumentDirectory() throws Exception {
+        //To change body of created methods use File | Settings | File Templates.
+    }
+
+    @Test
+    public void testSetLoggingLevel() throws Exception {
+        //To change body of created methods use File | Settings | File Templates.
     }
 }

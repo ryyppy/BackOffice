@@ -1,6 +1,7 @@
 package config;
 
 import dal.DatabaseAdapter;
+import dal.MockAdapter;
 import dal.MysqlAdapter;
 import logging.LoggingLevel;
 
@@ -15,6 +16,30 @@ import java.util.Properties;
  * User: Patrick Stapfer
  * Date: 17.04.12
  * Time: 13:13
+ *
+ * This singleton-class provides a Configuration-Object, with data retrieved from external sources like a property-file.
+ * Also, this class doesn't contain any magic, that means, it only encapsulates values, which should be used by the
+ * business-logic, like creating additional ConsoleLogger or setting the loggingLevel in the LoggerManager.
+ *
+ * If the singleton-instance is not existent, a new instance will be created, that means, it uses the file "config.properties"
+ * in the root-folder to load all configuration-specific-values. It may fail in the first run, because the config-file
+ * will be created first. Adapt the values and re-run the application for a successful start!
+ *
+ * Everytime, there is an error in setting a configuration-object-value, a ConfigException will be thrown, so it would
+ * be best practise to load all values in the start of the program and check its integrity (no exceptions thrown?),
+ * before processing business-logic!
+ *
+ * Example to retrieve and work with the Configuration-object:
+ * try{
+ *   Configuration c = Configuration.getInstance();
+ * }catch(ConfigException ce){
+ *     System.err.println("Something went terribly wrong in creating the configuration!");
+ * }
+ * DatabaseAdapter db = c.getDatabaseAdapter();
+ * File loggingDirectory = c.getLoggingDirectory();
+ * .
+ * .
+ * .
  */
 public class Configuration {
     //Readonly field for the configuration-file-name
@@ -22,6 +47,9 @@ public class Configuration {
 
     //Singleton-Instance
     private static Configuration instance = null;
+
+    //Default-Values
+    private Properties defaults = null;
 
     //Properties-Reference
     private Properties properties = null;
@@ -38,8 +66,15 @@ public class Configuration {
     //Directory for the logging-files, which will be created by FileAdapter
     private File loggingDirectory = null;
 
-    protected Configuration(String filename) throws ConfigException {
-        Properties defaults = new Properties();
+    //Directory for the document-storage
+    private File documentDirectory = null;
+
+    /**
+     * Creates a new Configuration-Object with default-values only
+     * Use the set-Methods to set it's right values
+     */
+    protected Configuration(){
+        defaults = new Properties();
         defaults.setProperty("db_adapter", "mysql");
         defaults.setProperty("db_url", "localhost");
         defaults.setProperty("db_name", "backoffice");
@@ -48,8 +83,19 @@ public class Configuration {
         defaults.setProperty("logging_directory", "log");
         defaults.setProperty("logging_level", "DEBUG");
         defaults.setProperty("logging_stdout", "true");
+        defaults.setProperty("document_store_directory", "documents");
 
-        Properties properties = new Properties(defaults);
+        properties = new Properties(defaults);
+    }
+
+    /**
+     * This constructor loads the configuration from a properties-file.
+     * If there is no such file, it will be created with with the default-values
+     * @param filename - Properties file to load in,... If there are properties missing, then the default-values will be taken
+     * @throws ConfigException - If something went wrong in a set-method
+     */
+    protected Configuration(String filename) throws ConfigException {
+        this(); //Getting the default-values first
 
         try{
             File f = new File(filename);
@@ -59,16 +105,23 @@ public class Configuration {
             properties.load(new FileInputStream(f));
 
             //Set logging-directory
-            loadLoggingDirectory(properties);
+            setLoggingDirectory(properties.getProperty("logging_directory"));
 
             //Set logging-level
-            loadLoggingLevel(properties);
+            setLoggingLevel(properties.getProperty("logging_level"));
 
             //Set database-adapter
-            loadDatabaseAdapter(properties);
+            setDatabaseAdapter(properties.getProperty("db_adapter"),
+                               properties.getProperty("db_url"),
+                               properties.getProperty("db_name"),
+                               properties.getProperty("db_user"),
+                               properties.getProperty("db_pw"));
 
             //Set boolean for loggingStdout
-            loadLoggingStdout(properties);
+            setLoggingStdout(properties.getProperty("logging_stdout"));
+
+            //Load document-store-directory
+            setDocumentDirectory(properties.getProperty("document_store_directory"));
 
             //Set properties
             this.properties = properties;
@@ -78,8 +131,17 @@ public class Configuration {
         }
     }
 
-    private void loadLoggingStdout(Properties properties) throws ConfigException{
-        String loggingStdout = properties.getProperty("logging_stdout").toLowerCase();
+    /**
+     * Sets the loggingStdout-Value in the config-object.
+     * The value will be parsed from the String parameter and throws an exception if it is a non-known value.
+     * @param loggingStdout - Either "true" or "false"
+     * @throws ConfigException - If the value is not "true" or "false" or null
+     */
+    protected void setLoggingStdout(String loggingStdout) throws ConfigException{
+        if(loggingStdout == null)
+            throw new ConfigException("loggingStdout must not be null!");
+
+        loggingStdout = loggingStdout.toLowerCase();
 
         if(!loggingStdout.equals("true") && !loggingStdout.equals("false"))
             throw new ConfigException(String.format("logging_stdout '%s' unknown - Only 'true' or 'false' allowed!", loggingStdout));
@@ -87,22 +149,35 @@ public class Configuration {
         this.loggingStdout = Boolean.parseBoolean(loggingStdout);
     }
 
-    private void loadDatabaseAdapter(Properties properties) throws ConfigException{
+    /**
+     * Creates and sets the database-adapter in this configuration-object for the given values.
+     * Throws an exception if the database-adpater could not be created.
+     * @param dalName - Name of the databaseadapter ('mysql' for MysqlAdapter, 'mock' for MockAdapter)
+     * @param dbUrl - URL of the database-server
+     * @param dbName - Databasename according to the database-server
+     * @param dbUser - Username
+     * @param dbPw - Password
+     * @throws ConfigException  - if the given dalName is not supported
+     */
+    protected void setDatabaseAdapter(String dalName, String dbUrl, String dbName, String dbUser, String dbPw) throws ConfigException{
         //Initialize databaseadapter
-        String dalName = properties.getProperty("db_adapter");
-        String dbUrl = properties.getProperty("db_url");
-        String dbName = properties.getProperty("db_name");
-        String dbUser = properties.getProperty("db_user");
-        String dbPw = properties.getProperty("db_pw");
-
         if("mysql".equals(dalName.toLowerCase()))
             databaseAdapter = new MysqlAdapter(dbUser, dbPw, dbUrl, dbName);
+        else if("mock".equals(dalName.toLowerCase()))
+            databaseAdapter= new MockAdapter();
         else
             throw new ConfigException(String.format("db_adapter '%s' unknown", dalName));
     }
 
-    private void loadLoggingDirectory(Properties properties) throws ConfigException{
-        String path = properties.getProperty("logging_directory");
+    /**
+     * Sets the logginDirectory-value in this configuration-object for the given value.
+     * @param path - Path of the directory
+     * @throws ConfigException - If there are path-errors or the directory could not be created.
+     */
+    protected void setLoggingDirectory(String path) throws ConfigException{
+        if(path == null)
+            throw new ConfigException("Path must not be null!");
+
         File loggingDirectory = new File(path);
 
         if(!loggingDirectory.exists()){
@@ -117,13 +192,36 @@ public class Configuration {
     }
 
     /**
-     * Loads the "logging_level" Property-Key from the properties parameter and sets instance-variable "loggingLevel"
-     * if valid.
-     * @param properties - Properties-Object to search for "logging_level"
-     * @throws ConfigException - If there was a validation-problem in it's logging_level value
+     * Sets the documentDirectory-value in this configuration-object for the given value.
+     * @param path - Path of the directory
+     * @throws ConfigException - If there are path-errors or the directory could not be created.
      */
-    private void loadLoggingLevel(Properties properties) throws ConfigException {
-        String level = properties.getProperty("logging_level");
+    protected void setDocumentDirectory(String path) throws ConfigException{
+        if(path == null)
+            throw new ConfigException("Path must not be null!");
+
+        File documentDirectory = new File(path);
+
+        if(!documentDirectory.exists()){
+            if(!documentDirectory.mkdir())
+                throw new ConfigException(String.format("Document_store_directory '%s' not found or could not be created!", path));
+        }
+
+        if(!documentDirectory.isDirectory())
+            throw new ConfigException(String.format("logging_directory '%s' is no directory!", path));
+
+        this.documentDirectory = documentDirectory;
+    }
+
+    /**
+     * Sets the loggingLevel-value in this configuration-object for the given value.
+     * @param level - According to the logging.LoggingLevel - class ("INFO", "WARNING", "DEBUG")
+     * @throws ConfigException - If the given value could not be found in logging.LoggingLevel
+     */
+    protected void setLoggingLevel(String level) throws ConfigException {
+        if(level == null)
+            throw new ConfigException("Level must not be null!");
+
         LoggingLevel loggingLevel = LoggingLevel.get(level);
 
         if(loggingLevel == null)
@@ -148,6 +246,15 @@ public class Configuration {
         return loggingDirectory;
     }
 
+    public File getDocumentDirectory() {
+        return documentDirectory;
+    }
+
+    /**
+     * Returns the singleton-instance
+     * @return Singleton-Instance of type Configuration
+     * @throws ConfigException - If the configuration could not be loaded from the default-config-file (config.properties)
+     */
     public static Configuration getInstance() throws ConfigException{
         if(instance == null)
            instance = new Configuration(CONFIG_FILENAME);
