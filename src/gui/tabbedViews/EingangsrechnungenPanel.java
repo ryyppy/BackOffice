@@ -57,11 +57,11 @@ public class EingangsrechnungenPanel extends EntityViewPanel {
 	@Override
 	public void initPopupMenuItems() {
 		kontaktInfo = new JMenuItem("Kontaktinfo");
-		showRechnung= new JMenuItem("Show Rechnung");
-		showRechnungszeilen = new JMenuItem("Show Rechnungszeilen");
+		showRechnung= new JMenuItem("Rechnung anzeigen");
+		showRechnungszeilen = new JMenuItem("Rechnungszeilen anzeigen");
 		print = new JMenuItem("Als PDF drucken");
 
-		JMenuItem[] menuitems = { showRechnung, showRechnungszeilen, print, kontaktInfo };
+		JMenuItem[] menuitems = { showRechnungszeilen,showRechnung, print, kontaktInfo };
 		super.setPopupMenuItems(menuitems);
 	}
 
