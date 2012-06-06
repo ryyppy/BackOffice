@@ -24,6 +24,7 @@ import javax.swing.JTextField;
 import bl.BL;
 import bl.objects.Buchungszeile;
 import bl.objects.Kategorie;
+import bl.objects.Kunde;
 import dal.DALException;
 import databinding.DataBinder;
 import databinding.StandardRule;
@@ -100,13 +101,7 @@ public class EditBuchungszeileDialog extends JDialog implements ActionListener {
 			panel.add(p);
 
 		}
-		try {
-			kategorie = new JComboBox<Kategorie>(
-					new EntityComboBoxModel<Kategorie>(BL.getKategorieListe()));
-		} catch (DALException e) {
-			JOptionPane.showMessageDialog(this, e.getMessage());
-			System.exit(0);
-		}
+		kategorie = new JComboBox<Kategorie>();
 		kategorie.setName(columnNames[columnNames.length - 1]);
 		kategorie.setRenderer(new MyListCellRenderer());
 
@@ -119,20 +114,23 @@ public class EditBuchungszeileDialog extends JDialog implements ActionListener {
 		p.add(kategorie);
 		panel.add(p);
 
+		DataBinder d = new DataBinder();
+		try {
+			d.bindTo_String(kategorie,
+					new EntityComboBoxModel<Kategorie>(BL.getKategorieListe()),
+					b == null ? null : b.getKKbz());
+		} catch (DALException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+		}
+
 		if (b != null) {
-			textfeld[0].setText(b.getDatumString());
-			textfeld[1].setText(b.getKommentar());
-			textfeld[2].setText(String.valueOf(b.getSteuersatz()));
-			textfeld[3].setText(String.valueOf(b.getBetrag()));
-			for (int i = 0; i < kategorie.getItemCount(); i++) {
-				if (kategorie.getItemAt(i).getKKbz().equals(b.getKKbz())) {
-					kategorie.setSelectedIndex(i);
-					break;
-				}
-			}
+			d.bindTo_Date(textfeld[0], b.getDatum());
+			d.bindTo_String(textfeld[1], b.getKommentar());
+			d.bindTo_double(textfeld[2], b.getSteuersatz());
+			d.bindTo_double(textfeld[3], b.getBetrag());
+
 		} else {
-			textfeld[0].setText(new StringBuilder(new SimpleDateFormat(
-					"dd.MM.yyyy").format(new Date())).toString());
+			d.bindTo_Date(textfeld[0], new Date());
 		}
 
 		return panel;

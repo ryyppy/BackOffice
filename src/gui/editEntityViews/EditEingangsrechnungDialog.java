@@ -28,6 +28,7 @@ import bl.BL;
 import bl.filter.ImageFilter;
 import bl.objects.Eingangsrechnung;
 import bl.objects.Kontakt;
+import bl.objects.Kunde;
 import dal.DALException;
 import databinding.DataBinder;
 import databinding.StandardRule;
@@ -116,13 +117,7 @@ public class EditEingangsrechnungDialog extends JDialog implements
 		p.add(datum);
 		panel.add(p);
 
-		try {
-			kontakt = new JComboBox<Kontakt>(new EntityComboBoxModel<Kontakt>(
-					BL.getKontaktListe()));
-		} catch (DALException e) {
-			JOptionPane.showMessageDialog(this, e.getMessage());
-			System.exit(0);
-		}
+		kontakt = new JComboBox<Kontakt>();
 		kontakt.setName(columnNames[2]);
 		kontakt.setRenderer(new MyListCellRenderer("firma"));
 		p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -156,15 +151,17 @@ public class EditEingangsrechnungDialog extends JDialog implements
 		p.add(unselect);
 		panel.add(p);
 
+		DataBinder d = new DataBinder();
+		try {
+			d.bindTo_int(kontakt,
+					new EntityComboBoxModel<Kontakt>(BL.getKontaktListe()),
+					er == null ? -2 : er.getKontaktID());
+		} catch (DALException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+		}
 		if (er != null) {
-			status.setSelectedItem(er.getStatus());
-			for (int i = 0; i < kontakt.getItemCount(); i++) {
-				if (kontakt.getItemAt(i).getKontaktID() == er.getKontaktID()) {
-					kontakt.setSelectedIndex(i);
-					break;
-				}
-			}
-			datum.setText(er.getDatumString());
+			d.bindTo_String2(status, er.getStatus());
+			d.bindTo_Date(datum, er.getDatum());
 			if (er.getFile() != null) {
 				File f = new File(er.getFile());
 				fileLabel.setText(f.getName());
@@ -172,8 +169,8 @@ public class EditEingangsrechnungDialog extends JDialog implements
 				unselect.setEnabled(true);
 			}
 		} else {
-			datum.setText(new StringBuilder(new SimpleDateFormat("dd.MM.yyyy")
-					.format(new Date())).toString());
+			d.bindTo_Date(datum, new Date());
+
 		}
 
 		return panel;

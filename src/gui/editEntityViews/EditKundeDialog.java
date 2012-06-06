@@ -91,9 +91,10 @@ public class EditKundeDialog extends JDialog implements ActionListener {
 			panel.add(p);
 		}
 		if (k != null) {
-			textfeld[0].setText(k.getVorname());
-			textfeld[1].setText(k.getNachname());
-			textfeld[2].setText(k.getGeburtsdatumString());
+			DataBinder d = new DataBinder();
+			d.bindTo_String(textfeld[0], k.getVorname());
+			d.bindTo_String(textfeld[1], k.getNachname());
+			d.bindTo_Date(textfeld[2], k.getGeburtsdatum());
 		}
 
 		return panel;

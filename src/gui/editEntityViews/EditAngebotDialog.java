@@ -102,13 +102,7 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 
 		}
 
-		try {
-			kunden = new JComboBox<Kunde>(new EntityComboBoxModel<Kunde>(
-					BL.getKundeListe()));
-		} catch (DALException e) {
-			JOptionPane.showMessageDialog(this, e.getMessage());
-			System.exit(0);
-		}
+		kunden = new JComboBox<Kunde>();
 		kunden.setRenderer(new MyListCellRenderer("nachname"));
 		kunden.setName(columnNames[columnNames.length - 2]);
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -120,13 +114,8 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 		p.add(kunden);
 		panel.add(p);
 
-		try {
-			projekte = new JComboBox<Projekt>(new EntityComboBoxModel<Projekt>(
-					BL.getProjektListe()));
-		} catch (DALException e) {
-			JOptionPane.showMessageDialog(this, e.getMessage());
-			System.exit(0);
-		}
+		projekte = new JComboBox<Projekt>();
+
 		projekte.setRenderer(new MyListCellRenderer("name"));
 		projekte.setName(columnNames[columnNames.length - 1]);
 		p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -138,23 +127,26 @@ public class EditAngebotDialog extends JDialog implements ActionListener {
 		p.add(projekte);
 		panel.add(p);
 
+		DataBinder d = new DataBinder();
+		try {
+			d.bindTo_int(projekte,
+					new EntityComboBoxModel<Projekt>(BL.getProjektListe()),
+					a == null ? -2 : a.getProjektID());
+		} catch (DALException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+		}
+		try {
+			d.bindTo_int(kunden,
+					new EntityComboBoxModel<Kunde>(BL.getKundeListe()),
+					a == null ? -2 : a.getKundeID());
+		} catch (DALException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+		}
 		if (a != null) {
-			textfeld[0].setText(String.valueOf(a.getBeschreibung()));
-			textfeld[1].setText(String.valueOf(a.getSumme()));
-			textfeld[2].setText(String.valueOf(a.getDauer()));
-			textfeld[3].setText(String.valueOf(a.getChance()));
-			for (int i = 0; i < kunden.getItemCount(); i++) {
-				if (kunden.getItemAt(i).getKundeID() == a.getKundeID()) {
-					kunden.setSelectedIndex(i);
-					break;
-				}
-			}
-			for (int i = 0; i < projekte.getItemCount(); i++) {
-				if (projekte.getItemAt(i).getProjektID() == a.getProjektID()) {
-					projekte.setSelectedIndex(i);
-					break;
-				}
-			}
+			d.bindTo_String(textfeld[0], a.getBeschreibung());
+			d.bindTo_double(textfeld[1], a.getSumme());
+			d.bindTo_double(textfeld[2], a.getDauer());
+			d.bindTo_double(textfeld[3], a.getChance());
 		}
 
 		return panel;
