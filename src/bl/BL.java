@@ -23,9 +23,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import config.ConfigException;
-import config.Configuration;
-
 import bl.objects.Angebot;
 import bl.objects.Ausgangsrechnung;
 import bl.objects.Buchungszeile;
@@ -51,9 +48,10 @@ import bl.objects.view.reports.Jahresumsatz;
 import bl.objects.view.reports.OffeneProjekte;
 import bl.objects.view.reports.OffeneRechnungen;
 import bl.objects.view.reports.Stundensatz;
+import config.ConfigException;
+import config.Configuration;
 import dal.DALException;
-import dal.DatabaseAdapter;
-import dal.MysqlAdapter;
+import dal.DBAdapterInt;
 import dal.WhereChain;
 import dal.WhereChain.Chainer;
 import dal.WhereOperator;
@@ -78,8 +76,7 @@ public class BL {
 	private static int kategorieID = 0;
 	private static ArrayList<Rechnung_Buchungszeile> rechnungen_buchungszeilen = new ArrayList<Rechnung_Buchungszeile>();
 
-
-	private static DatabaseAdapter db = null;
+	private static DBAdapterInt db = null;
 	// private static DatabaseAdapter db = new MysqlAdapter("root", "dbsy",
 	// "localhost", "swe");
 
@@ -105,11 +102,16 @@ public class BL {
 	}
 
 	public static ArrayList<Kontakt> getKontaktListe() throws DALException {
-		db.connect();
-		ArrayList<Kontakt> ret = (ArrayList<Kontakt>) db
-				.getEntityList(Kontakt.class);
-		db.disconnect();
-		return ret;
+		try {
+			db.connect();
+			ArrayList<Kontakt> ret = (ArrayList<Kontakt>) db
+					.getEntityList(Kontakt.class);
+
+			return ret;
+		} finally {
+			db.disconnect();
+
+		}
 		// return kontakteliste;
 	}
 
