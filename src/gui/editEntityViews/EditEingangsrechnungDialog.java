@@ -194,13 +194,13 @@ public class EditEingangsrechnungDialog extends JDialog implements
 						er.setDatum(datum);
 						er.setKontaktID(kontaktID);
 						BL.updateEingangsrechnung(er, file);
-						JOptionPane.showMessageDialog(this,
-								"Eintrag wurde erfolgreich bearbeitet");
+						// JOptionPane.showMessageDialog(this,
+						// "Eintrag wurde erfolgreich bearbeitet");
 					} else {
 						er = new Eingangsrechnung(status, datum, kontaktID);
 						BL.saveEingangsrechnung(er, file);
-						JOptionPane.showMessageDialog(this,
-								"Eintrag wurde erfolgreich hinzugefügt");
+						// JOptionPane.showMessageDialog(this,
+						// "Eintrag wurde erfolgreich hinzugefügt");
 					}
 					dispose();
 				} else {

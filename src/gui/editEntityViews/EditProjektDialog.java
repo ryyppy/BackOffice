@@ -115,13 +115,13 @@ public class EditProjektDialog extends JDialog implements ActionListener {
 						p.setBeschreibung(beschreibung);
 						p.setVerbrauchteStunden(verbrauchteStunden);
 						BL.updateProjekt(p);
-						JOptionPane.showMessageDialog(this,
-								"Eintrag wurde erfolgreich bearbeitet");
+						// JOptionPane.showMessageDialog(this,
+						// "Eintrag wurde erfolgreich bearbeitet");
 					} else {
 						p = new Projekt(name, beschreibung, verbrauchteStunden);
 						BL.saveProjekt(p);
-						JOptionPane.showMessageDialog(this,
-								"Eintrag wurde erfolgreich hinzugefügt");
+						// JOptionPane.showMessageDialog(this,
+						// "Eintrag wurde erfolgreich hinzugefügt");
 					}
 					dispose();
 				} else {
