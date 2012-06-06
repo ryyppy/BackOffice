@@ -2,15 +2,25 @@ package gui.tabbedViews.reports;
 
 import gui.ReportViewPanel;
 
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.NumberFormat;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import com.itextpdf.text.DocumentException;
+
 import bl.BL;
+import bl.PDFFile;
+import bl.filter.PDFFilter;
+import bl.objects.Eingangsrechnung;
 import bl.objects.Projekt;
 import bl.objects.view.reports.Jahresumsatz;
 import dal.DALException;
@@ -66,7 +76,50 @@ public class JahresumsatzPanel extends ReportViewPanel {
 				}
 			}
 		} else if (e.getSource() == save) {
+//			try {
+				JFileChooser fc = new JFileChooser();
+				fc.setAcceptAllFileFilterUsed(false);
+				fc.setFileFilter(new PDFFilter());
 
+				int returnVal = fc.showSaveDialog(this);
+
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+					File file = fc.getSelectedFile();
+
+					PDFFile f = null;
+					try {
+						f = new PDFFile(file);
+
+						f.createReport("Jahresumsatz", tModel);
+
+						Desktop.getDesktop().open(file);
+
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+						JOptionPane.showMessageDialog(this, e1.getMessage());
+					} catch (DocumentException e1) {
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					} finally {
+						if (f != null) {
+							f.close();
+						}
+					}
+				}
+				
+//				File file = new File("report.pdf");
+//				file.createNewFile();
+//				PDFFile f = new PDFFile(file);
+//				f.createReport("Jahresumsatz", tModel);
+//
+//				Desktop.getDesktop().open(file);
+//			} catch (DocumentException e1) {
+//				e1.printStackTrace();
+//			} catch (IOException e1) {
+//				e1.printStackTrace();
+//			}
 		} else if (e.getSource() == refresh) {
 			tModel.refresh();
 			refreshAnalysis();
