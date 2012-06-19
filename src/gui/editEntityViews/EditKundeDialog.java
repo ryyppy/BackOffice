@@ -91,9 +91,10 @@ public class EditKundeDialog extends JDialog implements ActionListener {
 			panel.add(p);
 		}
 		if (k != null) {
-			textfeld[0].setText(k.getVorname());
-			textfeld[1].setText(k.getNachname());
-			textfeld[2].setText(k.getGeburtsdatumString());
+			DataBinder d = new DataBinder();
+			d.bindTo_String(textfeld[0], k.getVorname());
+			d.bindTo_String(textfeld[1], k.getNachname());
+			d.bindTo_Date(textfeld[2], k.getGeburtsdatum());
 		}
 
 		return panel;
@@ -118,13 +119,13 @@ public class EditKundeDialog extends JDialog implements ActionListener {
 						k.setNachname(nachname);
 						k.setGeburtsdatum(geburtsdatum);
 						BL.updateKunde(k);
-						JOptionPane.showMessageDialog(this,
-								"Eintrag wurde erfolgreich bearbeitet");
+						// JOptionPane.showMessageDialog(this,
+						// "Eintrag wurde erfolgreich bearbeitet");
 					} else {
 						k = new Kunde(vorname, nachname, geburtsdatum);
 						BL.saveKunde(k);
-						JOptionPane.showMessageDialog(this,
-								"Eintrag wurde erfolgreich hinzugefügt");
+						// JOptionPane.showMessageDialog(this,
+						// "Eintrag wurde erfolgreich hinzugefügt");
 					}
 					dispose();
 				} else {

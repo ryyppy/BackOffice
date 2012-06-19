@@ -15,6 +15,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import logging.LoggerManager;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -46,9 +48,10 @@ import bl.objects.view.reports.Jahresumsatz;
 import bl.objects.view.reports.OffeneProjekte;
 import bl.objects.view.reports.OffeneRechnungen;
 import bl.objects.view.reports.Stundensatz;
+import config.ConfigException;
+import config.Configuration;
 import dal.DALException;
-import dal.DatabaseAdapter;
-import dal.MysqlAdapter;
+import dal.DBAdapterInt;
 import dal.WhereChain;
 import dal.WhereChain.Chainer;
 import dal.WhereOperator;
@@ -73,8 +76,18 @@ public class BL {
 	private static int kategorieID = 0;
 	private static ArrayList<Rechnung_Buchungszeile> rechnungen_buchungszeilen = new ArrayList<Rechnung_Buchungszeile>();
 
-	private static DatabaseAdapter db = new MysqlAdapter("root", "dbsy",
-			"localhost", "swe");
+	private static DBAdapterInt db = null;
+	// private static DatabaseAdapter db = new MysqlAdapter("root", "dbsy",
+	// "localhost", "swe");
+
+	static {
+		try {
+			db = Configuration.getInstance().getDatabaseAdapter();
+		} catch (ConfigException e) {
+			LoggerManager.getLogger("runtime").warn("Konfiguration fehlerhaft");
+			System.exit(1);
+		}
+	}
 
 	public BL() {
 		projektliste = new ArrayList<Projekt>();
@@ -89,11 +102,16 @@ public class BL {
 	}
 
 	public static ArrayList<Kontakt> getKontaktListe() throws DALException {
-		db.connect();
-		ArrayList<Kontakt> ret = (ArrayList<Kontakt>) db
-				.getEntityList(Kontakt.class);
-		db.disconnect();
-		return ret;
+		try {
+			db.connect();
+			ArrayList<Kontakt> ret = (ArrayList<Kontakt>) db
+					.getEntityList(Kontakt.class);
+
+			return ret;
+		} finally {
+			db.disconnect();
+
+		}
 		// return kontakteliste;
 	}
 

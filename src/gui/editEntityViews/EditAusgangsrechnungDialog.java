@@ -111,13 +111,7 @@ public class EditAusgangsrechnungDialog extends JDialog implements
 		p.add(datum);
 		panel.add(p);
 
-		try {
-			kunden = new JComboBox<Kunde>(new EntityComboBoxModel<Kunde>(
-					BL.getKundeListe()));
-		} catch (DALException e) {
-			JOptionPane.showMessageDialog(this, e.getMessage());
-			System.exit(0);
-		}
+		kunden = new JComboBox<Kunde>();
 		kunden.setName(columnNames[2]);
 		kunden.setRenderer(new MyListCellRenderer("nachname"));
 		p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -129,18 +123,19 @@ public class EditAusgangsrechnungDialog extends JDialog implements
 		p.add(kunden);
 		panel.add(p);
 
+		DataBinder d = new DataBinder();
+		try {
+			d.bindTo_int(kunden,
+					new EntityComboBoxModel<Kunde>(BL.getKundeListe()),
+					ar == null ? -2 : ar.getKundeID());
+		} catch (DALException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+		}
 		if (ar != null) {
-			status.setSelectedItem(ar.getStatus());
-			for (int i = 0; i < kunden.getItemCount(); i++) {
-				if (kunden.getItemAt(i).getKundeID() == ar.getKundeID()) {
-					kunden.setSelectedIndex(i);
-					break;
-				}
-			}
-			datum.setText(ar.getDatumString());
+			d.bindTo_String2(status, ar.getStatus());
+			d.bindTo_Date(datum, ar.getDatum());
 		} else {
-			datum.setText(new StringBuilder(new SimpleDateFormat("dd.MM.yyyy")
-					.format(new Date())).toString());
+			d.bindTo_Date(datum, new Date());
 		}
 
 		return panel;
@@ -161,13 +156,13 @@ public class EditAusgangsrechnungDialog extends JDialog implements
 						ar.setDatum(datum);
 						ar.setKundeID(kundenID);
 						BL.updateAusgangsrechnung(ar);
-						JOptionPane.showMessageDialog(this,
-								"Eintrag wurde erfolgreich bearbeitet");
+						// JOptionPane.showMessageDialog(this,
+						// "Eintrag wurde erfolgreich bearbeitet");
 					} else {
 						ar = new Ausgangsrechnung(status, datum, kundenID);
 						BL.saveAusgangsrechnung(ar);
-						JOptionPane.showMessageDialog(this,
-								"Eintrag wurde erfolgreich hinzugefügt");
+						// JOptionPane.showMessageDialog(this,
+						// "Eintrag wurde erfolgreich hinzugefügt");
 					}
 					dispose();
 				} else {

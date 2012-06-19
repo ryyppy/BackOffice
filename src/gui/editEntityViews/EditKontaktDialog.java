@@ -94,9 +94,10 @@ public class EditKontaktDialog extends JDialog implements ActionListener,
 			panel.add(p);
 		}
 		if (k != null) {
-			textfeld[0].setText(k.getFirma());
-			textfeld[1].setText(k.getName());
-			textfeld[2].setText(k.getTelefon());
+			DataBinder d = new DataBinder();
+			d.bindTo_String(textfeld[0], k.getFirma());
+			d.bindTo_String(textfeld[1], k.getName());
+			d.bindTo_String(textfeld[2], k.getTelefon());
 		}
 
 		return panel;
@@ -122,13 +123,13 @@ public class EditKontaktDialog extends JDialog implements ActionListener,
 						k.setName(name);
 						k.setTelefon(telefon);
 						BL.updateKontakt(k);
-						JOptionPane.showMessageDialog(this,
-								"Eintrag wurde erfolgreich bearbeitet");
+						// JOptionPane.showMessageDialog(this,
+						// "Eintrag wurde erfolgreich bearbeitet");
 					} else {
 						k = new Kontakt(firma, name, telefon);
 						BL.saveKontakt(k);
-						JOptionPane.showMessageDialog(this,
-								"Eintrag wurde erfolgreich hinzugefügt");
+						// JOptionPane.showMessageDialog(this,
+						// "Eintrag wurde erfolgreich hinzugefügt");
 					}
 					dispose();
 				} else {

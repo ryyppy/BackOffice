@@ -1,8 +1,12 @@
 package bl;
 
+import gui.componentModels.EntityTableModel;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -31,6 +35,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import dal.DALException;
+import dal.DBEntity;
 
 public class PDFFile {
 	private Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
@@ -83,7 +88,7 @@ public class PDFFile {
 	// iText allows to add metadata to the PDF which can be viewed in your Adobe
 	// Reader
 	// under File -> Properties
-	public void addMetaData() {
+	private void addMetaData() {
 		document.open();
 		document.addTitle("My first PDF");
 		document.addSubject("Using iText");
@@ -93,7 +98,7 @@ public class PDFFile {
 		document.close();
 	}
 
-	public Paragraph newLine(String txt, Font f, int alignment) {
+	private Paragraph newLine(String txt, Font f, int alignment) {
 		Paragraph ret;
 		if (f != null) {
 			ret = new Paragraph(txt, f);
@@ -104,6 +109,72 @@ public class PDFFile {
 			ret.setAlignment(alignment);
 		}
 		return ret;
+	}
+
+	public void createReport(String titel, EntityTableModel tModel) throws DocumentException {
+		document.open();
+		Paragraph preface = new Paragraph();
+
+		preface.add(newLine(titel, catFont, -1));
+		addEmptyLine(preface, 2);
+		
+		preface.add(getTable(tModel));
+		
+		document.add(preface);
+		// Start a new page
+		document.newPage();
+		document.close();
+	}
+
+	private PdfPTable getTable(EntityTableModel tModel) {
+		String[] headers = tModel.getColumnNames();
+
+		PdfPTable table = new PdfPTable(headers.length);
+		table.setHeaderRows(1);
+		table.setWidthPercentage(100);
+		for (String header : headers) {
+			PdfPCell c1 = new PdfPCell(new Phrase(header));
+			c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+			table.addCell(c1);
+		}
+
+		ArrayList<DBEntity> entries = tModel.getEntries();
+		if (entries.isEmpty()) {
+			PdfPCell c = new PdfPCell(new Phrase("Keine Einträge vorhanden"));
+			c.setHorizontalAlignment(Element.ALIGN_CENTER);
+			c.setColspan(headers.length);
+			table.addCell(c);
+			return table;
+		}
+		for (DBEntity entry : entries) {
+			for (String header : headers) {
+				Method method;
+
+				Object a;
+				try {
+					method = entry.getClass()
+							.getMethod("get"+header, new Class<?>[0]);
+					a = method.invoke(entry, new Object[0]);
+					table.addCell(String.valueOf(a));
+				} catch (NoSuchMethodException e) {
+					e.printStackTrace();
+					table.addCell(new String(""));
+				} catch (SecurityException e) {
+					e.printStackTrace();
+					table.addCell(new String(""));
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+					table.addCell(new String(""));
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+					table.addCell(new String(""));
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+					table.addCell(new String(""));
+				}
+			}
+		}
+		return table;
 	}
 
 	public void createRechnung(Rechnung r) throws DocumentException,

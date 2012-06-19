@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 
 import bl.BL;
 import bl.objects.Angebot;
+import bl.objects.Kontakt;
 import bl.objects.Rechnungszeile;
 import dal.DALException;
 import databinding.DataBinder;
@@ -111,15 +112,7 @@ public class EditRechnungszeileDialog extends JDialog implements ActionListener 
 		}
 
 		if (kundeID != -1) {
-			try {
-				angebote = new JComboBox<Angebot>(
-						new EntityComboBoxModel<Angebot>(
-								BL.getAngebotListe(kundeID)));
-
-			} catch (DALException e) {
-				JOptionPane.showMessageDialog(this, e.getMessage());
-				System.exit(0);
-			}
+			angebote = new JComboBox<Angebot>();
 			angebote.setName(columnNames[columnNames.length - 1]);
 			angebote.setRenderer(new MyListCellRenderer("beschreibung"));
 
@@ -132,19 +125,24 @@ public class EditRechnungszeileDialog extends JDialog implements ActionListener 
 			p.add(angebote);
 			panel.add(p);
 		}
-		if (r != null) {
-			textfeld[1].setText(r.getKommentar());
-			textfeld[2].setText(String.valueOf(r.getSteuersatz()));
-			textfeld[3].setText(String.valueOf(r.getBetrag()));
+
+		DataBinder d = new DataBinder();
+		try {
 			if (kundeID != -1) {
-				for (int i = 0; i < angebote.getItemCount(); i++) {
-					if (angebote.getItemAt(i).getAngebotID() == r
-							.getAngebotID()) {
-						angebote.setSelectedIndex(i);
-						break;
-					}
-				}
+				d.bindTo_int(
+						angebote,
+						new EntityComboBoxModel<Angebot>(BL
+								.getAngebotListe(kundeID)),
+						r == null ? -2 : r.getAngebotID());
 			}
+		} catch (DALException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+		}
+		if (r != null) {
+			d.bindTo_String(textfeld[1], r.getKommentar());
+			d.bindTo_double(textfeld[2], r.getSteuersatz());
+			d.bindTo_double(textfeld[3], r.getBetrag());
+
 		}
 
 		return panel;
@@ -176,14 +174,14 @@ public class EditRechnungszeileDialog extends JDialog implements ActionListener 
 						r.setAngebotID(angebotsID);
 						r.setRechnungID(rechnungID);
 						BL.updateRechnungszeile(r);
-						JOptionPane.showMessageDialog(this,
-								"Eintrag wurde erfolgreich bearbeitet");
+						// JOptionPane.showMessageDialog(this,
+						// "Eintrag wurde erfolgreich bearbeitet");
 					} else {
 						r = new Rechnungszeile(kommentar, steuersatz, betrag,
 								rechnungID, angebotsID);
 						BL.saveRechnungszeile(r);
-						JOptionPane.showMessageDialog(this,
-								"Eintrag wurde erfolgreich hinzugefügt");
+						// JOptionPane.showMessageDialog(this,
+						// "Eintrag wurde erfolgreich hinzugefügt");
 					}
 					dispose();
 				} else {

@@ -1,14 +1,19 @@
 package databinding;
 
+import gui.componentModels.EntityComboBoxModel;
+
 import java.awt.Color;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
+import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 
+import dal.DALException;
 import dal.DBEntity;
 
 public class DataBinder {
@@ -16,6 +21,10 @@ public class DataBinder {
 
 	public DataBinder() {
 		errorCtrl = new ErrorControl();
+	}
+
+	public void bindTo_String(JTextField f, String val) {
+		f.setText(val);
 	}
 
 	public String bindFrom_String(JTextField f, Rule r) {
@@ -30,6 +39,24 @@ public class DataBinder {
 		}
 
 		return ret;
+	}
+
+	public void bindTo_String(JComboBox<?> f, EntityComboBoxModel aModel, String val) {
+		f.setModel(aModel);
+		for (int i = 0; i < f.getItemCount(); i++) {
+			try {
+				if (val != null
+						&& String.valueOf(((DBEntity) f.getItemAt(i)).getID())
+								.equals(val)) {
+					f.setSelectedIndex(i);
+					break;
+				}
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			} catch (DALException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public String bindFrom_String(JComboBox<?> f, Rule r) {
@@ -54,6 +81,10 @@ public class DataBinder {
 		}
 
 		return ret;
+	}
+
+	public void bindTo_String2(JComboBox<?> f, String val) {
+		f.setSelectedItem(val);
 	}
 
 	public String bindFrom_String2(JComboBox<?> f, Rule r) {
@@ -100,6 +131,24 @@ public class DataBinder {
 		return ret;
 	}
 
+	public void bindTo_int(JComboBox<?> f, EntityComboBoxModel aModel, int val) {
+		f.setModel(aModel);
+		for (int i = 0; i < f.getItemCount(); i++) {
+			try {
+				if (val != -2
+						&& Integer.parseInt(String.valueOf(((DBEntity) f
+								.getItemAt(i)).getID())) == val) {
+					f.setSelectedIndex(i);
+					break;
+				}
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			} catch (DALException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public int bindFrom_int(JComboBox<?> f, Rule r) {
 		setComponentBorder(f, Color.GREEN);
 		int ret = -1;
@@ -122,6 +171,10 @@ public class DataBinder {
 		return ret;
 	}
 
+	public void bindTo_double(JTextField f, Double val) {
+		f.setText(String.valueOf(val));
+	}
+
 	public double bindFrom_double(JTextField f, Rule r) {
 		setComponentBorder(f, Color.GREEN);
 		double ret = -1;
@@ -141,6 +194,10 @@ public class DataBinder {
 			}
 		}
 		return ret;
+	}
+
+	public void bindTo_Date(JTextField f, Date val) {
+		f.setText(new SimpleDateFormat("dd.MM.yyyy").format(val));
 	}
 
 	public Date bindFrom_Date(JTextField f, Rule r) {

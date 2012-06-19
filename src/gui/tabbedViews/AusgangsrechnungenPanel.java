@@ -48,7 +48,7 @@ public class AusgangsrechnungenPanel extends EntityViewPanel {
 	public void initPopupMenuItems() {
 		print = new JMenuItem("Als PDF drucken");
 		kundenInfo = new JMenuItem("Kundeninfo");
-		showRechnungszeilen = new JMenuItem("Show Rechnungszeilen");
+		showRechnungszeilen = new JMenuItem("Rechnungszeilen anzeigen");
 		JMenuItem[] menuitems = { showRechnungszeilen, print, kundenInfo };
 		super.setPopupMenuItems(menuitems);
 	}

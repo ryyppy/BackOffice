@@ -90,9 +90,10 @@ public class EditProjektDialog extends JDialog implements ActionListener {
 		}
 
 		if (p != null) {
-			textfeld[0].setText(p.getName());
-			textfeld[1].setText(p.getBeschreibung());
-			textfeld[2].setText(String.valueOf(p.getVerbrauchteStunden()));
+			DataBinder d = new DataBinder();
+			d.bindTo_String(textfeld[0], p.getName());
+			d.bindTo_String(textfeld[1], p.getBeschreibung());
+			d.bindTo_double(textfeld[2], p.getVerbrauchteStunden());
 		}
 
 		return panel;
@@ -115,13 +116,13 @@ public class EditProjektDialog extends JDialog implements ActionListener {
 						p.setBeschreibung(beschreibung);
 						p.setVerbrauchteStunden(verbrauchteStunden);
 						BL.updateProjekt(p);
-						JOptionPane.showMessageDialog(this,
-								"Eintrag wurde erfolgreich bearbeitet");
+						// JOptionPane.showMessageDialog(this,
+						// "Eintrag wurde erfolgreich bearbeitet");
 					} else {
 						p = new Projekt(name, beschreibung, verbrauchteStunden);
 						BL.saveProjekt(p);
-						JOptionPane.showMessageDialog(this,
-								"Eintrag wurde erfolgreich hinzugefügt");
+						// JOptionPane.showMessageDialog(this,
+						// "Eintrag wurde erfolgreich hinzugefügt");
 					}
 					dispose();
 				} else {
