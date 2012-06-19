@@ -47,8 +47,8 @@ public class FileLoggerTest extends TestCase {
     public void tearDown() throws Exception {
         super.tearDown();
 
-        //if(logfile != null)
-            //logfile.delete();
+        if(logfile != null)
+            logfile.delete();
 
     }
 

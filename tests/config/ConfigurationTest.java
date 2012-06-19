@@ -55,29 +55,4 @@ public class ConfigurationTest {
                 db.disconnect();
         }
     }
-
-    @Test
-    public void testSetLoggingStdout() throws Exception {
-        //To change body of created methods use File | Settings | File Templates.
-    }
-
-    @Test
-    public void testSetDatabaseAdapter() throws Exception {
-        //To change body of created methods use File | Settings | File Templates.
-    }
-
-    @Test
-    public void testSetLoggingDirectory() throws Exception {
-        //To change body of created methods use File | Settings | File Templates.
-    }
-
-    @Test
-    public void testSetDocumentDirectory() throws Exception {
-        //To change body of created methods use File | Settings | File Templates.
-    }
-
-    @Test
-    public void testSetLoggingLevel() throws Exception {
-        //To change body of created methods use File | Settings | File Templates.
-    }
 }

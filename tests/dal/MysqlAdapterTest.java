@@ -2,12 +2,10 @@ package dal;
 
 import bl.objects.Angebot;
 import bl.objects.Eingangsrechnung;
-import bl.objects.Rechnung;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -87,38 +85,6 @@ public class MysqlAdapterTest {
         for(Angebot a : angebote){
             System.out.println(a);
         }
-        db.disconnect();
-    }
-
-    @Test
-    public void arminTest() throws Exception {
-        /** hier bekomm ich ne fehlermeldung, obwohl alles gepasst hat **/
-
-        db.connect();
-        Eingangsrechnung e = new Eingangsrechnung("offen", new Date(), 0);
-        Rechnung r = new Rechnung(e.getStatus(), e.getDatum());
-        Object key = db.addEntity(r);
-        e.setRechnungID(Integer.valueOf(String.valueOf(key)));
-        db.addEntity(e);
-
-
-        /**
-         * ich will dass ich mit getEingangsrechnungenListe eine liste von
-         * EINGANGSRECHNUNGEN bekomme und anschließend auf ALLE attribute
-         * zugriff haben! genau so wie hier!!!
-         *
-         * die methode geteingagnsrechnungenliste vom BL musst du dafür
-         * bearbeiten!
-         **/
-
-        //ArrayList<Eingangsrechnung> liste = BL.getEingangsrechnungenListe();
-        List<Eingangsrechnung> liste = db.getEntityList(Eingangsrechnung.class);
-
-        for(Eingangsrechnung eingangsrechnung : liste){
-            System.out.println(eingangsrechnung);
-        }
-
-
         db.disconnect();
     }
 

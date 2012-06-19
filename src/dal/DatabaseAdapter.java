@@ -23,8 +23,19 @@ public abstract class DatabaseAdapter {
     private String dbUrl = null;
     protected Connection con = null;
 
-    private boolean connected = false;
-    private boolean transaction = false;
+    protected boolean connected = false;
+    protected boolean transaction = false;
+
+
+    /**
+     * This constructor is for special reasons only, it doesn't initialize any database-driver,
+     * so an object instantiated by this constructor can not call 'connect()' without throwing an exception!
+     *
+     * This constructor was made for the mocking-mechanism
+     */
+    protected DatabaseAdapter(){
+
+    }
 
     /**
      * Initializes the Database-Driver and saves connection-data for connecting to the database.
@@ -175,7 +186,7 @@ public abstract class DatabaseAdapter {
      * Be sure to call connect() and beginTransaction() first, before you use this method, or it will fail with an connection-error.
      * After inserting data you may call commit() to make your changes persistant!
      * @param entity - DBEntity, which should be made persistant
-     * @return true, if the dataset could be inserted. Otherwise false
+     * @return The new key of the object, if it was added to the database
      * @throws DALException - If a database-error occurs
      */
     public abstract Object addEntity(DBEntity entity) throws DALException;
