@@ -4,4 +4,4 @@
 bin/
 *.iml
 log/*
-*.properties
+config.properties
