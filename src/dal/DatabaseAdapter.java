@@ -16,7 +16,7 @@ import java.util.List;
  * There should only be DALExceptions thrown in the scope of a DatabaseAdapter, so catch all SQLExceptions, etc. and
  * bind them to a DALException.
  */
-public abstract class DatabaseAdapter {
+public abstract class DatabaseAdapter implements DBAdapterInt{
     private String jdbcDriver = null;
     private String dbUser = null;
     private String dbPassword = null;
