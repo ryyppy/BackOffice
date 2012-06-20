@@ -1,4 +1,4 @@
-package bl;
+package bl.pdf;
 
 import gui.componentModels.EntityTableModel;
 
@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 
+import bl.BL;
 import bl.objects.Ausgangsrechnung;
 import bl.objects.Eingangsrechnung;
 import bl.objects.Kontakt;
