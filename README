@@ -4,6 +4,33 @@ Team:
 Patrick Stapfer
 Armin Mehryar
 
+Benutzerhandbuch:
+-------------------------
+Das Programm besteht aus folgenden Reiter:
+- Kontakt
+- Kunden
+- Projekte
+- Angebote
+- Ausgangsrechnungen
+- Eingangsrechnungen
+- Bankkonto
+- Berichte
+
+In jeder dieser Reiter gibt es die Buttons "Add", "Edit" und "Delete" zum Hinzufügen, Bearbeiten und Löschen von Einträgen.
+Außerdem gibt es einen Filter, um gezielt nach bestimmten Einträgen zu Filtern.
+
+Mit rechtem Mausklick auf die einzelnen Einträge, hat man die Möglichkeit diese zu Bearbeiten oder zu Löschen. 
+Bei Ausgangsrechnungen und Eingangsrechnungen hat man außerdem die Möglichkeit, mit rechtem Mausklick Rechnungszeilen anzuzeigen/zu bearbeiten.
+
+Das Drucken der Ausgangsrechnungen erfolgt ebenfalls mit rechtem Mausklick "Als PDF drucken".
+Bei Eingangsrechnungen gibt es die Möglichkeit, mit rechtem Mausklick "Rechnung anzeigen", eingescannte Rechnungen anzuzeigen.
+
+Im Reiter Bankkonto, hat man die Möglichkeit mit "Select Rechnung" einzelne Rechnungen mit einer Buchungszeile zu verknüpfen.
+
+Berichte werden im Tab "Berichte" angezeigt und können mit dem Button "Als PDF speichern" gesichert werden.
+
+Lösungsbeschreibung:
+--------------------------
 Project-Contents:
 - bl:
 Businesslayer: Contains all modelclasses for data-encapsulation in this application (POJOS)
