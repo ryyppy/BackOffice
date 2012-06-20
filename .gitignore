@@ -5,3 +5,5 @@ bin/
 *.iml
 log/*
 config.properties
+.idea
+out/
