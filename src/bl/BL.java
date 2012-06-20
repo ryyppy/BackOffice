@@ -316,7 +316,7 @@ public class BL {
 		db.disconnect();
 	}
 
-	public static void saveKunde(Kunde k) throws DALException,
+	public static Integer saveKunde(Kunde k) throws DALException,
 			InvalidObjectException {
 		// String exception = "";
 		// // ...
@@ -327,8 +327,9 @@ public class BL {
 		// k.setKundenID(kundenID++);
 		// kundenliste.add(k);
 		db.connect();
-		db.addEntity(k);
+		Object key = db.addEntity(k);
 		db.disconnect();
+		return Integer.valueOf(String.valueOf(key));
 	}
 
 	public static void updateKunde(Kunde k) throws DALException,
@@ -427,7 +428,7 @@ public class BL {
 		db.disconnect();
 	}
 
-	public static void saveProjekt(Projekt p) throws DALException,
+	public static Integer saveProjekt(Projekt p) throws DALException,
 			InvalidObjectException {
 		// String exception = "";
 		// // ...
@@ -438,8 +439,9 @@ public class BL {
 		// p.setProjektID(projektID++);
 		// projektliste.add(p);
 		db.connect();
-		db.addEntity(p);
+		Object key = db.addEntity(p);
 		db.disconnect();
+		return Integer.valueOf(String.valueOf(key));
 	}
 
 	public static void updateProjekt(Projekt p) throws DALException,
@@ -557,7 +559,7 @@ public class BL {
 		db.disconnect();
 	}
 
-	public static void saveAngebot(Angebot a) throws DALException,
+	public static Integer saveAngebot(Angebot a) throws DALException,
 			InvalidObjectException {
 		// String exception = "";
 		// // ... Kunden bzw Projekt-ID überprüfen
@@ -568,8 +570,9 @@ public class BL {
 		// a.setAngebotID(angebotID++);
 		// angebotsliste.add(a);
 		db.connect();
-		db.addEntity(a);
+		Object key = db.addEntity(a);
 		db.disconnect();
+		return Integer.valueOf(String.valueOf(key));
 	}
 
 	public static void updateAngebot(Angebot a) throws DALException,
@@ -1107,7 +1110,7 @@ public class BL {
 		return ret;
 	}
 
-	public static void saveBuchungszeile(Buchungszeile b) throws DALException,
+	public static Integer saveBuchungszeile(Buchungszeile b) throws DALException,
 			InvalidObjectException {
 		// String exception = "";
 		// // ... kategorie-ID überprüfen
@@ -1118,8 +1121,9 @@ public class BL {
 		// b.setBuchungszeileID(buchungszeileID++);
 		// buchungszeilenliste.add(b);
 		db.connect();
-		db.addEntity(b);
+		Object key = db.addEntity(b);
 		db.disconnect();
+		return Integer.valueOf(String.valueOf(key));
 	}
 
 	public static Buchungszeile getBuchungszeile(int buchungszeileID)
