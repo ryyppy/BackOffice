@@ -15,9 +15,9 @@ import javax.swing.JTextField;
 
 import com.itextpdf.text.DocumentException;
 
-import bl.PDFFile;
 import bl.filter.PDFFilter;
 import bl.objects.view.reports.OffeneProjekte;
+import bl.pdf.PDFFile;
 
 public class OffeneProjektePanel extends ReportViewPanel {
 

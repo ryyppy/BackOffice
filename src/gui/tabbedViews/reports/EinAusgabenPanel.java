@@ -17,10 +17,10 @@ import javax.swing.JTextField;
 
 import com.itextpdf.text.DocumentException;
 
-import bl.PDFFile;
 import bl.filter.PDFFilter;
 import bl.objects.view.reports.Ausgaben;
 import bl.objects.view.reports.Einnahmen;
+import bl.pdf.PDFFile;
 import dal.DBEntity;
 
 public class EinAusgabenPanel extends ReportViewPanel {

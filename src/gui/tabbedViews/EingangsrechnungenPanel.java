@@ -21,12 +21,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import bl.BL;
-import bl.PDFFile;
 import bl.filter.PDFFilter;
 import bl.filter.XMLFilter;
 import bl.objects.Eingangsrechnung;
 import bl.objects.Kontakt;
 import bl.objects.view.EingangsrechnungView;
+import bl.pdf.PDFFile;
 
 import com.itextpdf.text.DocumentException;
 

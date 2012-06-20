@@ -18,11 +18,11 @@ import javax.swing.JTextField;
 import com.itextpdf.text.DocumentException;
 
 import bl.BL;
-import bl.PDFFile;
 import bl.filter.PDFFilter;
 import bl.objects.Eingangsrechnung;
 import bl.objects.Projekt;
 import bl.objects.view.reports.Jahresumsatz;
+import bl.pdf.PDFFile;
 import dal.DALException;
 import dal.DBEntity;
 

@@ -16,11 +16,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import bl.BL;
-import bl.PDFFile;
 import bl.filter.PDFFilter;
 import bl.objects.Ausgangsrechnung;
 import bl.objects.Kunde;
 import bl.objects.view.AusgangsrechnungView;
+import bl.pdf.PDFFile;
 
 import com.itextpdf.text.DocumentException;
 
