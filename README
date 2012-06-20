@@ -22,3 +22,31 @@ Loggingmodule, supports a central LoggerManager with multiple logging-adapters (
 
 - tests:
 Contains all sorts of tests, most of them are unit-tests
+
+
+What are we proud of?
+----------------------
+I think the whole DAL-system is pretty well designed, it has an simplistic ORM-Mapping, realized with a lot of reflection.
+For performance, we implemented a reflection-caching-sytem, which provides our BL and DatabaseAdapter to reuse preloaded
+class-data.
+The ORM-Mapper is also capable of mapping inheritance-tables in it's database. That means, the business-objects can also
+just inherit from their database-related business-object and the mapping happens automatically.
+Because of this advanced system, we only had to implement methods for reading, updating, creating and deleting items.
+For reading data, we implemented a Where-Chain-mechanism which enables us to construct filtered result-lists, this minimizes
+the need for specialized methods in the database-adapter.
+We have never used reflection before and are pretty proud of building such a complex system in an "somekind of" straight-forward
+way.
+
+
+What would we make better the next time?
+----------------------------------------
+Unfortunately, the MockAdapter for the database was one of the last classes we implemented, so we just used our finished
+MysqlAdapter to test the software. Clearly, you have to install a database and you cannot test the system independently.
+Also we would try to use less singleton-classes. We think that singleton-classes don't offer a lot of benefits and make
+the code confusing.
+
+In the Configuration-Module, there are some options missing, which would have been neat for the user, like individual
+configuration of each Logger object (i.e. different Adapter,..), maybe that is one point we could have done better.
+
+
+
